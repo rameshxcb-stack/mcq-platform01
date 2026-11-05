@@ -17,13 +17,28 @@ except Exception:
     HTML = None
     WEASYPRINT_OK = False
 
+try:
+    import google.generativeai as genai
+    GENAI_OK = True
+except Exception:
+    GENAI_OK = False
+
 BASE_DIR = Path(__file__).resolve().parent
 app = Flask(__name__, static_folder=None)
 app.config["MAX_CONTENT_LENGTH"] = 32 * 1024 * 1024
 
 env = Environment(loader=FileSystemLoader(str(BASE_DIR)), autoescape=select_autoescape(("html", "xml")))
 
-# Cache dictionary
+# Gemini AI Setup
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+gemini_model = None
+if GEMINI_API_KEY and GENAI_OK:
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        gemini_model = genai.GenerativeModel("gemini-1.5-flash")
+    except Exception:
+        pass
+
 CACHE = {}
 
 def _translate(text, lang):
@@ -87,8 +102,6 @@ def _preprocess(payload):
     for k in ("name", "dob", "weight", "phone", "email", "father", "mother", "place", "date"):
         data[k] = str(data.get(k) or "").strip()
 
-    # Translate Name fields if needed (optional, usually names are kept as is)
-
     data["dob"] = _translate(data.get("dob"), lang)
     data["date"] = _translate(data.get("date"), lang)
 
@@ -115,8 +128,52 @@ def _preprocess(payload):
 
     return data
 
+# ==========================================
+# ROUTES
+# ==========================================
+
 @app.route("/")
 def index(): return send_from_directory(BASE_DIR, "index.html")
+
+@app.route("/manifest.json")
+def manifest():
+    return jsonify({
+        "name": "Biodata Maker Pro", "short_name": "BiodataPro", "start_url": "/",
+        "display": "standalone", "background_color": "#f1f5f9", "theme_color": "#0f172a"
+    })
+
+# 🔥 YEH ROUTE MISSING THA JISKI WAJAH SE ERROR AA RAHA THA
+@app.route("/api/health")
+def health():
+    return jsonify(status="ok", ai=bool(gemini_model))
+
+@app.route("/api/generate-profile", methods=["POST"])
+def generate_profile():
+    if not gemini_model: 
+        return jsonify(error="AI not configured. Set GEMINI_API_KEY env var."), 503
+    try:
+        data = request.get_json(silent=True) or {}
+        name = str(data.get("name") or "the candidate").strip()
+        education = str(data.get("education") or "Graduation").strip()
+        skills = str(data.get("skills") or "Good communication").strip()
+        prompt = f"Write a 3-4 sentence humble biodata profile for an Indian marriage profile. Name: {name}. Education: {education}. Skills: {skills}. Focus on family values, career goals. Return plain text only."
+        resp = gemini_model.generate_content(prompt)
+        return jsonify(profile=(resp.text or "").strip())
+    except Exception as e:
+        return jsonify(error=str(e)), 500
+
+@app.route("/api/suggest-skills", methods=["POST"])
+def suggest_skills():
+    if not gemini_model: 
+        return jsonify(error="AI not configured"), 503
+    try:
+        data = request.get_json(silent=True) or {}
+        education = str(data.get("education") or "").strip()
+        prompt = f"Suggest 6 relevant skills (as 'Name | Level 0-100') for a candidate with education '{education}'. Return only one skill per line."
+        resp = gemini_model.generate_content(prompt)
+        return jsonify(skills=(resp.text or "").strip())
+    except Exception as e:
+        return jsonify(error=str(e)), 500
 
 @app.route("/api/preview", methods=["POST"])
 def preview():
