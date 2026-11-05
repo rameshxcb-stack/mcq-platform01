@@ -4,6 +4,10 @@ from pathlib import Path
 import os, re, traceback, datetime
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+# Naye imports
+from deep_translator import GoogleTranslator
+import google.generativeai as genai
+
 BASE_DIR = Path(__file__).resolve().parent
 app = Flask(__name__, static_folder=None)
 app.config["MAX_CONTENT_LENGTH"] = 32 * 1024 * 1024
@@ -12,9 +16,17 @@ env = Environment(loader=FileSystemLoader(str(BASE_DIR)), autoescape=select_auto
 try:
     from weasyprint import HTML
     WEASYPRINT_AVAILABLE = True
-except Exception as exc:
+except Exception:
     HTML = None
     WEASYPRINT_AVAILABLE = False
+
+# Gemini API Config
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+    gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+else:
+    gemini_model = None
 
 VALID_THEMES = {
     "cyan", "orange_sidebar", "navy_classic", "teal_header", "blue_corporate", "emerald_sidebar", 
@@ -26,11 +38,7 @@ VALID_THEMES = {
     "lagoon_minimal", "sandstone_timeline", "orchid_editorial", "cobalt_sidebar", "pine_banner", 
     "pearl_corporate", "golden_cards", "slate_split", "coral_minimal", "moss_timeline", "wine_editorial", 
     "arctic_sidebar", "royal_banner", "graphite_corporate", "peach_cards", "denim_split", "lilac_minimal", 
-    "bronze_timeline", "jade_editorial", "maroon_sidebar", "turquoise_banner", "smoke_corporate", "ivory_cards",
-    "royal", "professional", "emerald", "midnight", "rose", "lavender", "teal", "charcoal", "minimal", 
-    "sky", "forest", "terracotta", "plum", "classic", "coral", "sapphire", "champagne", "burgundy", 
-    "indigo", "copper", "ocean", "sage", "ruby", "steel", "mint", "sunset", "peacock", "blush", "olive", 
-    "ice", "onyx", "mauve", "amber", "crimson", "lagoon", "sandstone", "orchid", "cobalt", "pine", "pearl"
+    "bronze_timeline", "jade_editorial", "maroon_sidebar", "turquoise_banner", "smoke_corporate", "ivory_cards"
 }
 
 def _format_date(value):
@@ -41,12 +49,26 @@ def _format_date(value):
         except ValueError: continue
     return s
 
+def _translate(text, lang_code):
+    if not text or not lang_code or lang_code == 'en':
+        return text
+    try:
+        # Agar text pehle se hi bahut lamba hai, toh chunk me translate karna padega
+        # Par filhal simple approach:
+        return GoogleTranslator(source='auto', target=lang_code).translate(text)
+    except Exception:
+        return text
+
 def preprocess(payload):
     data = dict(payload or {})
+    
+    # Language Code (e.g., 'hi', 'mr', 'ta', 'te')
+    lang = str(data.get("language") or "en").lower()
+    
     theme = str(data.get("theme") or "cyan").lower()
     data["theme"] = theme if theme in VALID_THEMES else "cyan"
 
-    # Skills
+    # Skills parsing
     skills = []
     for raw in str(data.get("skills") or "").splitlines():
         if "|" in raw:
@@ -58,18 +80,22 @@ def preprocess(payload):
             skills.append({"name": raw.strip(), "level": 80})
     data["skills_list"] = skills
 
-    # Strings
-    for key in ("name", "dob", "gender", "height", "weight", "blood", "marital", "religion", "caste", 
-                "gotra", "rashi", "nakshatra", "manglik", "profile", "phone", "email", "address", 
-                "father", "father_job", "mother", "mother_job", "brothers", "sisters", "education_simple", 
-                "experience", "languages", "hobbies", "declaration", "place", "date"):
+    # Fields to translate (excluding Name, Email, Phone, Dates)
+    translate_keys = ["gender", "height", "blood", "marital", "religion", "caste", "gotra", "rashi", 
+                      "nakshatra", "manglik", "profile", "address", "father_job", "mother_job", 
+                      "brothers", "sisters", "education_simple", "experience", "languages", "hobbies", "declaration"]
+    
+    for key in translate_keys:
+        data[key] = _translate(str(data.get(key) or "").strip(), lang)
+        
+    # Direct fields
+    for key in ("name", "dob", "weight", "phone", "email", "father", "mother", "place", "date"):
         data[key] = str(data.get(key) or "").strip()
 
-    # Dates
     data["dob"] = _format_date(data.get("dob"))
     data["date"] = _format_date(data.get("date"))
 
-    # Education parsing
+    # Education List Translation
     edu_mode = data.get("education_mode", "simple")
     data["education_mode"] = edu_mode
     data["education_list"] = []
@@ -78,12 +104,29 @@ def preprocess(payload):
         for item in data["education_list"]:
             if item.get("level") or item.get("institute"):
                 data["education_list"].append({
-                    "level": str(item.get("level", "")).strip(),
-                    "board": str(item.get("board", "")).strip(),
-                    "institute": str(item.get("institute", "")).strip(),
+                    "level": _translate(str(item.get("level", "")).strip(), lang),
+                    "board": _translate(str(item.get("board", "")).strip(), lang),
+                    "institute": _translate(str(item.get("institute", "")).strip(), lang),
                     "year": str(item.get("year", "")).strip(),
                     "score": str(item.get("score", "")).strip()
                 })
+
+    # Translate Section Labels for PDF
+    labels = {
+        "contact": "Contact Details", "personal": "Personal Details", "family": "Family Details",
+        "skills": "Skills", "additional": "Additional Details", "profile": "Profile / Objective",
+        "education": "Education", "experience": "Work Experience", "declaration": "Declaration",
+        "dob": "Date of Birth", "gender": "Gender", "height": "Height", "weight": "Weight",
+        "blood": "Blood Group", "marital": "Marital Status", "religion": "Religion", "caste": "Caste / Community",
+        "gotra": "Gotra", "rashi": "Rashi", "nakshatra": "Nakshatra", "manglik": "Manglik",
+        "phone": "Mobile Number", "email": "Email", "address": "Address",
+        "father": "Father", "mother": "Mother", "brothers": "Brothers", "sisters": "Sisters",
+        "languages": "Languages", "hobbies": "Hobbies", "place": "Place", "signature": "Signature"
+    }
+    if lang != 'en':
+        for k, v in labels.items():
+            labels[k] = _translate(v, lang)
+    data["labels"] = labels
 
     data["photo"] = str(data.get("photo") or "")
     return data
@@ -95,13 +138,27 @@ def render_document(payload):
 @app.route("/")
 def index(): return send_from_directory(BASE_DIR, "index.html")
 
-@app.route("/favicon.ico")
-def favicon(): return "", 204
-
-@app.route("/keepalive")
 @app.route("/api/health")
 def health():
-    return jsonify(status="ok", weasyprint=WEASYPRINT_AVAILABLE, service="biodata-maker-pro", templates=len(VALID_THEMES))
+    return jsonify(status="ok", weasyprint=WEASYPRINT_AVAILABLE, ai=bool(gemini_model))
+
+# AI PROFILE GENERATION ENDPOINT
+@app.route("/api/generate-profile", methods=["POST"])
+def generate_profile():
+    if not gemini_model:
+        return jsonify(error="Gemini API key nahi mili. GitHub Secrets me GEMINI_API_KEY set karein."), 500
+    try:
+        payload = request.get_json(silent=True) or {}
+        name = payload.get("name", "The candidate")
+        edu = payload.get("education", "Graduation")
+        skills = payload.get("skills", "Good communication")
+        
+        prompt = f"Write a short, humble, and traditional Indian marriage biodata profile (3-4 sentences) for {name}. Education: {edu}. Skills: {skills}. Focus on family values and career goals."
+        
+        response = gemini_model.generate_content(prompt)
+        return jsonify(profile=response.text.strip())
+    except Exception as exc:
+        return jsonify(error=str(exc)), 500
 
 @app.route("/api/preview", methods=["POST"])
 def preview():
@@ -110,7 +167,6 @@ def preview():
         payload.pop("photo", None)
         return render_document(payload)
     except Exception as exc:
-        traceback.print_exc()
         return f"<p>Error: {exc}</p>", 500
 
 @app.route("/api/pdf", methods=["POST"])
@@ -123,7 +179,6 @@ def pdf():
         safe = re.sub(r"[^a-zA-Z0-9_-]", "", (data.get("name") or "Biodata").replace(" ", "_")) or "Biodata"
         return send_file(BytesIO(pdf_bytes), mimetype="application/pdf", as_attachment=True, download_name=f"{safe}_Biodata.pdf")
     except Exception as exc:
-        traceback.print_exc()
         return jsonify(error=str(exc)), 500
 
 if __name__ == "__main__":
