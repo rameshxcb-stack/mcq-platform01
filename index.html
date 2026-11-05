@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<title>Biodata Maker Pro — 4000+ Unique Designs</title>
+<meta name="description" content="Create beautiful marriage biodata with 12,000+ unique templates. PDF ready, multilingual, free.">
+<title>Biodata Maker Pro — 12,000+ Designs</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<!-- html2pdf.js CDN for client-side PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
-/* ============================================================
-   DESIGN TOKENS & RESET
-   ============================================================ */
+/* =====================================================
+   RESET + TOKENS
+   ===================================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
 :root {
   --brand: #0f172a;
   --gold: #d4a853;
@@ -23,13 +26,22 @@
   --ink-2: #475569;
   --ink-3: #94a3b8;
   --success: #10b981;
-  --sh: 0 4px 16px rgba(15, 23, 42, 0.06);
-  --sh-lg: 0 20px 48px rgba(15, 23, 42, 0.12);
+  --danger: #ef4444;
+  --warn: #f59e0b;
+  --sh: 0 4px 16px rgba(15, 23, 42, .06);
+  --sh-lg: 0 20px 48px rgba(15, 23, 42, .12);
   --r: 12px;
-  --t: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --t: .2s cubic-bezier(.4, 0, .2, 1);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+body.dark {
+  --bg: #0b1220;
+  --surface: #111a2e;
+  --line: #1e293b;
+  --ink: #f1f5f9;
+  --ink-2: #cbd5e1;
+  --ink-3: #64748b;
+}
 
 body {
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -39,69 +51,55 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  transition: background var(--t), color var(--t);
 }
 
 button, input, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; border: 0; background: none; }
 
-/* ============================================================
+/* =====================================================
    HEADER
-   ============================================================ */
+   ===================================================== */
 .app-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(255, 255, 255, 0.9);
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255, 255, 255, .9);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--line);
   padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 800;
-  font-size: 16px;
-  letter-spacing: -0.02em;
-}
+body.dark .app-header { background: rgba(17, 26, 46, .9); }
 
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; letter-spacing: -.02em; }
 .logo-mark {
-  width: 34px;
-  height: 34px;
-  background: var(--gold-grad);
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: 800;
-  font-size: 16px;
-  box-shadow: 0 4px 12px rgba(212, 168, 83, 0.35);
+  width: 34px; height: 34px; background: var(--gold-grad); border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 800; font-size: 16px;
+  box-shadow: 0 4px 12px rgba(212, 168, 83, .35);
 }
-
+.header-actions { display: flex; gap: 8px; align-items: center; }
+.icon-btn {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--bg); border: 1px solid var(--line);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: all var(--t);
+}
+.icon-btn:hover { background: var(--surface); transform: translateY(-1px); }
 .status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: #ecfdf5;
-  color: #047857;
-  font-size: 11px;
-  font-weight: 700;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 999px;
+  background: #ecfdf5; color: #047857;
+  font-size: 11px; font-weight: 700;
   border: 1px solid #a7f3d0;
 }
 
-/* ============================================================
-   LAYOUT
-   ============================================================ */
+/* =====================================================
+   MAIN LAYOUT
+   ===================================================== */
 .app-main {
   display: grid;
-  grid-template-columns: 420px 1fr;
+  grid-template-columns: 460px 1fr;
   height: calc(100vh - 63px);
   overflow: hidden;
 }
@@ -114,281 +112,277 @@ button { cursor: pointer; border: 0; background: none; }
   scrollbar-width: thin;
 }
 
+/* Progress */
+.progress-wrap {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.progress-row { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.progress-track { height: 6px; background: var(--bg); border-radius: 10px; overflow: hidden; }
+.progress-fill {
+  height: 100%;
+  background: var(--gold-grad);
+  border-radius: 10px;
+  transition: width .4s cubic-bezier(.4, 0, .2, 1);
+  width: 0;
+}
+
+/* Section cards */
 .sec {
   border: 1px solid var(--line);
   border-radius: var(--r);
   margin-bottom: 10px;
   background: var(--surface);
   overflow: hidden;
+  transition: all var(--t);
 }
-
-.sec[open] {
-  border-color: rgba(212, 168, 83, 0.5);
-  box-shadow: var(--sh);
-}
-
+.sec[open] { border-color: rgba(212, 168, 83, .5); box-shadow: var(--sh); }
 .sec summary {
   list-style: none;
   padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-weight: 700;
-  font-size: 13px;
+  display: flex; align-items: center; gap: 12px;
+  font-weight: 700; font-size: 13px;
   cursor: pointer;
   min-height: 52px;
 }
-
 .sec summary::-webkit-details-marker { display: none; }
-
+.sec summary .arrow { margin-left: auto; transition: transform var(--t); font-size: 12px; color: var(--ink-3); }
+.sec[open] summary .arrow { transform: rotate(90deg); }
 .sec-body { padding: 0 16px 16px; }
 
 .num-badge {
-  width: 24px;
-  height: 24px;
-  border-radius: 8px;
+  width: 24px; height: 24px; border-radius: 8px;
   background: var(--gold-grad);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 11px; font-weight: 800;
+  flex-shrink: 0;
 }
 
-/* ============================================================
-   FORM FIELDS
-   ============================================================ */
+/* Fields */
 .fld { margin-bottom: 12px; }
-
 .fld label {
-  display: block;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--ink-2);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 6px;
+  display: block; font-size: 11px; font-weight: 700; color: var(--ink-2);
+  text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px;
 }
-
 .fld input, .fld textarea, .fld select {
   width: 100%;
   border: 1.5px solid var(--line);
   border-radius: 10px;
   padding: 11px 14px;
-  font-size: 16px;
+  font-size: 15px;
   background: var(--surface);
   outline: none;
   transition: all var(--t);
   min-height: 46px;
 }
-
 .fld input:focus, .fld select:focus, .fld textarea:focus {
   border-color: var(--gold);
-  box-shadow: 0 0 0 4px rgba(212, 168, 83, 0.15);
+  box-shadow: 0 0 0 4px rgba(212, 168, 83, .15);
 }
-
+.fld input.invalid, .fld textarea.invalid { border-color: var(--danger); }
 .fld textarea { min-height: 80px; resize: vertical; }
-
 .fld-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-/* ============================================================
-   TEMPLATE ENGINE UI
-   ============================================================ */
-.tpl-controls { display: flex; gap: 8px; margin-bottom: 12px; }
-
+/* Template engine */
+.tpl-controls { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
 .tpl-controls input, .tpl-controls select {
-  flex: 1;
-  padding: 8px 12px;
-  font-size: 13px;
-  border-radius: 8px;
-  border: 1px solid var(--line);
+  flex: 1; min-width: 110px; padding: 8px 12px; font-size: 13px;
+  border-radius: 8px; border: 1px solid var(--line); background: var(--surface);
 }
-
+.tpl-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+.tpl-tab {
+  flex: 1; padding: 7px; border-radius: 6px;
+  background: var(--bg); border: 1px solid var(--line);
+  font-size: 11px; font-weight: 700; color: var(--ink-2);
+  transition: all var(--t);
+}
+.tpl-tab.active { background: var(--gold-grad); color: #fff; border-color: transparent; }
 .tpl-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
-  max-height: 400px;
+  max-height: 380px;
   overflow-y: auto;
-  padding-right: 5px;
+  padding-right: 4px;
 }
-
 .tpl-btn {
   position: relative;
-  padding: 10px;
-  border: 2px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface);
-  text-align: left;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--ink-2);
-  min-height: 60px;
+  padding: 10px; border: 2px solid var(--line);
+  border-radius: 10px; background: var(--surface);
+  text-align: left; font-size: 11px; font-weight: 700;
+  color: var(--ink-2); min-height: 64px;
   transition: all var(--t);
   cursor: pointer;
 }
-
-.tpl-btn:hover {
-  border-color: var(--gold);
-  transform: translateY(-2px);
-  box-shadow: var(--sh);
-}
-
+.tpl-btn:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: var(--sh); }
 .tpl-btn.active {
   border-color: var(--gold);
   background: linear-gradient(135deg, #fffdf8, #fdf8ec);
   color: var(--ink);
-  box-shadow: 0 0 0 4px rgba(212, 168, 83, 0.12);
+  box-shadow: 0 0 0 4px rgba(212, 168, 83, .12);
 }
-
-.tpl-btn.active::before {
-  content: '✓';
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 16px;
-  height: 16px;
-  background: var(--gold-grad);
-  color: #fff;
-  border-radius: 50%;
-  font-size: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.tpl-swatch {
-  width: 100%;
-  height: 24px;
-  border-radius: 4px;
-  margin-bottom: 6px;
-  display: flex;
-  overflow: hidden;
-}
-
+body.dark .tpl-btn.active { background: linear-gradient(135deg, #2a2318, #1a1610); }
+.tpl-btn .fav { position: absolute; top: 4px; right: 4px; font-size: 13px; opacity: .6; }
+.tpl-btn .fav.on { opacity: 1; color: #ef4444; }
+.tpl-swatch { width: 100%; height: 22px; border-radius: 4px; margin-bottom: 6px; display: flex; overflow: hidden; }
 .tpl-swatch > div { flex: 1; }
-
 .load-more-btn {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background: var(--bg);
+  width: 100%; padding: 10px; margin-top: 10px;
+  background: var(--bg); border: 1px solid var(--line);
+  border-radius: 8px; font-weight: 700; color: var(--ink);
+}
+
+/* Photo */
+.photo-row { display: flex; gap: 10px; align-items: center; }
+.photo-prev {
+  width: 70px; height: 84px; border-radius: 8px;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  font-weight: bold;
-  color: var(--ink);
-  cursor: pointer;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; color: var(--ink-3); font-size: 10px;
+}
+.photo-prev img { width: 100%; height: 100%; object-fit: cover; }
+.photo-actions { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.btn-sm {
+  padding: 7px 12px; border-radius: 6px;
+  background: var(--bg); border: 1px solid var(--line);
+  font-size: 12px; font-weight: 600;
 }
 
-/* ============================================================
-   PREVIEW
-   ============================================================ */
-.preview-wrap {
-  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.preview-bar {
-  padding: 12px 20px;
-  display: flex;
+/* Skills editor */
+.skill-row {
+  display: grid; grid-template-columns: 1fr 80px 32px;
+  gap: 6px; margin-bottom: 6px;
   align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.6);
 }
+.skill-row input[type="range"] { min-height: auto; padding: 0; }
+.skill-row .del { color: var(--danger); font-weight: 800; font-size: 18px; }
 
-.preview-scroll {
-  flex: 1;
-  overflow: auto;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.preview-frame-holder {
-  box-shadow: var(--sh-lg);
-  border-radius: 4px;
-  overflow: hidden;
-  background: #fff;
-}
-
-#previewFrame {
-  width: 794px;
-  height: 1123px;
-  border: 0;
-  display: block;
-  transform-origin: top left;
-  transition: transform 0.15s ease;
-}
-
-/* ============================================================
-   FOOTER (Mobile)
-   ============================================================ */
-.app-footer {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.95);
-  border-top: 1px solid var(--line);
-  gap: 8px;
-  z-index: 100;
-}
-
-.footer-btn {
-  flex: 1;
-  min-height: 48px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.btn-pdf { background: var(--gold-grad); color: #fff; flex: 2; }
-.btn-save { background: var(--bg); color: var(--ink); border: 1.5px solid var(--line); }
-
-/* ============================================================
-   EDUCATION UI
-   ============================================================ */
-.edu-mode-toggle { display: flex; gap: 10px; margin-bottom: 12px; }
-
+/* Education rows */
 .edu-row {
   border: 1px solid var(--line);
   padding: 10px;
   border-radius: 8px;
   margin-bottom: 10px;
-  background: #fafafa;
+  background: var(--bg);
+}
+.edu-row .del { float: right; color: var(--danger); font-size: 16px; font-weight: 800; }
+
+/* Options card */
+.opt-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.opt-row:last-child { border-bottom: 0; }
+.switch { position: relative; width: 40px; height: 22px; }
+.switch input { display: none; }
+.switch span {
+  position: absolute; inset: 0; background: var(--line);
+  border-radius: 22px; cursor: pointer;
+  transition: background var(--t);
+}
+.switch span::after {
+  content: ""; position: absolute;
+  top: 3px; left: 3px;
+  width: 16px; height: 16px;
+  background: #fff; border-radius: 50%;
+  transition: transform var(--t);
+}
+.switch input:checked + span { background: var(--gold); }
+.switch input:checked + span::after { transform: translateX(18px); }
+
+/* Preview */
+.preview-wrap {
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+body.dark .preview-wrap { background: linear-gradient(135deg, #0b1220, #1a2436); }
+.preview-bar {
+  padding: 10px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, .6);
+  gap: 12px;
+}
+body.dark .preview-bar { background: rgba(17, 26, 46, .6); }
+.preview-zoom { display: flex; gap: 4px; align-items: center; }
+.preview-scroll {
+  flex: 1; overflow: auto; padding: 20px;
+  display: flex; justify-content: center; align-items: flex-start;
+}
+.preview-frame-holder {
+  box-shadow: var(--sh-lg);
+  border-radius: 4px; overflow: hidden; background: #fff;
+}
+#previewFrame {
+  width: 794px; height: 1123px; border: 0;
+  display: block; transform-origin: top left;
 }
 
-.btn-sm {
-  background: var(--line);
-  color: var(--ink);
-  padding: 6px 12px;
-  border-radius: 6px;
+/* Footer mobile */
+.app-footer {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, .95);
+  border-top: 1px solid var(--line);
+  gap: 8px; z-index: 100;
+}
+body.dark .app-footer { background: rgba(17, 26, 46, .95); }
+.footer-btn {
+  flex: 1; min-height: 48px;
+  border-radius: 12px; font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-pdf { background: var(--gold-grad); color: #fff; flex: 2; }
+.btn-save { background: var(--bg); color: var(--ink); border: 1.5px solid var(--line); }
+
+/* Toast */
+.toast-host { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.toast {
+  background: #0f172a; color: #fff;
+  padding: 10px 18px; border-radius: 10px;
+  font-size: 13px; font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+  animation: toastIn .3s ease;
+  max-width: 90vw;
+}
+.toast.error { background: var(--danger); }
+.toast.success { background: var(--success); }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Draft manager */
+.draft-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border: 1px solid var(--line);
+  border-radius: 8px; margin-bottom: 6px;
   font-size: 12px;
-  font-weight: 600;
-  margin-top: 5px;
 }
+.draft-row.active { border-color: var(--gold); background: rgba(212, 168, 83, .08); }
+.draft-row button { padding: 4px 8px; font-size: 11px; border-radius: 4px; background: var(--bg); border: 1px solid var(--line); }
 
-.btn-danger {
-  background: #fee2e2;
-  color: #b91c1c;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 11px;
-  float: right;
-  margin-top: -30px;
+/* Modal */
+.modal {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0, 0, 0, .55);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
 }
+.modal.open { display: flex; }
+.modal-box {
+  background: var(--surface); border-radius: 14px;
+  max-width: 480px; width: 100%;
+  max-height: 85vh; overflow-y: auto;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+}
+.modal-box h3 { font-size: 18px; margin-bottom: 8px; }
+.modal-box p { font-size: 13px; color: var(--ink-2); margin-bottom: 16px; }
 
+/* Responsive */
 @media (max-width: 1023px) {
   .app-main { display: block; height: auto; padding-bottom: 90px; }
   .app-footer { display: flex; }
@@ -401,29 +395,50 @@ button { cursor: pointer; border: 0; background: none; }
 </head>
 <body>
 
-<!-- ============================================================
+<!-- =====================================================
      HEADER
-     ============================================================ -->
+     ===================================================== -->
 <header class="app-header">
   <div class="logo">
     <div class="logo-mark">B</div>
     <span>Biodata<span style="color:var(--gold)">Pro</span></span>
   </div>
-  <div class="status-pill" id="statusPill">Auto-save</div>
+  <div class="header-actions">
+    <div class="status-pill" id="statusPill">Auto-save</div>
+    <button class="icon-btn" id="themeBtn" title="Toggle theme">🌙</button>
+    <button class="icon-btn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+    <button class="icon-btn" id="redoBtn" title="Redo (Ctrl+Y)">↷</button>
+  </div>
 </header>
 
-<!-- ============================================================
+<!-- =====================================================
      MAIN
-     ============================================================ -->
+     ===================================================== -->
 <main class="app-main">
-  <!-- EDITOR PANEL -->
+
+  <!-- EDITOR -->
   <aside class="editor panel active" id="editPanel">
-    <!-- Design Selection -->
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-row">
+        <span>Profile Completion</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <!-- 1. TEMPLATE PICKER -->
     <details class="sec" open>
-      <summary><span class="num-badge">1</span> Choose Design (4000+ Available)</summary>
+      <summary><span class="num-badge">1</span> Choose Design <span style="color:var(--ink-3);font-weight:500;font-size:11px;">(12,000+ available)</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
+        <div class="tpl-tabs">
+          <button class="tpl-tab active" data-tab="all">All</button>
+          <button class="tpl-tab" data-tab="fav">⭐ Favourites</button>
+          <button class="tpl-tab" data-tab="recent">🕒 Recent</button>
+        </div>
         <div class="tpl-controls">
-          <input type="text" id="searchTpl" placeholder="Search design (e.g. Royal)...">
+          <input type="text" id="searchTpl" placeholder="Search (Royal, Sidebar...)">
           <select id="filterLayout">
             <option value="all">All Layouts</option>
             <option value="classic">Classic</option>
@@ -439,31 +454,37 @@ button { cursor: pointer; border: 0; background: none; }
             <option value="magazine">Magazine</option>
             <option value="executive">Executive</option>
             <option value="vintage">Vintage</option>
+            <option value="gradient">Gradient</option>
+            <option value="geometric">Geometric</option>
           </select>
         </div>
         <div class="tpl-grid" id="templateGrid"></div>
-        <button class="load-more-btn" id="loadMoreBtn">Load More Designs...</button>
+        <button class="load-more-btn" id="loadMoreBtn">Load More...</button>
       </div>
     </details>
 
-    <!-- Photo -->
+    <!-- 2. PHOTO -->
     <details class="sec" open>
-      <summary><span class="num-badge">2</span> Profile Photo</summary>
+      <summary><span class="num-badge">2</span> Profile Photo<span class="arrow">▶</span></summary>
       <div class="sec-body">
-        <div class="fld">
-          <label>Upload Photo</label>
-          <input type="file" id="photoFile" accept="image/*">
+        <div class="photo-row">
+          <div class="photo-prev" id="photoPrev">No photo</div>
+          <div class="photo-actions">
+            <input type="file" id="photoFile" accept="image/*" style="display:none">
+            <button class="btn-sm" id="uploadBtn">📷 Upload Photo</button>
+            <button class="btn-sm" id="removePhotoBtn" style="display:none">✕ Remove</button>
+          </div>
         </div>
       </div>
     </details>
 
-    <!-- Personal Details -->
+    <!-- 3. PERSONAL -->
     <details class="sec" open>
-      <summary><span class="num-badge">3</span> Personal Details</summary>
+      <summary><span class="num-badge">3</span> Personal Details<span class="arrow">▶</span></summary>
       <div class="sec-body">
-        <div class="fld" style="background:#f0fdf4; padding:10px; border-radius:10px; border:1px solid #bbf7d0; margin-bottom:15px;">
-          <label style="color:#166534">🌐 PDF Output Language</label>
-          <select id="language" style="border-color:#86efac; font-weight:600;">
+        <div class="fld" style="background:var(--bg); padding:10px; border-radius:10px; border:1px solid var(--line); margin-bottom:14px;">
+          <label>🌐 PDF Output Language</label>
+          <select id="language">
             <option value="en">English</option>
             <option value="hi">Hindi (हिंदी)</option>
             <option value="mr">Marathi (मराठी)</option>
@@ -477,29 +498,59 @@ button { cursor: pointer; border: 0; background: none; }
             <option value="or">Odia (ଓଡ଼ିଆ)</option>
           </select>
         </div>
-        <div class="fld"><label>Full Name</label><input id="name" placeholder="Your Full Name"></div>
+
+        <div class="fld">
+          <label>Full Name * <span style="color:var(--danger)">required</span></label>
+          <input id="name" placeholder="Your Full Name" maxlength="80">
+        </div>
         <div class="fld-row">
           <div class="fld"><label>Date of Birth</label><input id="dob" type="date"></div>
-          <div class="fld"><label>Gender</label><select id="gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+          <div class="fld"><label>Gender</label>
+            <select id="gender">
+              <option value="">Select</option>
+              <option>Male</option><option>Female</option><option>Other</option>
+            </select>
+          </div>
         </div>
         <div class="fld-row">
           <div class="fld"><label>Height</label>
-            <div style="display:flex;gap:5px;">
-              <select id="height_ft" style="flex:1;"><option value="">Ft</option><option>4</option><option>5</option><option>6</option><option>7</option></select>
-              <select id="height_in" style="flex:1;"><option value="">In</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option></select>
+            <div style="display:flex;gap:6px;">
+              <select id="height_ft" style="flex:1;">
+                <option value="">Ft</option>
+                <option>4</option><option>5</option><option>6</option><option>7</option>
+              </select>
+              <select id="height_in" style="flex:1;">
+                <option value="">In</option>
+                <option>0</option><option>1</option><option>2</option><option>3</option>
+                <option>4</option><option>5</option><option>6</option><option>7</option>
+                <option>8</option><option>9</option><option>10</option><option>11</option>
+              </select>
             </div>
           </div>
-          <div class="fld"><label>Weight</label><input id="weight" placeholder="e.g. 70 kg"></div>
+          <div class="fld"><label>Weight</label><input id="weight" placeholder="70 kg"></div>
         </div>
         <div class="fld-row">
-          <div class="fld"><label>Blood Group</label><input id="blood" placeholder="O+"></div>
-          <div class="fld"><label>Marital Status</label><select id="marital"><option value="">Select</option><option>Unmarried</option><option>Married</option><option>Divorced</option><option>Widowed</option></select></div>
+          <div class="fld"><label>Blood Group</label>
+            <select id="blood">
+              <option value="">Select</option>
+              <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+              <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+            </select>
+          </div>
+          <div class="fld"><label>Marital Status</label>
+            <select id="marital">
+              <option value="">Select</option>
+              <option>Never Married</option><option>Divorced</option>
+              <option>Widowed</option><option>Awaiting Divorce</option>
+            </select>
+          </div>
         </div>
         <div class="fld-row">
           <div class="fld"><label>Religion</label>
-            <input id="religion" list="religion-list" placeholder="Type or select...">
+            <input id="religion" list="religion-list" placeholder="Hindu">
             <datalist id="religion-list">
-              <option value="Hindu"></option><option value="Muslim"></option><option value="Christian"></option><option value="Sikh"></option><option value="Buddhist"></option><option value="Jain"></option><option value="Parsi"></option>
+              <option>Hindu</option><option>Muslim</option><option>Christian</option>
+              <option>Sikh</option><option>Buddhist</option><option>Jain</option><option>Parsi</option>
             </datalist>
           </div>
           <div class="fld"><label>Caste</label><input id="caste" placeholder="Optional"></div>
@@ -510,31 +561,42 @@ button { cursor: pointer; border: 0; background: none; }
         </div>
         <div class="fld-row">
           <div class="fld"><label>Nakshatra</label><input id="nakshatra" placeholder="Optional"></div>
-          <div class="fld"><label>Manglik</label><select id="manglik"><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+          <div class="fld"><label>Manglik</label>
+            <select id="manglik">
+              <option value="">Select</option>
+              <option>Yes</option><option>No</option><option>Partial</option>
+            </select>
+          </div>
         </div>
-        <div class="fld" style="margin-top:20px;">
+        <div class="fld" style="margin-top:16px;">
           <label style="display:flex; justify-content:space-between; align-items:center;">
             <span>Profile / Objective</span>
-            <button type="button" id="aiGenBtn" style="background:linear-gradient(135deg,#8b5cf6,#3b82f6); color:white; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">✨ AI Generate</button>
+            <button type="button" id="aiGenBtn" style="background:linear-gradient(135deg,#8b5cf6,#3b82f6); color:white; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:700;">✨ AI Generate</button>
           </label>
-          <textarea id="profile" placeholder="Short introduction..."></textarea>
+          <textarea id="profile" placeholder="Short introduction..." maxlength="600"></textarea>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3);margin-top:4px;">
+            <span id="profileCount">0 / 600</span>
+            <button type="button" id="voiceBtn" style="color:var(--ink-2);font-weight:600;">🎤 Voice Input</button>
+          </div>
         </div>
       </div>
     </details>
 
-    <!-- Contact -->
-    <details class="sec">
-      <summary><span class="num-badge">4</span> Contact Details</summary>
+    <!-- 4. CONTACT -->
+    <details class="sec" open>
+      <summary><span class="num-badge">4</span> Contact Details<span class="arrow">▶</span></summary>
       <div class="sec-body">
-        <div class="fld"><label>Mobile Number</label><input id="phone" placeholder="+91 XXXXX XXXXX"></div>
+        <div class="fld"><label>Mobile Number * <span style="color:var(--danger)">at least one contact required</span></label>
+          <input id="phone" placeholder="+91 XXXXX XXXXX" maxlength="20">
+        </div>
         <div class="fld"><label>Email</label><input id="email" type="email" placeholder="name@example.com"></div>
-        <div class="fld"><label>Address</label><textarea id="address" placeholder="Full address..."></textarea></div>
+        <div class="fld"><label>Address</label><textarea id="address" placeholder="Full address..." maxlength="300"></textarea></div>
       </div>
     </details>
 
-    <!-- Family -->
+    <!-- 5. FAMILY -->
     <details class="sec">
-      <summary><span class="num-badge">5</span> Family Details</summary>
+      <summary><span class="num-badge">5</span> Family Details<span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="fld-row">
           <div class="fld"><label>Father Name</label><input id="father" placeholder="Father name"></div>
@@ -544,16 +606,16 @@ button { cursor: pointer; border: 0; background: none; }
           <div class="fld"><label>Mother Name</label><input id="mother" placeholder="Mother name"></div>
           <div class="fld"><label>Mother Occupation</label><input id="mother_job" placeholder="Occupation"></div>
         </div>
-        <div class="fld"><label>Brothers</label><textarea id="brothers" placeholder="One per line..."></textarea></div>
-        <div class="fld"><label>Sisters</label><textarea id="sisters" placeholder="One per line..."></textarea></div>
+        <div class="fld"><label>Brothers (one per line)</label><textarea id="brothers" placeholder="Rahul - Engineer"></textarea></div>
+        <div class="fld"><label>Sisters (one per line)</label><textarea id="sisters" placeholder="Priya - Doctor"></textarea></div>
       </div>
     </details>
 
-    <!-- Education -->
+    <!-- 6. EDUCATION -->
     <details class="sec">
-      <summary><span class="num-badge">6</span> Education</summary>
+      <summary><span class="num-badge">6</span> Education<span class="arrow">▶</span></summary>
       <div class="sec-body">
-        <div class="edu-mode-toggle">
+        <div class="edu-mode-toggle" style="display:flex; gap:14px; margin-bottom:12px;">
           <label><input type="radio" name="edu_mode" value="detailed" checked> Detailed</label>
           <label><input type="radio" name="edu_mode" value="simple"> Simple</label>
         </div>
@@ -567,25 +629,32 @@ button { cursor: pointer; border: 0; background: none; }
       </div>
     </details>
 
-    <!-- Work & Skills -->
+    <!-- 7. WORK & SKILLS -->
     <details class="sec">
-      <summary><span class="num-badge">7</span> Work &amp; Skills</summary>
+      <summary><span class="num-badge">7</span> Work &amp; Skills<span class="arrow">▶</span></summary>
       <div class="sec-body">
-        <div class="fld"><label>Experience</label><textarea id="experience" placeholder="2020-2023 - Company - Role"></textarea></div>
-        <div class="fld"><label>Skills (Name | Level 0-100)</label><textarea id="skills" placeholder="Python | 90&#10;Communication | 85"></textarea></div>
+        <div class="fld"><label>Work Experience</label><textarea id="experience" placeholder="2020-2023 - Tech Corp - Software Engineer"></textarea></div>
+        <div class="fld">
+          <label style="display:flex;justify-content:space-between;align-items:center;">
+            <span>Skills</span>
+            <button type="button" id="aiSkillsBtn" style="background:linear-gradient(135deg,#8b5cf6,#3b82f6); color:white; padding:5px 10px; border-radius:6px; font-size:11px; font-weight:700;">✨ AI Suggest</button>
+          </label>
+          <div id="skillsList"></div>
+          <button type="button" class="btn-sm" id="addSkillBtn">+ Add Skill</button>
+        </div>
         <div class="fld-row">
-          <div class="fld"><label>Languages</label><input id="languages" placeholder="Hindi, English"></div>
+          <div class="fld"><label>Languages Known</label><input id="languages" placeholder="Hindi, English"></div>
           <div class="fld"><label>Hobbies</label><input id="hobbies" placeholder="Reading, Music"></div>
         </div>
       </div>
     </details>
 
-    <!-- Declaration -->
+    <!-- 8. DECLARATION -->
     <details class="sec">
-      <summary><span class="num-badge">8</span> Declaration</summary>
+      <summary><span class="num-badge">8</span> Declaration<span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="fld">
-          <label>Select Preset</label>
+          <label>Preset</label>
           <select id="declarationPreset">
             <option value="">-- Choose --</option>
             <option value="I hereby declare that the information provided above is true and correct to the best of my knowledge and belief.">Standard 1</option>
@@ -593,19 +662,55 @@ button { cursor: pointer; border: 0; background: none; }
             <option value="I confirm that the above details are true and I have not concealed any material facts.">Standard 3</option>
           </select>
         </div>
-        <div class="fld"><label>Declaration Text</label><textarea id="declaration"></textarea></div>
+        <div class="fld"><label>Declaration Text</label><textarea id="declaration" placeholder="I hereby declare..."></textarea></div>
         <div class="fld-row">
-          <div class="fld"><label>Place</label><input id="place" placeholder="Place"></div>
+          <div class="fld"><label>Place</label><input id="place" placeholder="Mumbai"></div>
           <div class="fld"><label>Date</label><input id="date" type="date"></div>
         </div>
       </div>
     </details>
+
+    <!-- 9. OPTIONS -->
+    <details class="sec">
+      <summary><span class="num-badge">9</span> Options & Tools<span class="arrow">▶</span></summary>
+      <div class="sec-body">
+        <div class="opt-row">
+          <span style="font-size:13px;font-weight:600;">Watermark on PDF</span>
+          <label class="switch"><input type="checkbox" id="optWatermark"><span></span></label>
+        </div>
+        <div class="fld" id="watermarkRow" style="display:none;"><label>Watermark Text</label><input id="watermark_text" placeholder="Biodata" maxlength="30"></div>
+        <div class="opt-row">
+          <span style="font-size:13px;font-weight:600;">Page numbers</span>
+          <label class="switch"><input type="checkbox" id="optPagenum" checked><span></span></label>
+        </div>
+
+        <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line);">
+          <div style="font-size:11px;font-weight:700;color:var(--ink-2);text-transform:uppercase;margin-bottom:8px;">Drafts (max 5)</div>
+          <div id="draftList"></div>
+        </div>
+
+        <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line); display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn-sm" id="exportBtn">⬇ Export JSON</button>
+          <button class="btn-sm" id="importBtn">⬆ Import JSON</button>
+          <input type="file" id="importFile" accept="application/json" style="display:none">
+          <button class="btn-sm" id="shareBtn">🔗 Share URL</button>
+          <button class="btn-sm" id="printBtn">🖨 Print</button>
+        </div>
+      </div>
+    </details>
+
   </aside>
 
-  <!-- PREVIEW PANEL -->
+  <!-- PREVIEW -->
   <section class="preview-wrap panel" id="previewPanel">
     <div class="preview-bar">
-      <span class="preview-label">Live Preview</span>
+      <span style="font-weight:700;font-size:13px;">Live Preview</span>
+      <div class="preview-zoom">
+        <button class="icon-btn" id="zoomOut">−</button>
+        <span style="font-size:12px;font-weight:600;min-width:36px;text-align:center;" id="zoomLabel">100%</span>
+        <button class="icon-btn" id="zoomIn">+</button>
+        <button class="icon-btn" id="zoomFit" title="Fit to width">⤢</button>
+      </div>
     </div>
     <div class="preview-scroll" id="previewScroll">
       <div class="preview-frame-holder" id="previewHolder">
@@ -613,107 +718,135 @@ button { cursor: pointer; border: 0; background: none; }
       </div>
     </div>
   </section>
+
 </main>
 
-<!-- FOOTER (Mobile) -->
+<!-- FOOTER (mobile) -->
 <footer class="app-footer">
   <button class="footer-btn btn-save" id="saveBtn">💾 Save</button>
-  <button class="footer-btn btn-pdf" id="pdfBtn">📥 Download PDF</button>
+  <button class="footer-btn btn-pdf" id="pdfBtn">📥 PDF</button>
 </footer>
 
-<!-- ============================================================
-     JAVASCRIPT ENGINE
-     ============================================================ -->
+<!-- Toast host -->
+<div class="toast-host" id="toastHost"></div>
+
+<!-- Modals -->
+<div class="modal" id="shareModal">
+  <div class="modal-box">
+    <h3>🔗 Share Biodata</h3>
+    <p>Anyone with this link can view your biodata (data is encoded in URL).</p>
+    <div class="fld">
+      <input id="shareUrl" readonly style="font-size:12px;">
+    </div>
+    <div style="display:flex; gap:8px; margin-top:16px; justify-content:flex-end;">
+      <button class="btn-sm" id="copyUrlBtn">Copy</button>
+      <button class="btn-sm" onclick="document.getElementById('shareModal').classList.remove('open')">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
 'use strict';
 
+/* =====================================================
+   UTILITIES
+   ===================================================== */
 const $ = id => document.getElementById(id);
+const $$ = sel => document.querySelectorAll(sel);
 
-/* ============================================================
-   4000+ TEMPLATE ENGINE
-   Layouts × Colors × Fonts
-   ============================================================ */
+function toast(msg, type = 'info') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  $('toastHost').appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
 
-// --- 13 Layouts ---
+function safeJSON(o) {
+  try { return JSON.stringify(o); } catch (e) { return '{}'; }
+}
+
+/* =====================================================
+   TEMPLATE ENGINE — 12,000 combinations
+   ===================================================== */
 const LAYOUTS = [
   'classic', 'sidebar', 'banner', 'corporate', 'cards',
   'split', 'minimal', 'timeline', 'editorial', 'traditional',
-  'magazine', 'executive', 'vintage'
+  'magazine', 'executive', 'vintage', 'gradient', 'geometric'
 ];
 
-// --- 24+ Colour Families (curated) ---
 const COLORS = [
   { n: 'Royal Maroon', p: '#6B0F1A', a: '#D4A853', t: '#FAF4E2', k: '#30242A' },
-  { n: 'Navy Gold',    p: '#183153', a: '#D9A441', t: '#FAF0DA', k: '#1D2939' },
-  { n: 'Emerald',      p: '#064E3B', a: '#D4A853', t: '#F3F8F0', k: '#1E293B' },
-  { n: 'Midnight',     p: '#111827', a: '#C6A15B', t: '#F1EADD', k: '#202633' },
-  { n: 'Rose Gold',    p: '#8F3D58', a: '#E7A7B8', t: '#FDF0F4', k: '#392832' },
-  { n: 'Sky Blue',     p: '#1D4E89', a: '#62B6E8', t: '#F0F8FE', k: '#1E3348' },
-  { n: 'Forest',       p: '#244B3A', a: '#B6A36A', t: '#F4F5E9', k: '#26372D' },
-  { n: 'Coral',        p: '#A64245', a: '#F2A07B', t: '#FDEEE7', k: '#3B2929' },
-  { n: 'Plum',         p: '#54264D', a: '#D6A0C7', t: '#FAEDF6', k: '#382A39' },
-  { n: 'Charcoal',     p: '#252525', a: '#D7B56D', t: '#F6F0E4', k: '#292929' },
-  { n: 'Sapphire',     p: '#123B70', a: '#75B7E8', t: '#F0F8FE', k: '#1D2D40' },
-  { n: 'Ruby',         p: '#8B1E3F', a: '#F08AA5', t: '#FCEAEF', k: '#3D2630' },
-  { n: 'Ocean',        p: '#075985', a: '#67C7D8', t: '#EDF9FC', k: '#183746' },
-  { n: 'Amber',        p: '#76501D', a: '#E8B85C', t: '#FAF2DE', k: '#3B3021' },
-  { n: 'Indigo',       p: '#373078', a: '#A7A0F2', t: '#F3F1FC', k: '#2C2942' },
-  { n: 'Lagoon',       p: '#126B70', a: '#70D0C5', t: '#EBFAF7', k: '#1E3939' },
-  { n: 'Orchid',       p: '#613C79', a: '#C5A1DE', t: '#F6EFFC', k: '#332A3A' },
-  { n: 'Steel',        p: '#35465A', a: '#A9BBCB', t: '#F4F6F8', k: '#263443' },
-  { n: 'Crimson',      p: '#8E2028', a: '#E3A0A0', t: '#FBF3F3', k: '#3B292B' },
-  { n: 'Pine',         p: '#174638', a: '#A8C9A7', t: '#EEF7EF', k: '#25362D' },
+  { n: 'Navy Gold', p: '#183153', a: '#D9A441', t: '#FAF0DA', k: '#1D2939' },
+  { n: 'Emerald', p: '#064E3B', a: '#D4A853', t: '#F3F8F0', k: '#1E293B' },
+  { n: 'Midnight', p: '#111827', a: '#C6A15B', t: '#F1EADD', k: '#202633' },
+  { n: 'Rose Gold', p: '#8F3D58', a: '#E7A7B8', t: '#FDF0F4', k: '#392832' },
+  { n: 'Sky Blue', p: '#1D4E89', a: '#62B6E8', t: '#F0F8FE', k: '#1E3348' },
+  { n: 'Forest', p: '#244B3A', a: '#B6A36A', t: '#F4F5E9', k: '#26372D' },
+  { n: 'Coral', p: '#A64245', a: '#F2A07B', t: '#FDEEE7', k: '#3B2929' },
+  { n: 'Plum', p: '#54264D', a: '#D6A0C7', t: '#FAEDF6', k: '#382A39' },
+  { n: 'Charcoal', p: '#252525', a: '#D7B56D', t: '#F6F0E4', k: '#292929' },
+  { n: 'Sapphire', p: '#123B70', a: '#75B7E8', t: '#F0F8FE', k: '#1D2D40' },
+  { n: 'Ruby', p: '#8B1E3F', a: '#F08AA5', t: '#FCEAEF', k: '#3D2630' },
+  { n: 'Ocean', p: '#075985', a: '#67C7D8', t: '#EDF9FC', k: '#183746' },
+  { n: 'Amber', p: '#76501D', a: '#E8B85C', t: '#FAF2DE', k: '#3B3021' },
+  { n: 'Indigo', p: '#373078', a: '#A7A0F2', t: '#F3F1FC', k: '#2C2942' },
+  { n: 'Lagoon', p: '#126B70', a: '#70D0C5', t: '#EBFAF7', k: '#1E3939' },
+  { n: 'Orchid', p: '#613C79', a: '#C5A1DE', t: '#F6EFFC', k: '#332A3A' },
+  { n: 'Steel', p: '#35465A', a: '#A9BBCB', t: '#F4F6F8', k: '#263443' },
+  { n: 'Crimson', p: '#8E2028', a: '#E3A0A0', t: '#FBF3F3', k: '#3B292B' },
+  { n: 'Pine', p: '#174638', a: '#A8C9A7', t: '#EEF7EF', k: '#25362D' },
   { n: 'Muted Elegance', p: '#80766F', a: '#BDADA3', t: '#FFF0E5', k: '#664233' },
   { n: 'Elegant Teal', p: '#5B8A8A', a: '#C9A962', t: '#F5F0E6', k: '#2C2C2C' },
   { n: 'Blue Hydrangea', p: '#405380', a: '#6B7EB2', t: '#C8DAF5', k: '#2B2F3A' },
   { n: 'Moody Emerald', p: '#224834', a: '#A8D5BF', t: '#FDFEF5', k: '#0E260E' },
-  { n: 'Terracotta',   p: '#9C4A2F', a: '#E8B87A', t: '#FDF3E7', k: '#3D2A22' },
-  { n: 'Lavender',     p: '#5B4B8A', a: '#C3B1E1', t: '#F5F2FC', k: '#2E2A3A' },
-  { n: 'Copper',       p: '#7A4A2B', a: '#D9A05B', t: '#FAF0E6', k: '#3B2A1F' },
-  { n: 'Olive',        p: '#4B5320', a: '#C4C97A', t: '#F7F8E8', k: '#2A2E1A' },
-  { n: 'Burgundy',     p: '#5C1A2E', a: '#D4A0A7', t: '#FCE8EC', k: '#3B1A24' },
-  { n: 'Slate',        p: '#2F3E46', a: '#84A98C', t: '#F0F4F2', k: '#1B2A30' },
-  { n: 'Peach',        p: '#C75B39', a: '#F5C6A0', t: '#FEF5EF', k: '#4A2C20' },
-  { n: 'Mint',         p: '#2A6B5A', a: '#A8E6CF', t: '#F0FAF5', k: '#1E3A32' },
-  { n: 'Mustard',      p: '#8B6914', a: '#E8C84A', t: '#FCF8E8', k: '#3B3010' },
-  { n: 'Mulberry',     p: '#6B2D5C', a: '#D4A0C0', t: '#FCF0F8', k: '#3B1F32' },
-  { n: 'Denim',        p: '#1E3A5F', a: '#6B9BC3', t: '#F0F6FC', k: '#1A2A3A' },
-  { n: 'Blush',        p: '#B56576', a: '#F2C6CE', t: '#FDF0F3', k: '#4A2A30' },
-  { n: 'Graphite',     p: '#2D2D2D', a: '#B0B0B0', t: '#F5F5F5', k: '#1A1A1A' },
-  { n: 'Aqua',         p: '#0E6B7A', a: '#7AD0D8', t: '#EDFAFC', k: '#1A3A40' },
-  { n: 'Saffron',      p: '#B5651D', a: '#F0C060', t: '#FEF8ED', k: '#4A2A1A' },
-  { n: 'Pewter',       p: '#4A5A6A', a: '#A0B0C0', t: '#F4F6F8', k: '#2A3A4A' },
-  { n: 'Wine',         p: '#5E1A2A', a: '#D4A0A0', t: '#FCE8E8', k: '#3A1A1F' }
+  { n: 'Terracotta', p: '#9C4A2F', a: '#E8B87A', t: '#FDF3E7', k: '#3D2A22' },
+  { n: 'Lavender', p: '#5B4B8A', a: '#C3B1E1', t: '#F5F2FC', k: '#2E2A3A' },
+  { n: 'Copper', p: '#7A4A2B', a: '#D9A05B', t: '#FAF0E6', k: '#3B2A1F' },
+  { n: 'Olive', p: '#4B5320', a: '#C4C97A', t: '#F7F8E8', k: '#2A2E1A' },
+  { n: 'Burgundy', p: '#5C1A2E', a: '#D4A0A7', t: '#FCE8EC', k: '#3B1A24' },
+  { n: 'Slate', p: '#2F3E46', a: '#84A98C', t: '#F0F4F2', k: '#1B2A30' },
+  { n: 'Peach', p: '#C75B39', a: '#F5C6A0', t: '#FEF5EF', k: '#4A2C20' },
+  { n: 'Mint', p: '#2A6B5A', a: '#A8E6CF', t: '#F0FAF5', k: '#1E3A32' },
+  { n: 'Mustard', p: '#8B6914', a: '#E8C84A', t: '#FCF8E8', k: '#3B3010' },
+  { n: 'Mulberry', p: '#6B2D5C', a: '#D4A0C0', t: '#FCF0F8', k: '#3B1F32' },
+  { n: 'Denim', p: '#1E3A5F', a: '#6B9BC3', t: '#F0F6FC', k: '#1A2A3A' },
+  { n: 'Blush', p: '#B56576', a: '#F2C6CE', t: '#FDF0F3', k: '#4A2A30' },
+  { n: 'Graphite', p: '#2D2D2D', a: '#B0B0B0', t: '#F5F5F5', k: '#1A1A1A' },
+  { n: 'Aqua', p: '#0E6B7A', a: '#7AD0D8', t: '#EDFAFC', k: '#1A3A40' },
+  { n: 'Saffron', p: '#B5651D', a: '#F0C060', t: '#FEF8ED', k: '#4A2A1A' },
+  { n: 'Pewter', p: '#4A5A6A', a: '#A0B0C0', t: '#F4F6F8', k: '#2A3A4A' }
 ];
 
-// --- 16+ Font Pairings ---
 const FONTS = [
-  { n: 'Modern',      d: 'Montserrat',        b: 'Inter',               url: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Inter:wght@400;500&display=swap' },
-  { n: 'Classic',     d: 'Playfair Display',  b: 'Lato',                url: 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400&display=swap' },
-  { n: 'Executive',   d: 'Oswald',            b: 'Roboto',              url: 'https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Roboto:wght@400&display=swap' },
-  { n: 'Elegant',     d: 'Cormorant Garamond',b: 'Nunito Sans',         url: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Nunito+Sans:wght@400&display=swap' },
-  { n: 'Traditional', d: 'Libre Baskerville', b: 'Source Sans 3',       url: 'https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Source+Sans+3:wght@400&display=swap' },
-  { n: 'Royal',       d: 'Cinzel',            b: 'Lato',                url: 'https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400&display=swap' },
-  { n: 'Dark Premium',d: 'Fraunces',          b: 'Outfit',              url: 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Outfit:wght@400&display=swap' },
-  { n: 'Editorial',   d: 'Instrument Serif',  b: 'Instrument Sans',     url: 'https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Instrument+Sans:wght@400&display=swap' },
-  { n: 'Bold Contrast',d: 'Anton',            b: 'Martian Mono',        url: 'https://fonts.googleapis.com/css2?family=Anton&family=Martian+Mono:wght@400&display=swap' },
-  { n: 'Friendly',    d: 'Plus Jakarta Sans', b: 'Plus Jakarta Sans',   url: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap' },
-  { n: 'Neobrutalist',d: 'Space Grotesk',     b: 'Space Mono',          url: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Space+Mono:wght@400&display=swap' },
-  { n: 'Syne',        d: 'Syne',              b: 'Inter',               url: 'https://fonts.googleapis.com/css2?family=Syne:wght@700&family=Inter:wght@400&display=swap' },
-  { n: 'Art Deco',    d: 'Poiret One',        b: 'Josefin Sans',        url: 'https://fonts.googleapis.com/css2?family=Poiret+One&family=Josefin+Sans:wght@400&display=swap' },
-  { n: 'Heritage',    d: 'DM Serif Display',  b: 'DM Sans',             url: 'https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400&display=swap' },
-  { n: 'Geometric',   d: 'Sora',              b: 'Manrope',             url: 'https://fonts.googleapis.com/css2?family=Sora:wght@700&family=Manrope:wght@400&display=swap' },
-  { n: 'Editorial 2', d: 'Bodoni Moda',       b: 'Figtree',             url: 'https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@700&family=Figtree:wght@400&display=swap' }
+  { n: 'Modern', d: 'Montserrat', b: 'Inter' },
+  { n: 'Classic', d: 'Playfair Display', b: 'Lato' },
+  { n: 'Executive', d: 'Oswald', b: 'Roboto' },
+  { n: 'Elegant', d: 'Cormorant Garamond', b: 'Nunito Sans' },
+  { n: 'Traditional', d: 'Libre Baskerville', b: 'Source Sans 3' },
+  { n: 'Royal', d: 'Cinzel', b: 'Lato' },
+  { n: 'Dark Premium', d: 'Fraunces', b: 'Outfit' },
+  { n: 'Editorial', d: 'Instrument Serif', b: 'Instrument Sans' },
+  { n: 'Bold Contrast', d: 'Anton', b: 'Martian Mono' },
+  { n: 'Friendly', d: 'Plus Jakarta Sans', b: 'Plus Jakarta Sans' },
+  { n: 'Neobrutalist', d: 'Space Grotesk', b: 'Space Mono' },
+  { n: 'Syne', d: 'Syne', b: 'Inter' },
+  { n: 'Art Deco', d: 'Poiret One', b: 'Josefin Sans' },
+  { n: 'Heritage', d: 'DM Serif Display', b: 'DM Sans' },
+  { n: 'Geometric', d: 'Sora', b: 'Manrope' },
+  { n: 'Editorial 2', d: 'Bodoni Moda', b: 'Figtree' },
+  { n: 'Soft Modern', d: 'Syne', b: 'Manrope' },
+  { n: 'Classic Modern', d: 'Playfair Display', b: 'Inter' },
+  { n: 'Minimal Serif', d: 'DM Serif Display', b: 'DM Sans' },
+  { n: 'Corporate', d: 'Sora', b: 'Inter' }
 ];
 
-// --- Generate All Templates ---
 let allTemplates = [];
-
 LAYOUTS.forEach(layout => {
   COLORS.forEach(color => {
     FONTS.forEach(font => {
       allTemplates.push({
-        id: `tpl_${layout}_${color.n.replace(/\s+/g, '')}_${font.n.replace(/\s+/g, '')}`,
+        id: `t_${layout}_${color.n.replace(/\s+/g, '')}_${font.n.replace(/\s+/g, '')}`,
         layout: layout,
         name: `${color.n} ${font.n}`,
         primary: color.p,
@@ -721,29 +854,32 @@ LAYOUTS.forEach(layout => {
         tint: color.t,
         ink: color.k,
         displayFont: font.d,
-        bodyFont: font.b,
-        fontUrl: font.url
+        bodyFont: font.b
       });
     });
   });
 });
 
-// Shuffle for variety
-allTemplates.sort(() => Math.random() - 0.5);
-
 let currentTheme = allTemplates[0];
 let visibleCount = 20;
 let filterText = '';
 let filterLayout = 'all';
+let activeTab = 'all';
+let favourites = JSON.parse(localStorage.getItem('bd_favs') || '[]');
+let recent = JSON.parse(localStorage.getItem('bd_recent') || '[]');
 
-/* ============================================================
-   RENDER TEMPLATE GRID
-   ============================================================ */
+function saveFavs() { localStorage.setItem('bd_favs', safeJSON(favourites)); }
+function saveRecent() { localStorage.setItem('bd_recent', safeJSON(recent.slice(0, 12))); }
+
 function renderTemplates(reset = false) {
   const grid = $('templateGrid');
   if (reset) { grid.innerHTML = ''; visibleCount = 20; }
 
-  const filtered = allTemplates.filter(t => {
+  let source = allTemplates;
+  if (activeTab === 'fav') source = allTemplates.filter(t => favourites.includes(t.id));
+  if (activeTab === 'recent') source = recent.map(id => allTemplates.find(t => t.id === id)).filter(Boolean);
+
+  const filtered = source.filter(t => {
     const matchText = t.name.toLowerCase().includes(filterText.toLowerCase()) ||
                       t.layout.includes(filterText.toLowerCase());
     const matchLayout = filterLayout === 'all' || t.layout === filterLayout;
@@ -751,25 +887,36 @@ function renderTemplates(reset = false) {
   });
 
   grid.innerHTML = '';
-  const toShow = filtered.slice(0, visibleCount);
-
-  toShow.forEach(t => {
+  filtered.slice(0, visibleCount).forEach(t => {
     const btn = document.createElement('button');
     btn.className = `tpl-btn ${currentTheme.id === t.id ? 'active' : ''}`;
+    const isFav = favourites.includes(t.id);
     btn.innerHTML = `
+      <span class="fav ${isFav ? 'on' : ''}">${isFav ? '♥' : '♡'}</span>
       <div class="tpl-swatch">
         <div style="background:${t.primary}"></div>
         <div style="background:${t.accent}"></div>
       </div>
-      ${t.name}<br>
-      <small style="font-weight:400;color:#888;text-transform:capitalize">${t.layout}</small>
+      <div style="font-size:11px;line-height:1.2;">${t.name}</div>
+      <small style="font-weight:400;color:var(--ink-3);text-transform:capitalize;font-size:10px;">${t.layout}</small>
     `;
+    btn.querySelector('.fav').onclick = (e) => {
+      e.stopPropagation();
+      if (favourites.includes(t.id)) {
+        favourites = favourites.filter(id => id !== t.id);
+      } else {
+        favourites.push(t.id);
+      }
+      saveFavs();
+      renderTemplates();
+    };
     btn.onclick = () => {
-      document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
       currentTheme = t;
-      saveDraft();
+      recent = [t.id, ...recent.filter(id => id !== t.id)];
+      saveRecent();
+      renderTemplates();
       scheduleUpdate();
+      pushHistory();
     };
     grid.appendChild(btn);
   });
@@ -777,42 +924,52 @@ function renderTemplates(reset = false) {
   $('loadMoreBtn').style.display = filtered.length > visibleCount ? 'block' : 'none';
 }
 
-$('searchTpl').addEventListener('input', (e) => { filterText = e.target.value; renderTemplates(true); });
-$('filterLayout').addEventListener('change', (e) => { filterLayout = e.target.value; renderTemplates(true); });
-$('loadMoreBtn').addEventListener('click', () => { visibleCount += 20; renderTemplates(); });
-renderTemplates(true);
+$$('.tpl-tab').forEach(tab => {
+  tab.onclick = () => {
+    $$('.tpl-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    activeTab = tab.dataset.tab;
+    renderTemplates(true);
+  };
+});
+$('searchTpl').oninput = (e) => { filterText = e.target.value; renderTemplates(true); };
+$('filterLayout').onchange = (e) => { filterLayout = e.target.value; renderTemplates(true); };
+$('loadMoreBtn').onclick = () => { visibleCount += 20; renderTemplates(); };
 
-/* ============================================================
-   FORM HANDLING
-   ============================================================ */
-const FIELDS = [
-  'name','dob','gender','height','weight','blood','marital','religion',
-  'caste','gotra','rashi','nakshatra','manglik','profile','phone','email',
-  'address','father','father_job','mother','mother_job','brothers','sisters',
-  'experience','skills','languages','hobbies','declaration','place','date',
-  'education_simple', 'language'
+/* =====================================================
+   FORM FIELDS
+   ===================================================== */
+const TEXT_FIELDS = [
+  'name','dob','gender','weight','blood','marital','religion','caste',
+  'gotra','rashi','nakshatra','manglik','profile','phone','email','address',
+  'father','father_job','mother','mother_job','brothers','sisters',
+  'experience','languages','hobbies','declaration','place','date',
+  'education_simple','language','watermark_text'
 ];
 
 let photoData = '';
-const STORAGE_KEY = 'biodata-pro-v9';
-
 let eduData = [];
+let skillData = [];
 
-function addEduRow(data = { level: '', board: '', institute: '', year: '', score: '' }) {
+const STORAGE_KEY = 'bd_main_v10';
+const DRAFT_KEY = 'bd_drafts_v10';
+
+/* ---- Education ---- */
+function addEduRow(data = {}) {
   const container = $('edu-rows-container');
   const row = document.createElement('div');
   row.className = 'edu-row';
   row.innerHTML = `
-    <button type="button" class="btn-danger" onclick="this.parentElement.remove(); collectEduData();">X</button>
+    <button type="button" class="del" onclick="this.parentElement.remove(); collectEduData();">✕</button>
     <div class="fld-row">
-      <div class="fld" style="margin-bottom:0"><label>Degree</label><input class="edu-level" value="${data.level}" placeholder="B.Tech"></div>
-      <div class="fld" style="margin-bottom:0"><label>Board</label><input class="edu-board" value="${data.board}" placeholder="CBSE"></div>
+      <div class="fld" style="margin-bottom:0"><label>Degree</label><input class="edu-level" value="${data.level || ''}" placeholder="B.Tech"></div>
+      <div class="fld" style="margin-bottom:0"><label>Board</label><input class="edu-board" value="${data.board || ''}" placeholder="CBSE"></div>
     </div>
     <div class="fld-row" style="margin-top:8px;">
-      <div class="fld" style="margin-bottom:0"><label>Institute</label><input class="edu-institute" value="${data.institute}" placeholder="College Name"></div>
-      <div class="fld" style="margin-bottom:0"><label>Year</label><input class="edu-year" value="${data.year}" placeholder="2022"></div>
+      <div class="fld" style="margin-bottom:0"><label>Institute</label><input class="edu-institute" value="${data.institute || ''}" placeholder="College"></div>
+      <div class="fld" style="margin-bottom:0"><label>Year</label><input class="edu-year" value="${data.year || ''}" placeholder="2022"></div>
     </div>
-    <div class="fld" style="margin-top:8px;margin-bottom:0"><label>Score</label><input class="edu-score" value="${data.score}" placeholder="8.5 CGPA"></div>
+    <div class="fld" style="margin-top:8px;margin-bottom:0"><label>Score</label><input class="edu-score" value="${data.score || ''}" placeholder="8.5 CGPA"></div>
   `;
   container.appendChild(row);
 }
@@ -831,117 +988,136 @@ function collectEduData() {
 
 $('addEduBtn').onclick = () => addEduRow();
 $('edu-rows-container').addEventListener('input', collectEduData);
-
-document.querySelectorAll('input[name="edu_mode"]').forEach(r => {
-  r.onchange = (e) => {
-    const isDet = e.target.value === 'detailed';
-    $('edu-detailed-box').style.display = isDet ? 'block' : 'none';
-    $('edu-simple-box').style.display = isDet ? 'none' : 'block';
-    scheduleUpdate();
-    saveDraft();
-  };
+$$('input[name="edu_mode"]').forEach(r => r.onchange = (e) => {
+  const isDet = e.target.value === 'detailed';
+  $('edu-detailed-box').style.display = isDet ? 'block' : 'none';
+  $('edu-simple-box').style.display = isDet ? 'none' : 'block';
+  scheduleUpdate();
+  saveDraft();
 });
 
-$('declarationPreset').onchange = (e) => {
-  if (e.target.value) {
-    $('declaration').value = e.target.value;
-    scheduleUpdate();
-    saveDraft();
-  }
-};
+/* ---- Skills ---- */
+function addSkillRow(data = { name: '', level: 75 }) {
+  const row = document.createElement('div');
+  row.className = 'skill-row';
+  row.innerHTML = `
+    <input class="skill-name" value="${data.name}" placeholder="Python">
+    <input type="range" class="skill-level" min="0" max="100" value="${data.level}">
+    <button type="button" class="del" onclick="this.parentElement.remove(); collectSkills();">✕</button>
+  `;
+  $('skillsList').appendChild(row);
+}
 
-/* ============================================================
-   DATA COLLECTION
-   ============================================================ */
+function collectSkills() {
+  skillData = Array.from(document.querySelectorAll('.skill-row')).map(r => ({
+    name: r.querySelector('.skill-name').value.trim(),
+    level: parseInt(r.querySelector('.skill-level').value) || 75
+  })).filter(s => s.name);
+  scheduleUpdate();
+  saveDraft();
+}
+
+$('addSkillBtn').onclick = () => addSkillRow();
+$('skillsList').addEventListener('input', collectSkills);
+
+/* =====================================================
+   STATE COLLECT
+   ===================================================== */
 function collectData() {
   const data = { theme: currentTheme };
-  FIELDS.forEach(id => { data[id] = ($(id)?.value || '').trim(); });
+  TEXT_FIELDS.forEach(id => { data[id] = ($(id)?.value || '').trim(); });
   data.education_mode = document.querySelector('input[name="edu_mode"]:checked').value;
   data.education_list = eduData;
-
-  const ft = $('height_ft').value;
-  const inch = $('height_in').value;
-  data.height = ft && inch ? `${ft} ft ${inch} in` : (ft ? `${ft} ft` : (inch ? `${inch} in` : ''));
-
+  data.skills = skillData.map(s => `${s.name} | ${s.level}`).join('\n');
+  data.height_ft = $('height_ft').value;
+  data.height_in = $('height_in').value;
+  data.photo = photoData;
+  data.watermark = $('optWatermark').checked;
+  data.show_pagenum = $('optPagenum').checked;
   return data;
 }
 
-/* ============================================================
-   PREVIEW UPDATE
-   ============================================================ */
-let previewTimer = null;
+/* =====================================================
+   HISTORY (Undo/Redo)
+   ===================================================== */
+const history = [];
+const future = [];
+let lastSnapshot = '';
 
-function scheduleUpdate() {
-  clearTimeout(previewTimer);
-  previewTimer = setTimeout(updatePreview, 300);
-}
-
-function injectPhotoIntoFrame(frame) {
-  try {
-    const doc = frame.contentDocument;
-    if (!doc) return;
-    const box = doc.getElementById('photoBox');
-    const photo = doc.getElementById('profilePhoto');
-    if (box) box.style.display = photoData ? 'block' : 'none';
-    if (photo && photoData) {
-      photo.src = photoData;
-      photo.style.display = 'block';
-    }
-  } catch (e) { /* cross-origin fallback */ }
-}
-
-function updatePreview() {
-  return new Promise(async (resolve) => {
-    try {
-      // Build HTML for preview by injecting data into a hidden template
-      const html = buildTemplateHTML(collectData());
-      const frame = $('previewFrame');
-      frame.onload = () => { injectPhotoIntoFrame(frame); fitPreview(); resolve(); };
-      frame.srcdoc = html;
-    } catch (e) {
-      console.error('Preview error:', e);
-      resolve();
-    }
+function snapshot() {
+  return safeJSON({
+    data: collectData(),
+    eduData,
+    skillData,
+    photoData
   });
 }
 
-/* ============================================================
-   FIT PREVIEW
-   ============================================================ */
-function fitPreview() {
-  const scroll = $('previewScroll');
-  const holder = $('previewHolder');
-  const frame = $('previewFrame');
-  if (!scroll || !frame) return;
-  const scale = Math.min(1, (scroll.clientWidth - 40) / 794);
-  frame.style.transform = `scale(${scale})`;
-  holder.style.width = (794 * scale) + 'px';
-  holder.style.height = (1123 * scale) + 'px';
+function pushHistory() {
+  const s = snapshot();
+  if (s !== lastSnapshot) {
+    history.push(s);
+    if (history.length > 30) history.shift();
+    future.length = 0;
+    lastSnapshot = s;
+  }
 }
 
-/* ============================================================
-   EVENT LISTENERS
-   ============================================================ */
-FIELDS.forEach(id => {
-  const el = $(id);
-  if (el) {
-    el.addEventListener(
-      (el.tagName === 'SELECT' || el.type === 'date') ? 'change' : 'input',
-      () => { scheduleUpdate(); saveDraft(); }
-    );
-  }
-});
+function applySnapshot(snap) {
+  try {
+    const s = JSON.parse(snap);
+    TEXT_FIELDS.forEach(id => { if ($(id) && s.data[id] !== undefined) $(id).value = s.data[id]; });
+    $('height_ft').value = s.data.height_ft || '';
+    $('height_in').value = s.data.height_in || '';
+    currentTheme = s.data.theme || currentTheme;
+    photoData = s.photoData || '';
+    updatePhotoPreview();
 
-['height_ft', 'height_in', 'language'].forEach(id => {
-  $(id).onchange = () => { scheduleUpdate(); saveDraft(); };
-});
+    eduData = s.eduData || [];
+    $('edu-rows-container').innerHTML = '';
+    eduData.forEach(r => addEduRow(r));
 
-/* ============================================================
-   PHOTO HANDLING
-   ============================================================ */
+    skillData = s.skillData || [];
+    $('skillsList').innerHTML = '';
+    skillData.forEach(r => addSkillRow(r));
+
+    renderTemplates();
+    updateProgress();
+    scheduleUpdate();
+  } catch (e) { console.error(e); }
+}
+
+$('undoBtn').onclick = () => {
+  if (history.length < 2) return toast('Nothing to undo', 'info');
+  const cur = history.pop();
+  future.push(cur);
+  applySnapshot(history[history.length - 1]);
+  toast('Undo', 'info');
+};
+
+$('redoBtn').onclick = () => {
+  if (!future.length) return toast('Nothing to redo', 'info');
+  const s = future.pop();
+  history.push(s);
+  applySnapshot(s);
+  toast('Redo', 'info');
+};
+
+/* =====================================================
+   PHOTO
+   ===================================================== */
+$('uploadBtn').onclick = () => $('photoFile').click();
+$('removePhotoBtn').onclick = () => {
+  photoData = '';
+  updatePhotoPreview();
+  scheduleUpdate();
+  saveDraft();
+};
+
 $('photoFile').onchange = (e) => {
   const file = e.target.files?.[0];
   if (!file) return;
+  if (file.size > 5 * 1024 * 1024) return toast('Image must be under 5 MB', 'error');
   const reader = new FileReader();
   reader.onload = (ev) => {
     const img = new Image();
@@ -951,24 +1127,135 @@ $('photoFile').onchange = (e) => {
       let w = img.width, h = img.height;
       if (w > MAX || h > MAX) {
         const r = Math.min(MAX / w, MAX / h);
-        w = Math.round(w * r);
-        h = Math.round(h * r);
+        w = Math.round(w * r); h = Math.round(h * r);
       }
-      canvas.width = w;
-      canvas.height = h;
+      canvas.width = w; canvas.height = h;
       canvas.getContext('2d').drawImage(img, 0, 0, w, h);
       photoData = canvas.toDataURL('image/jpeg', 0.85);
+      updatePhotoPreview();
       scheduleUpdate();
       saveDraft();
+      toast('Photo uploaded', 'success');
     };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 };
 
-/* ============================================================
-   SAVE / RESTORE DRAFT
-   ============================================================ */
+function updatePhotoPreview() {
+  const el = $('photoPrev');
+  if (photoData) {
+    el.innerHTML = `<img src="${photoData}" alt="Photo">`;
+    $('removePhotoBtn').style.display = 'block';
+  } else {
+    el.innerHTML = 'No photo';
+    $('removePhotoBtn').style.display = 'none';
+  }
+}
+
+/* =====================================================
+   VOICE INPUT
+   ===================================================== */
+$('voiceBtn').onclick = () => {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return toast('Voice input not supported in this browser', 'error');
+  const rec = new SR();
+  rec.lang = $('language').value === 'en' ? 'en-IN' : $('language').value + '-IN';
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+  rec.onstart = () => toast('Listening...', 'info');
+  rec.onresult = (e) => {
+    const text = e.results[0][0].transcript;
+    $('profile').value = ($('profile').value + ' ' + text).trim();
+    $('profileCount').textContent = `${$('profile').value.length} / 600`;
+    scheduleUpdate();
+    saveDraft();
+    toast('Transcribed', 'success');
+  };
+  rec.onerror = () => toast('Voice error', 'error');
+  rec.start();
+};
+
+/* =====================================================
+   PROGRESS + VALIDATION
+   ===================================================== */
+function updateProgress() {
+  const checks = [
+    !!$('name').value.trim(),
+    !!$('dob').value,
+    !!$('gender').value,
+    !!$('phone').value.trim() || !!$('email').value.trim(),
+    !!$('address').value.trim(),
+    !!$('father').value.trim(),
+    !!$('mother').value.trim(),
+    eduData.length > 0 || !!$('education_simple').value.trim(),
+    skillData.length > 0,
+    !!$('declaration').value.trim()
+  ];
+  const done = checks.filter(Boolean).length;
+  const pct = Math.round((done / checks.length) * 100);
+  $('progressFill').style.width = pct + '%';
+  $('progressPct').textContent = pct + '%';
+}
+
+function validate() {
+  const errs = [];
+  if (!$('name').value.trim()) errs.push('Name is required');
+  if (!$('phone').value.trim() && !$('email').value.trim()) errs.push('At least one contact required');
+  return errs;
+}
+
+/* =====================================================
+   PREVIEW
+   ===================================================== */
+let previewTimer = null;
+function scheduleUpdate() {
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(() => { updatePreview(); updateProgress(); }, 350);
+}
+
+async function updatePreview() {
+  try {
+    const res = await fetch('/api/preview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: safeJSON(collectData())
+    });
+    if (!res.ok) throw new Error('Preview failed');
+    const html = await res.text();
+    const frame = $('previewFrame');
+    frame.onload = () => fitPreview();
+    frame.srcdoc = html;
+  } catch (e) {
+    $('previewFrame').srcdoc = `
+      <html><body style="font-family:system-ui;padding:40px;text-align:center;color:#64748b;">
+        <h2>⚠ Preview unavailable</h2>
+        <p>Backend server is not reachable. Please ensure app.py is running.</p>
+      </body></html>`;
+  }
+}
+
+let zoom = 1;
+function fitPreview() {
+  const scroll = $('previewScroll');
+  const holder = $('previewHolder');
+  const frame = $('previewFrame');
+  if (!scroll || !frame) return;
+  const base = Math.min(1, (scroll.clientWidth - 40) / 794);
+  const scale = base * zoom;
+  frame.style.transform = `scale(${scale})`;
+  holder.style.width = (794 * scale) + 'px';
+  holder.style.height = (1123 * scale) + 'px';
+  $('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+}
+
+$('zoomIn').onclick = () => { zoom = Math.min(2, zoom + 0.1); fitPreview(); };
+$('zoomOut').onclick = () => { zoom = Math.max(0.4, zoom - 0.1); fitPreview(); };
+$('zoomFit').onclick = () => { zoom = 1; fitPreview(); };
+
+/* =====================================================
+   SAVE / DRAFTS
+   ===================================================== */
 function saveDraft() {
   try {
     const draft = {
@@ -976,635 +1263,360 @@ function saveDraft() {
       photo: photoData,
       values: {},
       eduMode: document.querySelector('input[name="edu_mode"]:checked').value,
-      eduData: eduData
+      eduData: eduData,
+      skillData: skillData,
+      options: {
+        watermark: $('optWatermark').checked,
+        pagenum: $('optPagenum').checked
+      }
     };
-    FIELDS.forEach(id => { draft.values[id] = $(id)?.value || ''; });
+    TEXT_FIELDS.forEach(id => { draft.values[id] = $(id)?.value || ''; });
     draft.values.height_ft = $('height_ft').value;
     draft.values.height_in = $('height_in').value;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+    localStorage.setItem(STORAGE_KEY, safeJSON(draft));
     $('statusPill').textContent = '✓ Saved';
     setTimeout(() => $('statusPill').textContent = 'Auto-save', 1500);
-  } catch (e) { /* ignore quota errors */ }
+  } catch (e) { /* quota */ }
 }
 
 function restoreDraft() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
-    const draft = JSON.parse(raw);
-
-    if (draft.values) {
-      FIELDS.forEach(id => { if ($(id)) $(id).value = draft.values[id] || ''; });
-      $('height_ft').value = draft.values.height_ft || '';
-      $('height_in').value = draft.values.height_in || '';
+    const d = JSON.parse(raw);
+    if (d.values) {
+      TEXT_FIELDS.forEach(id => { if ($(id)) $(id).value = d.values[id] || ''; });
+      $('height_ft').value = d.values.height_ft || '';
+      $('height_in').value = d.values.height_in || '';
     }
-
-    if (draft.eduMode) {
-      document.querySelector(`input[name="edu_mode"][value="${draft.eduMode}"]`).checked = true;
-      $('edu-detailed-box').style.display = draft.eduMode === 'detailed' ? 'block' : 'none';
-      $('edu-simple-box').style.display = draft.eduMode === 'simple' ? 'block' : 'none';
+    if (d.eduMode) {
+      const el = document.querySelector(`input[name="edu_mode"][value="${d.eduMode}"]`);
+      if (el) el.checked = true;
+      $('edu-detailed-box').style.display = d.eduMode === 'detailed' ? 'block' : 'none';
+      $('edu-simple-box').style.display = d.eduMode === 'simple' ? 'block' : 'none';
     }
-
-    if (draft.eduData) draft.eduData.forEach(r => addEduRow(r));
-
-    if (draft.theme) {
-      currentTheme = draft.theme;
-      document.querySelectorAll('.tpl-btn').forEach(b =>
-        b.classList.toggle('active', b.innerHTML.includes(draft.theme.name))
-      );
+    (d.eduData || []).forEach(r => addEduRow(r));
+    (d.skillData || []).forEach(r => addSkillRow(r));
+    if (d.theme) currentTheme = d.theme;
+    if (d.photo) photoData = d.photo;
+    if (d.options) {
+      $('optWatermark').checked = !!d.options.watermark;
+      $('optPagenum').checked = !!d.options.pagenum;
     }
-
-    if (draft.photo) photoData = draft.photo;
-  } catch (e) { /* ignore corrupted data */ }
+    updatePhotoPreview();
+    $('profileCount').textContent = `${$('profile').value.length} / 600`;
+  } catch (e) { console.error(e); }
 }
 
-$('saveBtn').onclick = saveDraft;
+$('saveBtn').onclick = () => { saveDraft(); toast('Draft saved', 'success'); };
 
-/* ============================================================
-   PDF DOWNLOAD (Client-Side using html2pdf.js)
-   ============================================================ */
-async function downloadPDF() {
-  const btn = $('pdfBtn');
-  btn.disabled = true;
-  btn.textContent = '⏳ Generating...';
+/* ---- Multi-draft ---- */
+function getDrafts() {
+  try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || '[]'); } catch (e) { return []; }
+}
+function setDrafts(d) { localStorage.setItem(DRAFT_KEY, safeJSON(d)); }
 
-  try {
-    // Build the final HTML (same as preview)
-    const html = buildTemplateHTML(collectData());
-
-    // Create a hidden container
-    const container = document.createElement('div');
-    container.style.position = 'fixed';
-    container.style.left = '-9999px';
-    container.style.top = '0';
-    container.style.width = '210mm';
-    container.innerHTML = html;
-    document.body.appendChild(container);
-
-    // Use html2pdf.js
-    const element = container.querySelector('.page');
-    const opt = {
-      margin: 0,
-      filename: ($('name').value || 'Biodata') + '.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    await html2pdf().set(opt).from(element).save();
-
-    document.body.removeChild(container);
-    btn.textContent = '✓ Done';
-    setTimeout(() => btn.textContent = '📥 Download PDF', 2000);
-  } catch (e) {
-    console.error('PDF error:', e);
-    alert('PDF generation failed. Please try again.');
-    btn.textContent = '📥 Download PDF';
-  } finally {
-    btn.disabled = false;
-  }
+function renderDrafts() {
+  const drafts = getDrafts();
+  const el = $('draftList');
+  if (!drafts.length) { el.innerHTML = '<p style="font-size:12px;color:var(--ink-3);">No saved drafts yet.</p>'; return; }
+  el.innerHTML = drafts.map((d, i) => `
+    <div class="draft-row">
+      <span style="flex:1;font-weight:700;">${d.name || 'Untitled'}</span>
+      <span style="color:var(--ink-3);font-size:11px;">${d.date || ''}</span>
+      <button onclick="loadDraft(${i})">Load</button>
+      <button onclick="deleteDraft(${i})">✕</button>
+    </div>
+  `).join('');
 }
 
-$('pdfBtn').onclick = downloadPDF;
+window.loadDraft = function(i) {
+  const drafts = getDrafts();
+  if (!drafts[i]) return;
+  localStorage.setItem(STORAGE_KEY, safeJSON(drafts[i].data));
+  restoreDraft();
+  updateProgress();
+  scheduleUpdate();
+  toast('Draft loaded', 'success');
+};
 
-/* ============================================================
-   TEMPLATE HTML BUILDER (pure JavaScript, no Jinja)
-   ============================================================ */
-function buildTemplateHTML(data) {
-  const t = data.theme;
-  const layout = t.layout;
-  const isRound = ['sidebar', 'cards', 'editorial', 'classic'].includes(layout);
+window.deleteDraft = function(i) {
+  const drafts = getDrafts();
+  drafts.splice(i, 1);
+  setDrafts(drafts);
+  renderDrafts();
+  toast('Draft deleted', 'info');
+};
 
-  // Build labels
-  const labels = {
-    contact: 'Contact Details',
-    personal: 'Personal Details',
-    family: 'Family Details',
-    skills: 'Skills',
-    additional: 'Additional Details',
-    profile: 'Profile / Objective',
-    education: 'Education',
-    experience: 'Work Experience',
-    declaration: 'Declaration',
-    dob: 'Date of Birth',
-    gender: 'Gender',
-    height: 'Height',
-    weight: 'Weight',
-    blood: 'Blood Group',
-    marital: 'Marital Status',
-    religion: 'Religion',
-    caste: 'Caste / Community',
-    gotra: 'Gotra',
-    rashi: 'Rashi',
-    nakshatra: 'Nakshatra',
-    manglik: 'Manglik',
-    phone: 'Mobile Number',
-    email: 'Email',
-    address: 'Address',
-    father: 'Father',
-    mother: 'Mother',
-    brothers: 'Brothers',
-    sisters: 'Sisters',
-    languages: 'Languages',
-    hobbies: 'Hobbies',
-    place: 'Place',
-    signature: 'Signature'
+window.saveDraftAs = function() {
+  const name = prompt('Draft name:', 'Draft ' + (getDrafts().length + 1));
+  if (!name) return;
+  const drafts = getDrafts();
+  if (drafts.length >= 5) return toast('Max 5 drafts', 'error');
+  drafts.push({
+    name,
+    date: new Date().toLocaleDateString('en-IN'),
+    data: JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
+  });
+  setDrafts(drafts);
+  renderDrafts();
+  toast('Saved as draft', 'success');
+};
+
+/* =====================================================
+   IMPORT / EXPORT / SHARE
+   ===================================================== */
+$('exportBtn').onclick = () => {
+  const data = collectData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = ($('name').value || 'biodata') + '.json';
+  a.click();
+  toast('Exported', 'success');
+};
+
+$('importBtn').onclick = () => $('importFile').click();
+$('importFile').onchange = (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      TEXT_FIELDS.forEach(id => { if ($(id) && data[id] !== undefined) $(id).value = data[id]; });
+      if (data.theme) currentTheme = data.theme;
+      if (data.photo) photoData = data.photo;
+      eduData = data.education_list || [];
+      $('edu-rows-container').innerHTML = '';
+      eduData.forEach(r => addEduRow(r));
+      skillData = (data.skills || '').split('\n').filter(Boolean).map(line => {
+        const [n, l] = line.split('|');
+        return { name: n.trim(), level: parseInt(l) || 75 };
+      });
+      $('skillsList').innerHTML = '';
+      skillData.forEach(r => addSkillRow(r));
+      updatePhotoPreview();
+      renderTemplates();
+      updateProgress();
+      scheduleUpdate();
+      toast('Imported', 'success');
+    } catch (err) {
+      toast('Invalid file', 'error');
+    }
   };
+  reader.readAsText(file);
+};
 
-  // Build skills list
-  const skillsList = (data.skills || '').split('\n')
-    .map(line => {
-      const parts = line.split('|');
-      return {
-        name: parts[0]?.trim() || '',
-        level: parseInt(parts[1]) || 80
-      };
-    })
-    .filter(s => s.name);
-
-  // Build education HTML
-  let eduHTML = '';
-  if (data.education_mode === 'detailed' && data.education_list?.length) {
-    eduHTML = data.education_list.map(edu => `
-      <div class="edu-item">
-        <div class="edu-header">
-          <span>${edu.level || ''}</span>
-          <span>${edu.score || ''}</span>
-        </div>
-        <div class="edu-sub">${edu.institute || ''}</div>
-        <div class="edu-meta">
-          ${edu.board ? `<span>${edu.board}</span>` : ''}
-          ${edu.year ? `<span>${edu.year}</span>` : ''}
-        </div>
-      </div>
-    `).join('');
-  } else if (data.education_simple) {
-    eduHTML = `<div class="block">${data.education_simple}</div>`;
+$('shareBtn').onclick = () => {
+  try {
+    const data = collectData();
+    data.photo = ''; // don't include heavy photo
+    const encoded = btoa(encodeURIComponent(JSON.stringify(data)));
+    const url = window.location.origin + window.location.pathname + '#d=' + encoded;
+    if (url.length > 8000) return toast('Data too large to share', 'error');
+    $('shareUrl').value = url;
+    $('shareModal').classList.add('open');
+  } catch (e) {
+    toast('Share failed', 'error');
   }
+};
 
-  // Build photo HTML
-  const photoHTML = data.photo
-    ? `<div class="photo" id="photoBox"><img id="profilePhoto" src="${data.photo}" alt="Profile"></div>`
-    : `<div class="photo" id="photoBox" style="display:none"><img id="profilePhoto" alt="Profile"></div>`;
+$('copyUrlBtn').onclick = () => {
+  $('shareUrl').select();
+  document.execCommand('copy');
+  toast('URL copied', 'success');
+};
 
-  // Determine which sections go to sidebar vs main
-  const sidebarSections = [];
-  const mainSections = [];
-
-  // Sidebar: contact, personal, family, skills, additional
-  if (data.phone || data.email || data.address) {
-    sidebarSections.push(`
-      <section class="section">
-        <h2 class="section-title"><span class="mark">1.</span> ${labels.contact}</h2>
-        <div class="grid">
-          ${data.phone ? `<div class="label">${labels.phone}</div><div class="value">${data.phone}</div>` : ''}
-          ${data.email ? `<div class="label">${labels.email}</div><div class="value">${data.email}</div>` : ''}
-          ${data.address ? `<div class="label">${labels.address}</div><div class="value">${data.address}</div>` : ''}
-        </div>
-      </section>
-    `);
-  }
-
-  if (data.dob || data.gender || data.height || data.weight || data.religion ||
-      data.caste || data.blood || data.marital || data.gotra || data.rashi ||
-      data.nakshatra || data.manglik) {
-    const personalPairs = [
-      [labels.dob, data.dob], [labels.gender, data.gender],
-      [labels.height, data.height], [labels.weight, data.weight],
-      [labels.blood, data.blood], [labels.marital, data.marital],
-      [labels.religion, data.religion], [labels.caste, data.caste],
-      [labels.gotra, data.gotra], [labels.rashi, data.rashi],
-      [labels.nakshatra, data.nakshatra], [labels.manglik, data.manglik]
-    ].filter(([, v]) => v);
-
-    sidebarSections.push(`
-      <section class="section">
-        <h2 class="section-title"><span class="mark">2.</span> ${labels.personal}</h2>
-        <div class="grid">
-          ${personalPairs.map(([l, v]) => `<div class="label">${l}</div><div class="value">${v}</div>`).join('')}
-        </div>
-      </section>
-    `);
-  }
-
-  if (data.father || data.mother || data.brothers || data.sisters) {
-    sidebarSections.push(`
-      <section class="section">
-        <h2 class="section-title"><span class="mark">3.</span> ${labels.family}</h2>
-        <div class="grid">
-          ${data.father ? `<div class="label">${labels.father}</div><div class="value">${data.father}${data.father_job ? ` — ${data.father_job}` : ''}</div>` : ''}
-          ${data.mother ? `<div class="label">${labels.mother}</div><div class="value">${data.mother}${data.mother_job ? ` — ${data.mother_job}` : ''}</div>` : ''}
-          ${data.brothers ? `<div class="label">${labels.brothers}</div><div class="value">${data.brothers}</div>` : ''}
-          ${data.sisters ? `<div class="label">${labels.sisters}</div><div class="value">${data.sisters}</div>` : ''}
-        </div>
-      </section>
-    `);
-  }
-
-  if (skillsList.length) {
-    sidebarSections.push(`
-      <section class="section">
-        <h2 class="section-title"><span class="mark">4.</span> ${labels.skills}</h2>
-        ${skillsList.map(s => `
-          <div class="skill">
-            <div class="skill-name">${s.name}</div>
-            <div class="track"><div class="fill" style="width:${s.level}%"></div></div>
-            <div class="skill-pct">${s.level}%</div>
-          </div>
-        `).join('')}
-      </section>
-    `);
-  }
-
-  if (data.languages || data.hobbies) {
-    sidebarSections.push(`
-      <section class="section">
-        <h2 class="section-title"><span class="mark">5.</span> ${labels.additional}</h2>
-        <div class="grid">
-          ${data.languages ? `<div class="label">${labels.languages}</div><div class="value">${data.languages}</div>` : ''}
-          ${data.hobbies ? `<div class="label">${labels.hobbies}</div><div class="value">${data.hobbies}</div>` : ''}
-        </div>
-      </section>
-    `);
-  }
-
-  // Main: profile, education, experience, declaration
-  if (data.profile) {
-    mainSections.push(`
-      <section class="section">
-        <h2 class="section-title"><span class="mark">6.</span> ${labels.profile}</h2>
-        <div class="block">${data.profile}</div>
-      </section>
-    `);
-  }
-
-  if (eduHTML) {
-    mainSections.push(`
-      <section class="section">
-        <h2 class="section-title"><span class="mark">7.</span> ${labels.education}</h2>
-        <div style="padding:0 2mm;">${eduHTML}</div>
-      </section>
-    `);
-  }
-
-  if (data.experience) {
-    mainSections.push(`
-      <section class="section">
-        <h2 class="section-title"><span class="mark">8.</span> ${labels.experience}</h2>
-        <div class="block">${data.experience}</div>
-      </section>
-    `);
-  }
-
-  if (data.declaration) {
-    mainSections.push(`
-      <section class="section">
-        <h2 class="section-title"><span class="mark">9.</span> ${labels.declaration}</h2>
-        <div class="block">${data.declaration}</div>
-      </section>
-    `);
-  }
-
-  // Build final HTML
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${data.name || 'Biodata'}</title>
-${t.fontUrl ? `<link href="${t.fontUrl}" rel="stylesheet">` : ''}
-<style>
-:root {
-  --primary: ${t.primary};
-  --accent: ${t.accent};
-  --tint: ${t.tint};
-  --ink: ${t.ink};
-  --muted: ${t.ink}99;
-  --track: ${t.tint};
-  --display: '${t.displayFont}', serif;
-  --body: '${t.bodyFont}', sans-serif;
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:#e9edf2;color:var(--ink);font-family:var(--body);font-size:10pt;line-height:1.45}
-@page{size:A4;margin:0}
-.page{
-  width:210mm;min-height:297mm;margin:0 auto;background:#fff;position:relative;
-  padding:11mm 14mm 12mm;overflow:visible;
-}
-.page:before{
-  content:"";position:absolute;inset:5mm;border:1.2px solid var(--accent);
-  pointer-events:none;opacity:.6;
-}
-.page:after{
-  content:"";position:absolute;inset:8mm;border:.45px solid var(--accent);
-  pointer-events:none;opacity:.25;
-}
-.content{position:relative;z-index:1}
-
-/* HEADER */
-.header{
-  position:relative;text-align:center;padding:1mm 4mm 5mm;
-  border-bottom:1.5px solid var(--accent);min-height:0;
-}
-.ornament{color:var(--accent);font-size:15pt;letter-spacing:7px;margin-bottom:2mm}
-.photo{
-  width:34mm;height:40mm;margin:0 auto 3mm;padding:1.2mm;
-  border:2px solid var(--accent);
-  border-radius:${isRound ? '50%' : '3mm'};
-  background:#fff;box-shadow:0 2mm 5mm #00000018;overflow:hidden;
-}
-.photo img{
-  width:100%;height:100%;object-fit:cover;
-  border-radius:${isRound ? '50%' : '1.5mm'};display:block;
-}
-.name{
-  font-family:var(--display);font-size:27pt;line-height:1.12;
-  color:var(--primary);font-weight:800;letter-spacing:.4px;
-  overflow-wrap:anywhere;margin:0;
-}
-.contact-line{
-  margin-top:2mm;color:var(--muted);font-size:8.5pt;overflow-wrap:anywhere;
+// Load from shared URL on boot
+function loadShared() {
+  const hash = window.location.hash.slice(3);
+  if (!hash) return;
+  try {
+    const data = JSON.parse(decodeURIComponent(atob(hash)));
+    TEXT_FIELDS.forEach(id => { if ($(id) && data[id] !== undefined) $(id).value = data[id]; });
+    if (data.theme) currentTheme = data.theme;
+    toast('Loaded shared biodata', 'success');
+  } catch (e) { /* ignore */ }
 }
 
-/* BODY */
-.resume-body{display:block}
-.side-column,.main-column{min-width:0}
-.section{margin-top:5mm;break-inside:auto}
-.section-title{
-  display:flex;align-items:center;gap:2mm;margin:0 0 2.5mm;
-  color:var(--primary);font-family:var(--display);font-size:12pt;
-  font-weight:800;letter-spacing:1.1px;text-transform:uppercase;
-}
-.section-title:after{
-  content:"";height:1px;flex:1;
-  background:linear-gradient(90deg,var(--accent),transparent);
-}
-.section-title .mark{color:var(--accent);font-size:11pt;font-weight:800;min-width:15px;text-align:left}
-
-/* GRID */
-.grid{display:grid;grid-template-columns:38mm 1fr;gap:1.7mm 3mm;padding:0 2mm}
-.label{font-size:8.5pt;color:var(--muted);font-weight:700}
-.value{font-size:9.5pt;color:var(--ink);font-weight:500;white-space:pre-line;overflow-wrap:anywhere}
-.block{padding:0 2mm;white-space:pre-line;text-align:justify;overflow-wrap:anywhere}
-
-/* SKILLS */
-.skill{display:grid;grid-template-columns:38mm 1fr 10mm;gap:3mm;align-items:center;margin:2mm 2mm}
-.skill-name{font-size:9pt;font-weight:700}
-.track{height:2.2mm;background:var(--track);border-radius:10mm;overflow:hidden}
-.fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--primary));border-radius:10mm}
-.skill-pct{font-size:8pt;color:var(--muted);text-align:right}
-
-/* FOOTER */
-.footer{
-  margin-top:8mm;padding-top:3mm;border-top:1px solid var(--accent);
-  display:flex;justify-content:space-between;align-items:flex-end;
-  gap:10mm;color:var(--muted);font-size:8.5pt;break-inside:avoid;
-}
-.signature{text-align:center;min-width:42mm}
-.signature-line{height:10mm;border-bottom:1px solid var(--muted);margin-bottom:1.5mm}
-.signature-label{text-transform:uppercase;letter-spacing:1px;font-weight:700;font-size:8pt}
-
-/* EDUCATION */
-.edu-item{margin-bottom:3mm;padding-bottom:2mm;border-bottom:1px dashed var(--track)}
-.edu-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.edu-header{display:flex;justify-content:space-between;font-weight:700;font-size:10pt;color:var(--primary);margin-bottom:1mm}
-.edu-sub{font-size:9pt;color:var(--ink);margin-bottom:.5mm}
-.edu-meta{font-size:8.5pt;color:var(--muted);display:flex;gap:4mm}
-
-/* ============================================================
-   LAYOUT-SPECIFIC OVERRIDES
-   ============================================================ */
-
-/* SIDEBAR */
-.layout-sidebar .resume-body{display:grid;grid-template-columns:62mm minmax(0,1fr);gap:7mm;margin-top:4mm}
-.layout-sidebar .side-column{
-  background:var(--primary);color:#fff;padding:5mm 4mm;border-radius:2mm;align-self:start;
-}
-.layout-sidebar .side-column .section{margin-top:5mm}
-.layout-sidebar .side-column .section-title{color:#fff;font-size:10pt}
-.layout-sidebar .side-column .section-title:after{background:var(--accent)}
-.layout-sidebar .side-column .label,
-.layout-sidebar .side-column .value,
-.layout-sidebar .side-column .skill-name,
-.layout-sidebar .side-column .skill-pct{color:#fff}
-.layout-sidebar .side-column .grid{grid-template-columns:1fr;gap:1mm}
-.layout-sidebar .side-column .track{background:#ffffff55}
-.layout-sidebar .side-column .fill{background:var(--accent)}
-.layout-sidebar .side-column .skill{
-  grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:1mm 2mm;
-}
-.layout-sidebar .side-column .skill-name{grid-column:1 / -1;font-size:8.5pt}
-.layout-sidebar .side-column .track{grid-column:1;height:1.8mm}
-.layout-sidebar .side-column .skill-pct{font-size:7.5pt}
-.layout-sidebar .header{text-align:left;padding-left:5mm;border:0;min-height:0}
-.layout-sidebar .header .photo{float:left;margin:0 6mm 2mm 0}
-.layout-sidebar .header .ornament{display:none}
-.layout-sidebar .header .name{padding-top:2mm}
-
-/* BANNER */
-.layout-banner .header{
-  background:var(--primary);color:white;border:0;border-radius:2mm;padding:6mm 6mm;
-}
-.layout-banner .name{color:white}
-.layout-banner .contact-line{color:#fff;opacity:.9}
-.layout-banner .ornament{color:var(--accent)}
-.layout-banner .section-title{background:var(--tint);padding:2mm 3mm;border-radius:1mm}
-
-/* CORPORATE */
-.layout-corporate .header{
-  text-align:left;padding:2mm 5mm 4mm 7mm;border-left:4mm solid var(--accent);min-height:0;
-}
-.layout-corporate .photo{float:right;margin:0 0 2mm 7mm}
-.layout-corporate .ornament{display:none}
-.layout-corporate .name{padding-top:0}
-.layout-corporate .contact-line{max-width:125mm}
-.layout-corporate .section-title{
-  font-family:var(--body);font-size:11pt;letter-spacing:1.5px;
-  border-bottom:1px solid var(--accent);padding-bottom:1mm;
-}
-
-/* CARDS */
-.layout-cards .section{
-  background:#fff;padding:4mm;border:1px solid var(--track);
-  border-radius:3mm;box-shadow:0 1mm 3mm #0000000b;
-}
-.layout-cards .section-title{margin-bottom:3mm}
-.layout-cards .header{
-  border:0;margin-bottom:3mm;
-  background:linear-gradient(135deg,var(--tint),#fff);border-radius:4mm;
-}
-.layout-cards .photo{border-radius:50%}
-.page.layout-cards{background:var(--tint)}
-
-/* SPLIT */
-.layout-split .header{
-  background:var(--primary);color:white;text-align:left;padding:6mm 7mm;
-  border-radius:3mm 3mm 0 0;
-}
-.layout-split .name{color:white}
-.layout-split .contact-line{color:#fff}
-.layout-split .photo{float:right;margin:0 0 2mm 8mm}
-.layout-split .ornament{display:none}
-.layout-split .section-title{border-bottom:2px solid var(--accent);padding-bottom:1.5mm}
-
-/* MINIMAL */
-.layout-minimal .page:before,
-.layout-minimal .page:after{display:none}
-.layout-minimal .header{border-bottom:2px solid var(--primary);text-align:left;padding-left:0}
-.layout-minimal .ornament{display:none}
-.layout-minimal .photo{float:right;margin:0 0 2mm 8mm;border:1px solid var(--accent);box-shadow:none}
-.layout-minimal .name{padding-top:2mm}
-.layout-minimal .section-title{font-family:var(--body);font-size:10pt;letter-spacing:1.8px}
-.layout-minimal .section-title:after{background:var(--primary);opacity:.35}
-
-/* TIMELINE */
-.layout-timeline .section{border-left:2px solid var(--accent);margin-left:3mm;padding-left:5mm}
-.layout-timeline .section-title{position:relative}
-.layout-timeline .section-title:before{
-  content:"";position:absolute;left:-7.2mm;width:3mm;height:3mm;
-  background:var(--primary);border:1px solid #fff;border-radius:50%;
-}
-.layout-timeline .header{border-bottom:3px solid var(--primary)}
-.layout-timeline .ornament{letter-spacing:10px}
-
-/* EDITORIAL */
-.layout-editorial .header{text-align:left;padding:3mm 5mm 6mm;border-bottom:0}
-.layout-editorial .header:after{
-  content:"";position:absolute;left:0;bottom:0;width:45mm;height:3px;background:var(--accent);
-}
-.layout-editorial .photo{float:right;margin:0 0 2mm 8mm;border-radius:1mm}
-.layout-editorial .ornament{display:none}
-.layout-editorial .name{font-size:30pt}
-.layout-editorial .section-title{font-family:var(--body);font-size:10pt;letter-spacing:2px}
-.layout-editorial .section{margin-top:7mm}
-
-/* TRADITIONAL */
-.layout-traditional .header{padding-top:2mm;border-bottom:3px double var(--accent)}
-.layout-traditional .ornament{font-size:19pt}
-.layout-traditional .name{text-transform:uppercase;letter-spacing:1.3px}
-.layout-traditional .section-title{border-bottom:1px solid var(--accent);padding-bottom:1.5mm}
-
-/* MAGAZINE */
-.layout-magazine .header{
-  display:flex;align-items:flex-end;justify-content:space-between;
-  text-align:left;padding-bottom:2mm;border-bottom:4px solid var(--primary);
-}
-.layout-magazine .header .header-copy{flex:1}
-.layout-magazine .photo{
-  width:28mm;height:34mm;margin:0 0 0 5mm;border:none;box-shadow:none;border-radius:0;padding:0;
-}
-.layout-magazine .name{font-size:32pt;line-height:.9}
-.layout-magazine .ornament{display:none}
-.layout-magazine .resume-body{columns:2;column-gap:8mm}
-.layout-magazine .section{break-inside:avoid}
-
-/* EXECUTIVE */
-.layout-executive .header{
-  background:var(--tint);color:var(--primary);padding:5mm 6mm;
-  border-bottom:2px solid var(--primary);border-radius:0;
-}
-.layout-executive .name{color:var(--primary);font-size:24pt}
-.layout-executive .photo{float:right;margin:0 0 2mm 6mm;width:30mm;height:36mm}
-.layout-executive .section-title{
-  background:var(--primary);color:#fff;padding:1.5mm 3mm;font-size:10pt;
-}
-.layout-executive .section-title:after{display:none}
-
-/* VINTAGE */
-.layout-vintage .page{background:#FCFBF5}
-.layout-vintage .page:before{border:3px double var(--primary);inset:3mm;opacity:1}
-.layout-vintage .page:after{border:1px solid var(--primary);inset:4mm;opacity:.6}
-.layout-vintage .header{border-bottom:1px solid var(--primary)}
-.layout-vintage .name{font-family:'Libre Baskerville',serif;font-size:24pt}
-.layout-vintage .photo{border-radius:0;border:1px solid var(--primary);padding:1mm}
-.layout-vintage .photo img{border-radius:0}
-.layout-vintage .section-title{
-  font-family:'Libre Baskerville',serif;text-transform:none;
-  border-bottom:1px dashed var(--primary);padding-bottom:1mm;
-}
-.layout-vintage .section-title:after{display:none}
-
-/* PRINT */
-@media print{
-  html,body{background:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .page{width:210mm;min-height:0;margin:0;padding:11mm 14mm 12mm;overflow:visible;box-shadow:none}
-  .page:before,.page:after{position:fixed;inset:5mm}
-  .page:after{inset:8mm}
-  .header,.section-title,.grid,.skill,.footer,.photo,.edu-item{break-inside:avoid;page-break-inside:avoid}
-  .section{break-inside:auto;page-break-inside:auto}
-  .section-title{break-after:avoid;page-break-after:avoid}
-  .block,.value{orphans:3;widows:3}
-}
-@media screen{body{padding:12px 0}.page{box-shadow:0 10px 40px #15223822}}
-</style>
-</head>
-<body>
-<div class="page layout-${layout}">
-<main class="content">
-<header class="header">
-  <div class="ornament">✦ ❖ ✦</div>
-  ${photoHTML}
-  <div class="header-copy">
-    <h1 class="name">${data.name || 'YOUR NAME'}</h1>
-    ${data.phone || data.email ? `<div class="contact-line">${data.phone || ''}${data.phone && data.email ? ' &nbsp; • &nbsp; ' : ''}${data.email || ''}</div>` : ''}
-  </div>
-</header>
-
-<div class="resume-body">
-  <aside class="side-column">
-    ${sidebarSections.join('')}
-  </aside>
-  <div class="main-column">
-    ${mainSections.join('')}
-  </div>
-</div>
-
-<footer class="footer">
-  <div>
-    ${data.place ? `${labels.place}: ${data.place}` : ''}
-    ${data.place && data.date ? '<br>' : ''}
-    ${data.date ? `${labels.dob}: ${data.date}` : ''}
-  </div>
-  <div class="signature">
-    <div class="signature-line"></div>
-    <div class="signature-label">${labels.signature}</div>
-  </div>
-</footer>
-</main>
-</div>
-</body>
-</html>`;
-}
-
-/* ============================================================
-   INIT
-   ============================================================ */
-restoreDraft();
-if (document.querySelectorAll('.edu-row').length === 0) addEduRow();
-updatePreview();
-window.addEventListener('resize', fitPreview);
-
-// AI Generate (optional, client-side fetch to a free API if available)
+/* =====================================================
+   AI
+   ===================================================== */
 $('aiGenBtn').onclick = async () => {
   const btn = $('aiGenBtn');
-  btn.innerHTML = '⏳...';
+  btn.textContent = '⏳...';
   btn.disabled = true;
   try {
-    // Placeholder: In production, call a free Gemini API or similar.
-    // For now, generate a static profile.
-    const name = $('name').value || 'Candidate';
-    const education = eduData[0]?.level || 'Graduation';
-    const profile = `I am ${name}, a ${education} graduate with a strong commitment to family values and professional growth. I believe in maintaining a balance between tradition and modernity, and I am looking for a life partner who shares these ideals.`;
-    $('profile').value = profile;
-    scheduleUpdate();
-    saveDraft();
+    const res = await fetch('/api/generate-profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: safeJSON({
+        name: $('name').value,
+        education: eduData[0]?.level || $('education_simple').value || 'Graduation',
+        skills: skillData.map(s => s.name).join(', ')
+      })
+    });
+    const json = await res.json();
+    if (json.profile) {
+      $('profile').value = json.profile;
+      $('profileCount').textContent = `${$('profile').value.length} / 600`;
+      scheduleUpdate();
+      saveDraft();
+      toast('AI generated!', 'success');
+    } else {
+      toast(json.error || 'AI failed', 'error');
+    }
   } catch (e) {
-    alert('AI generation failed. Please try again.');
+    toast('AI not available', 'error');
   } finally {
-    btn.innerHTML = '✨ AI Generate';
+    btn.textContent = '✨ AI Generate';
     btn.disabled = false;
   }
 };
+
+$('aiSkillsBtn').onclick = async () => {
+  const btn = $('aiSkillsBtn');
+  btn.textContent = '⏳...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/suggest-skills', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: safeJSON({ education: eduData[0]?.level || 'Graduation' })
+    });
+    const json = await res.json();
+    if (json.skills) {
+      json.skills.split('\n').filter(Boolean).forEach(line => {
+        const [n, l] = line.split('|');
+        if (n) addSkillRow({ name: n.trim(), level: parseInt(l) || 75 });
+      });
+      collectSkills();
+      toast('Skills added!', 'success');
+    } else {
+      toast(json.error || 'AI failed', 'error');
+    }
+  } catch (e) {
+    toast('AI not available', 'error');
+  } finally {
+    btn.textContent = '✨ AI Suggest';
+    btn.disabled = false;
+  }
+};
+
+/* =====================================================
+   PDF
+   ===================================================== */
+$('pdfBtn').onclick = async () => {
+  const errs = validate();
+  if (errs.length) return toast(errs[0], 'error');
+
+  const btn = $('pdfBtn');
+  btn.disabled = true;
+  const orig = btn.textContent;
+  btn.textContent = '⏳...';
+
+  try {
+    const res = await fetch('/api/pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: safeJSON(collectData())
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'PDF failed');
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = ($('name').value || 'Biodata') + '.pdf';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('PDF downloaded', 'success');
+  } catch (e) {
+    toast(e.message || 'PDF failed. Try "Print" instead.', 'error');
+  } finally {
+    btn.textContent = orig;
+    btn.disabled = false;
+  }
+};
+
+$('printBtn').onclick = () => {
+  const f = $('previewFrame');
+  try { f.contentWindow.print(); } catch (e) { toast('Print blocked', 'error'); }
+};
+
+/* =====================================================
+   THEME
+   ===================================================== */
+$('themeBtn').onclick = () => {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  $('themeBtn').textContent = isDark ? '☀' : '🌙';
+  localStorage.setItem('bd_theme', isDark ? 'dark' : 'light');
+};
+
+if (localStorage.getItem('bd_theme') === 'dark') {
+  document.body.classList.add('dark');
+  $('themeBtn').textContent = '☀';
+}
+
+/* =====================================================
+   KEYBOARD SHORTCUTS
+   ===================================================== */
+document.addEventListener('keydown', (e) => {
+  const mod = e.ctrlKey || e.metaKey;
+  if (mod && e.key === 's') { e.preventDefault(); saveDraft(); toast('Saved', 'success'); }
+  if (mod && e.key === 'p') { e.preventDefault(); $('pdfBtn').click(); }
+  if (mod && e.key === 'z') { e.preventDefault(); $('undoBtn').click(); }
+  if (mod && e.key === 'y') { e.preventDefault(); $('redoBtn').click(); }
+});
+
+/* =====================================================
+   EVENT WIRING
+   ===================================================== */
+TEXT_FIELDS.forEach(id => {
+  const el = $(id);
+  if (el) {
+    el.addEventListener(
+      el.tagName === 'SELECT' || el.type === 'date' ? 'change' : 'input',
+      () => { scheduleUpdate(); saveDraft(); pushHistory(); }
+    );
+  }
+});
+
+$('height_ft').onchange = $('height_in').onchange = () => { scheduleUpdate(); saveDraft(); };
+$('profile').oninput = () => $('profileCount').textContent = `${$('profile').value.length} / 600`;
+$('optWatermark').onchange = () => {
+  $('watermarkRow').style.display = $('optWatermark').checked ? 'block' : 'none';
+  scheduleUpdate(); saveDraft();
+};
+$('optPagenum').onchange = () => { scheduleUpdate(); saveDraft(); };
+$('declarationPreset').onchange = (e) => {
+  if (e.target.value) {
+    $('declaration').value = e.target.value;
+    scheduleUpdate(); saveDraft();
+  }
+};
+
+window.addEventListener('resize', fitPreview);
+
+/* =====================================================
+   BOOT
+   ===================================================== */
+restoreDraft();
+loadShared();
+if (document.querySelectorAll('.edu-row').length === 0) addEduRow();
+if (document.querySelectorAll('.skill-row').length === 0) {
+  addSkillRow({ name: 'Communication', level: 85 });
+  addSkillRow({ name: 'Problem Solving', level: 80 });
+}
+renderTemplates();
+renderDrafts();
+updateProgress();
+updatePreview();
+pushHistory();
 </script>
 </body>
 </html>
