@@ -43,6 +43,7 @@ img{max-width:100%;display:block}
 .fld input:focus,.fld textarea:focus,.fld select:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(212,168,83,.15);background:#fffdf8}
 .fld textarea{min-height:80px;resize:vertical;line-height:1.5}
 .fld input[type="file"]{padding:8px;font-size:12px}
+.fld input[type="date"]{cursor:pointer}
 .fld-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tpl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .tpl-btn{position:relative;padding:14px 10px;border:2px solid var(--line);border-radius:10px;background:var(--surface);text-align:left;font-size:12px;font-weight:700;color:var(--ink-2);min-height:70px;transition:all var(--t)}
@@ -356,8 +357,20 @@ img{max-width:100%;display:block}
       <div class="sec-body">
         <div class="fld"><label>Full Name</label><input id="name" placeholder="Your Full Name"></div>
         <div class="fld-row">
-          <div class="fld"><label>Date of Birth</label><input id="dob" placeholder="DD/MM/YYYY"></div>
-          <div class="fld"><label>Gender</label><input id="gender" placeholder="Male / Female"></div>
+          <div class="fld">
+            <label>Date of Birth</label>
+            <input id="dob" type="date">
+          </div>
+          <div class="fld">
+            <label>Gender</label>
+            <select id="gender">
+              <option value="">Select gender</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+              <option>Prefer not to say</option>
+            </select>
+          </div>
         </div>
         <div class="fld-row">
           <div class="fld"><label>Height</label><input id="height" placeholder="5 ft 8 in"></div>
@@ -431,7 +444,7 @@ img{max-width:100%;display:block}
         <div class="fld"><label>Declaration</label><textarea id="declaration" placeholder="I hereby declare..."></textarea></div>
         <div class="fld-row">
           <div class="fld"><label>Place</label><input id="place" placeholder="Place"></div>
-          <div class="fld"><label>Date</label><input id="date" placeholder="DD/MM/YYYY"></div>
+          <div class="fld"><label>Date</label><input id="date" type="date"></div>
         </div>
       </div>
     </details>
@@ -464,7 +477,7 @@ img{max-width:100%;display:block}
 const $ = id => document.getElementById(id);
 const FIELDS = ['name','dob','gender','height','weight','blood','marital','religion','caste','gotra','rashi','nakshatra','manglik','profile','phone','email','address','father','father_job','mother','mother_job','brothers','sisters','education','experience','skills','languages','hobbies','declaration','place','date'];
 let currentTheme = 'cyan', photoData = '', zoomLevel = 1;
-const STORAGE_KEY = 'biodata-pro-v4';
+const STORAGE_KEY = 'biodata-pro-v5';
 
 function safeFilename(name) {
   const base = String(name || 'Biodata').trim() || 'Biodata';
@@ -489,8 +502,10 @@ function injectPhotoIntoFrame(frame) {
   try {
     const doc = frame.contentDocument;
     if (!doc) return;
+    const box = doc.getElementById('photoBox');
     const photo = doc.getElementById('profilePhoto');
     const empty = doc.getElementById('photoEmpty');
+    if (box) box.style.display = photoData ? 'block' : 'none';
     if (photo && photoData) {
       photo.src = photoData;
       photo.style.display = 'block';
@@ -556,7 +571,10 @@ document.querySelectorAll('.tpl-btn').forEach(btn => {
 
 FIELDS.forEach(id => {
   const el = $(id);
-  if (el) el.addEventListener('input', () => { scheduleUpdate(); saveDraft(); });
+  if (el) {
+    const evt = (el.tagName === 'SELECT' || el.type === 'date') ? 'change' : 'input';
+    el.addEventListener(evt, () => { scheduleUpdate(); saveDraft(); });
+  }
 });
 
 const photoInput = $('photoFile');
@@ -616,6 +634,17 @@ function saveDraft() {
   }
 }
 
+function migrateDate(value) {
+  // Convert legacy DD/MM/YYYY or DD-MM-YYYY to ISO YYYY-MM-DD for <input type="date">
+  if (!value) return value;
+  const m = String(value).match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (m) {
+    const [, d, mo, y] = m;
+    return `${y}-${mo.padStart(2, '0')}-${d.padStart(2, '0')}`;
+  }
+  return value;
+}
+
 function restoreDraft() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -623,7 +652,10 @@ function restoreDraft() {
     const draft = JSON.parse(raw);
     if (draft.values) {
       FIELDS.forEach(id => {
-        if (typeof draft.values[id] === 'string' && $(id)) $(id).value = draft.values[id];
+        let val = draft.values[id];
+        if (typeof val !== 'string' || !$(id)) return;
+        if (id === 'dob' || id === 'date') val = migrateDate(val);
+        $(id).value = val;
       });
     }
     if (draft.theme) {
