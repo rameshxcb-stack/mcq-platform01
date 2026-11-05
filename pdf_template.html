@@ -258,11 +258,11 @@
  {% if phone or email or address %}
  {% set ns.num = ns.num + 1 %}
  <section class="section">
-   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Contact Details</h2>
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> {{ labels.contact }}</h2>
    <div class="grid">
-     {% if phone %}<div class="label">Mobile Number</div><div class="value">{{ phone }}</div>{% endif %}
-     {% if email %}<div class="label">Email</div><div class="value">{{ email }}</div>{% endif %}
-     {% if address %}<div class="label">Address</div><div class="value">{{ address }}</div>{% endif %}
+     {% if phone %}<div class="label">{{ labels.phone }}</div><div class="value">{{ phone }}</div>{% endif %}
+     {% if email %}<div class="label">{{ labels.email }}</div><div class="value">{{ email }}</div>{% endif %}
+     {% if address %}<div class="label">{{ labels.address }}</div><div class="value">{{ address }}</div>{% endif %}
    </div>
  </section>
  {% endif %}
@@ -270,9 +270,9 @@
  {% if dob or gender or height or weight or religion or caste or blood or marital or gotra or rashi or nakshatra or manglik %}
  {% set ns.num = ns.num + 1 %}
  <section class="section">
-   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Personal Details</h2>
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> {{ labels.personal }}</h2>
    <div class="grid">
-   {% for label, value in [('Date of Birth',dob),('Gender',gender),('Height',height),('Weight',weight),('Blood Group',blood),('Marital Status',marital),('Religion',religion),('Caste / Community',caste),('Gotra',gotra),('Rashi',rashi),('Nakshatra',nakshatra),('Manglik',manglik)] %}
+   {% for label, value in [(labels.dob,dob),(labels.gender,gender),(labels.height,height),(labels.weight,weight),(labels.blood,blood),(labels.marital,marital),(labels.religion,religion),(labels.caste,caste),(labels.gotra,gotra),(labels.rashi,rashi),(labels.nakshatra,nakshatra),(labels.manglik,manglik)] %}
      {% if value %}<div class="label">{{ label }}</div><div class="value">{{ value }}</div>{% endif %}
    {% endfor %}
    </div>
@@ -282,12 +282,12 @@
  {% if father or mother or brothers or sisters %}
  {% set ns.num = ns.num + 1 %}
  <section class="section">
-   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Family Details</h2>
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> {{ labels.family }}</h2>
    <div class="grid">
-     {% if father %}<div class="label">Father</div><div class="value">{{ father }}{% if father_job %} — {{ father_job }}{% endif %}</div>{% endif %}
-     {% if mother %}<div class="label">Mother</div><div class="value">{{ mother }}{% if mother_job %} — {{ mother_job }}{% endif %}</div>{% endif %}
-     {% if brothers %}<div class="label">Brothers</div><div class="value">{{ brothers }}</div>{% endif %}
-     {% if sisters %}<div class="label">Sisters</div><div class="value">{{ sisters }}</div>{% endif %}
+     {% if father %}<div class="label">{{ labels.father }}</div><div class="value">{{ father }}{% if father_job %} — {{ father_job }}{% endif %}</div>{% endif %}
+     {% if mother %}<div class="label">{{ labels.mother }}</div><div class="value">{{ mother }}{% if mother_job %} — {{ mother_job }}{% endif %}</div>{% endif %}
+     {% if brothers %}<div class="label">{{ labels.brothers }}</div><div class="value">{{ brothers }}</div>{% endif %}
+     {% if sisters %}<div class="label">{{ labels.sisters }}</div><div class="value">{{ sisters }}</div>{% endif %}
    </div>
  </section>
  {% endif %}
@@ -295,7 +295,7 @@
  {% if skills_list %}
  {% set ns.num = ns.num + 1 %}
  <section class="section">
-   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Skills</h2>
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> {{ labels.skills }}</h2>
    {% for skill in skills_list %}
    <div class="skill">
      <div class="skill-name">{{ skill.name }}</div>
@@ -309,10 +309,10 @@
  {% if languages or hobbies %}
  {% set ns.num = ns.num + 1 %}
  <section class="section">
-   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Additional Details</h2>
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> {{ labels.additional }}</h2>
    <div class="grid">
-     {% if languages %}<div class="label">Languages</div><div class="value">{{ languages }}</div>{% endif %}
-     {% if hobbies %}<div class="label">Hobbies</div><div class="value">{{ hobbies }}</div>{% endif %}
+     {% if languages %}<div class="label">{{ labels.languages }}</div><div class="value">{{ languages }}</div>{% endif %}
+     {% if hobbies %}<div class="label">{{ labels.hobbies }}</div><div class="value">{{ hobbies }}</div>{% endif %}
    </div>
  </section>
  {% endif %}
@@ -322,7 +322,7 @@
  {% if profile %}
  {% set ns.num = ns.num + 1 %}
  <section class="section">
-   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Profile / Objective</h2>
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> {{ labels.profile }}</h2>
    <div class="block">{{ profile }}</div>
  </section>
  {% endif %}
@@ -330,7 +330,7 @@
  {% if education_mode == 'detailed' and education_list %}
  {% set ns.num = ns.num + 1 %}
  <section class="section">
-   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Education</h2>
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> {{ labels.education }}</h2>
    <div style="padding: 0 2mm;">
      {% for edu in education_list %}
      <div class="edu-item">
@@ -340,8 +340,8 @@
        </div>
        <div class="edu-sub">{{ edu.institute }}</div>
        <div class="edu-meta">
-         {% if edu.board %}<span>Board: {{ edu.board }}</span>{% endif %}
-         {% if edu.year %}<span>Year: {{ edu.year }}</span>{% endif %}
+         {% if edu.board %}<span>{{ edu.board }}</span>{% endif %}
+         {% if edu.year %}<span>{{ edu.year }}</span>{% endif %}
        </div>
      </div>
      {% endfor %}
@@ -350,7 +350,7 @@
  {% elif education_simple %}
  {% set ns.num = ns.num + 1 %}
  <section class="section">
-   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Education</h2>
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> {{ labels.education }}</h2>
    <div class="block">{{ education_simple }}</div>
  </section>
  {% endif %}
@@ -358,7 +358,7 @@
  {% if experience %}
  {% set ns.num = ns.num + 1 %}
  <section class="section">
-   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Work Experience</h2>
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> {{ labels.experience }}</h2>
    <div class="block">{{ experience }}</div>
  </section>
  {% endif %}
@@ -366,15 +366,15 @@
  {% if declaration %}
  {% set ns.num = ns.num + 1 %}
  <section class="section">
-   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Declaration</h2>
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> {{ labels.declaration }}</h2>
    <div class="block">{{ declaration }}</div>
  </section>
  {% endif %}
 </div>
 </div>
 <footer class="footer">
- <div>{% if place %}Place: {{ place }}{% endif %}{% if place and date %}<br>{% endif %}{% if date %}Date: {{ date }}{% endif %}</div>
- <div class="signature"><div class="signature-line"></div><div class="signature-label">Signature</div></div>
+ <div>{% if place %}{{ labels.place }}: {{ place }}{% endif %}{% if place and date %}<br>{% endif %}{% if date %}{{ labels.dob }}: {{ date }}{% endif %}</div>
+ <div class="signature"><div class="signature-line"></div><div class="signature-label">{{ labels.signature }}</div></div>
 </footer>
 </main>
 </div>
