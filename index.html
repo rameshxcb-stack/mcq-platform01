@@ -331,14 +331,16 @@ body.dark .preview-bar { background: rgba(17, 26, 46, .6); }
 body.dark .app-footer { background: rgba(17, 26, 46, .95); }
 .footer-btn {
   flex: 1; min-height: 48px;
-  border-radius: 12px; font-size: 14px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
+  border-radius: 12px; font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 0 8px;
 }
-.btn-pdf { background: var(--gold-grad); color: #fff; flex: 2; }
+.btn-pdf { background: var(--gold-grad); color: #fff; flex: 1.2; }
 .btn-save { background: var(--bg); color: var(--ink); border: 1.5px solid var(--line); }
+.btn-preview { background: var(--ink); color: var(--bg); }
 
 /* Toast */
-.toast-host { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.toast-host { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
 .toast {
   background: #0f172a; color: #fff;
   padding: 10px 18px; border-radius: 10px;
@@ -388,8 +390,8 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
   .app-footer { display: flex; }
   .panel { display: none; }
   .panel.active { display: block; }
-  .editor { padding: 12px; }
-  .preview-wrap { height: 80vh; }
+  .editor { padding: 12px; border-right: none; }
+  .preview-wrap { height: calc(100vh - 63px - 73px); /* Adjust for header and footer */ }
 }
 </style>
 </head>
@@ -724,6 +726,7 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
 <!-- FOOTER (mobile) -->
 <footer class="app-footer">
   <button class="footer-btn btn-save" id="saveBtn">💾 Save</button>
+  <button class="footer-btn btn-preview" id="previewToggleBtn">👁️ Preview</button>
   <button class="footer-btn btn-pdf" id="pdfBtn">📥 PDF</button>
 </footer>
 
@@ -1231,6 +1234,7 @@ async function updatePreview() {
       <html><body style="font-family:system-ui;padding:40px;text-align:center;color:#64748b;">
         <h2>⚠ Preview unavailable</h2>
         <p>Backend server is not reachable. Please ensure app.py is running.</p>
+        <p style="font-size:12px;margin-top:20px;">Error: ${e.message}</p>
       </body></html>`;
   }
 }
@@ -1252,6 +1256,28 @@ function fitPreview() {
 $('zoomIn').onclick = () => { zoom = Math.min(2, zoom + 0.1); fitPreview(); };
 $('zoomOut').onclick = () => { zoom = Math.max(0.4, zoom - 0.1); fitPreview(); };
 $('zoomFit').onclick = () => { zoom = 1; fitPreview(); };
+
+/* =====================================================
+   MOBILE PREVIEW TOGGLE
+   ===================================================== */
+const previewToggleBtn = $('previewToggleBtn');
+if (previewToggleBtn) {
+  previewToggleBtn.onclick = () => {
+    const editPanel = $('editPanel');
+    const previewPanel = $('previewPanel');
+    
+    if (editPanel.classList.contains('active')) {
+      editPanel.classList.remove('active');
+      previewPanel.classList.add('active');
+      previewToggleBtn.innerHTML = '✏️ Edit';
+      setTimeout(fitPreview, 50); // Let layout settle before fitting
+    } else {
+      previewPanel.classList.remove('active');
+      editPanel.classList.add('active');
+      previewToggleBtn.innerHTML = '👁️ Preview';
+    }
+  };
+}
 
 /* =====================================================
    SAVE / DRAFTS
@@ -1600,7 +1626,18 @@ $('declarationPreset').onchange = (e) => {
   }
 };
 
-window.addEventListener('resize', fitPreview);
+window.addEventListener('resize', () => {
+  if (window.innerWidth >= 1024) {
+    // Ensure if user rotates desktop window back, editor is shown
+    $('editPanel').classList.add('active');
+    $('previewPanel').classList.add('active');
+    fitPreview();
+  } else {
+    // On mobile, only show active panel
+    const isEdit = $('editPanel').classList.contains('active');
+    if (!isEdit) setTimeout(fitPreview, 50);
+  }
+});
 
 /* =====================================================
    BOOT
@@ -1617,6 +1654,14 @@ renderDrafts();
 updateProgress();
 updatePreview();
 pushHistory();
+
+// Fix for mobile if preview is open on load
+if (window.innerWidth < 1024) {
+  if ($('previewPanel').classList.contains('active')) {
+    $('previewToggleBtn').innerHTML = '✏️ Edit';
+    setTimeout(fitPreview, 100);
+  }
+}
 </script>
 </body>
 </html>
