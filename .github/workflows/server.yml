@@ -1,15 +1,3 @@
-# ─────────────────────────────────────────────────────────────────────────────
-#  Biodata Maker Pro — GitHub Actions + Cloudflare Quick Tunnel
-#
-#  ⚠️  Use this ONLY with a PUBLIC repository.
-#      Private repos consume GitHub Actions minutes fast:
-#      350 min × 4 runs/day × 30 days ≈ 42,000 min/month
-#      (Free tier for private repos = 2,000 min/month → exhausted in ~1 day).
-#
-#  ℹ️  Each job produces a NEW Cloudflare tunnel URL. Copy it from the
-#      workflow run summary. The URL dies when the job ends (after ~6 h).
-#      The next scheduled run (every 6 h) starts a fresh tunnel.
-# ─────────────────────────────────────────────────────────────────────────────
 name: Biodata Maker Preview Server
 
 on:
@@ -26,7 +14,6 @@ jobs:
     timeout-minutes: 355
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -39,12 +26,13 @@ jobs:
             libpango-1.0-0 libpangoft2-1.0-0 libcairo2 libgdk-pixbuf-2.0-0 \
             libffi-dev shared-mime-info fonts-liberation fonts-dejavu
 
-      - name: Install Python dependencies (tolerant of WeasyPrint failure)
+      - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install Flask==3.0.3 Jinja2==3.1.4 gunicorn==22.0.0
-          if ! pip install WeasyPrint==62.3; then
-            echo "::warning::WeasyPrint install failed — server-side PDF will 503 and client-side fallback will be used."
+          pip install -r requirements.txt
+          # Fallback if WeasyPrint fails due to system lib mismatch
+          if ! python -c "import weasyprint"; then
+            echo "::warning::WeasyPrint install failed — fallback to client-side PDF."
           fi
 
       - name: Install Cloudflare Quick Tunnel
@@ -56,6 +44,8 @@ jobs:
           cloudflared --version
 
       - name: Start Flask
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} # <--- ADDED AI KEY HERE
         run: |
           nohup python app.py >/tmp/flask.log 2>&1 &
           for i in $(seq 1 30); do
@@ -80,9 +70,8 @@ jobs:
             echo "Tunnel failed to start:"; cat /tmp/tunnel.log; exit 1
           fi
           echo "url=$URL" >> "$GITHUB_OUTPUT"
-          echo "URL=$URL"
 
-      - name: Verify public URL responds
+      - name: Verify public URL
         run: |
           URL="${{ steps.tunnel.outputs.url }}"
           for i in $(seq 1 20); do
@@ -91,8 +80,7 @@ jobs:
             fi
             sleep 3
           done
-          echo "❌ Tunnel URL is not reachable (Cloudflare may still be warming up)."
-          curl -v "$URL/api/health" || true
+          echo "❌ Tunnel URL is not reachable."
           exit 1
 
       - name: Publish URL in run summary
@@ -103,10 +91,7 @@ jobs:
             echo ""
             echo "**URL:** $URL"
             echo ""
-            echo "⏱️ This URL stays alive until this job ends (~6 h from start)."
-            echo "📅 The next scheduled run will publish a fresh URL — check this page again."
-            echo ""
-            echo "🧾 Health check: \`$URL/api/health\`"
+            echo "⏱️ Alive until this job ends (~6 h)."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Keep server alive (≈ 342 min)
