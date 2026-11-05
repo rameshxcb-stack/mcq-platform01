@@ -510,7 +510,6 @@ function translateUI(lang) {
   
   if ($('searchTpl')) $('searchTpl').placeholder = lang === 'en' ? "Search..." : (lang === 'hi' ? "खोजें..." : "Search...");
 
-  // 🔥 Fix: Ensure toggle button translates immediately
   if ($('previewToggleBtn')) {
     const isPreview = $('previewPanel').classList.contains('active');
     $('previewToggleBtn').innerHTML = isPreview ? (dict.edit || '✏️ Edit') : (dict.preview || '👁️ Preview');
@@ -659,8 +658,8 @@ const TEXT_FIELDS = ['name','dob','gender','weight','blood','marital','religion'
 let photoData = '';
 let eduData = [];
 let skillData = [];
-const STORAGE_KEY = 'bd_main_v16';
-const DRAFT_KEY = 'bd_drafts_v16';
+const STORAGE_KEY = 'bd_main_v17';
+const DRAFT_KEY = 'bd_drafts_v17';
 
 function addEduRow(data = {}) {
   const container = $('edu-rows-container');
@@ -899,7 +898,13 @@ function restoreDraft() {
       const el = document.querySelector(`input[name="edu_mode"][value="${d.eduMode}"]`); if (el) el.checked = true;
       $('edu-detailed-box').style.display = d.eduMode === 'detailed' ? 'block' : 'none'; $('edu-simple-box').style.display = d.eduMode === 'simple' ? 'block' : 'none';
     }
-    (d.eduData || []).forEach(r => addEduRow(r)); (d.skillData || []).forEach(r => addSkillRow(r));
+    (d.eduData || []).forEach(r => addEduRow(r)); 
+    (d.skillData || []).forEach(r => addSkillRow(r));
+    
+    // 🔥 FIX: Sync DOM to Memory
+    collectEduData();
+    collectSkills();
+
     if (d.theme) currentTheme = d.theme; if (d.photo) photoData = d.photo;
     if (d.options) { $('optWatermark').checked = !!d.options.watermark; $('optPagenum').checked = !!d.options.pagenum; }
     updatePhotoPreview(); $('profileCount').textContent = `${$('profile').value.length} / 600`;
