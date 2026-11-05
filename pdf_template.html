@@ -70,10 +70,10 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 .value { font-size: 9.5pt; color: var(--ink); font-weight: 500; white-space: pre-line; overflow-wrap: anywhere; }
 .block { padding: 0 2mm; white-space: pre-line; text-align: justify; overflow-wrap: anywhere; }
 
-/* FIX: Skill Track Length */
-.skill { display: grid; grid-template-columns: 35mm 1fr 10mm; gap: 3mm; align-items: center; margin: 2mm 2mm; }
+/* 🔥 FIX: Skill Track Length (Ab fixed 50mm width hai, poore page par nahi failega) */
+.skill { display: grid; grid-template-columns: 40mm 50mm 10mm; gap: 4mm; align-items: center; margin: 0 2mm 2.5mm 2mm; }
 .skill-name { font-size: 9pt; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.track { height: 2.2mm; background: var(--track); border-radius: 10mm; overflow: hidden; width: 100%; max-width: 85mm; /* Prevents bar from stretching to the end */ }
+.track { height: 2.2mm; background: var(--track); border-radius: 10mm; overflow: hidden; width: 100%; }
 .fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--primary)); border-radius: 10mm; }
 .skill-pct { font-size: 8pt; color: var(--muted); text-align: right; }
 
@@ -94,10 +94,15 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 .layout-sidebar .side-column .section { margin-top: 5mm; } .layout-sidebar .side-column .section-title { color: #fff; font-size: 10pt; }
 .layout-sidebar .side-column .section-title::after { background: var(--accent); }
 .layout-sidebar .side-column .label, .layout-sidebar .side-column .value, .layout-sidebar .side-column .skill-name, .layout-sidebar .side-column .skill-pct { color: #fff; }
-.layout-sidebar .side-column .grid { grid-template-columns: 1fr; gap: 1mm; } .layout-sidebar .side-column .track { background: #ffffff55; max-width: 100%; }
+.layout-sidebar .side-column .grid { grid-template-columns: 1fr; gap: 1mm; }
 .layout-sidebar .side-column .fill { background: var(--accent); }
-.layout-sidebar .side-column .skill { grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 1mm 2mm; }
-.layout-sidebar .side-column .skill-name { grid-column: 1 / -1; font-size: 8.5pt; } .layout-sidebar .side-column .track { grid-column: 1; height: 1.8mm; } .layout-sidebar .side-column .skill-pct { font-size: 7.5pt; }
+
+/* Sidebar ke andar skill bar adjust hoga */
+.layout-sidebar .side-column .skill { grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 1mm 2mm; margin: 0 0 2mm 0; }
+.layout-sidebar .side-column .skill-name { grid-column: 1 / -1; font-size: 8.5pt; }
+.layout-sidebar .side-column .track { grid-column: 1 / -1; height: 1.8mm; background: #ffffff33; width: 100%; }
+.layout-sidebar .side-column .skill-pct { font-size: 7.5pt; text-align: right; display: block; width: 100%; margin-top: 0.5mm; }
+
 .layout-sidebar .header { text-align: left; padding-left: 5mm; border: 0; } .layout-sidebar .header .photo { float: left; margin: 0 6mm 2mm 0; } .layout-sidebar .header .ornament { display: none; } .layout-sidebar .header .name { padding-top: 2mm; }
 
 .layout-banner .header { background: var(--primary); color: white; border: 0; border-radius: 2mm; padding: 6mm; } .layout-banner .name { color: white; } .layout-banner .contact-line { color: #fff; opacity: .9; } .layout-banner .ornament { color: var(--accent); } .layout-banner .section-title { background: var(--tint); padding: 2mm 3mm; border-radius: 1mm; }
