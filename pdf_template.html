@@ -97,6 +97,7 @@
   'Bold': ('Oswald','Roboto'), 'Minimal': ('DM Sans','Inter')
 } %}
 {% set fonts = mood_fonts.get(selected_theme.mood, ('Playfair Display','Lato')) %}
+{% set ns = namespace(num=0) %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:wght@600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=Lato:wght@400;700;900&family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&family=Oswald:wght@500;600;700&family=Playfair+Display:wght@600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -112,15 +113,13 @@
 .ornament{color:var(--accent);font-size:15pt;letter-spacing:7px;margin-bottom:2mm}
 .photo{width:34mm;height:40mm;margin:0 auto 3mm;padding:1.2mm;border:2px solid var(--accent);border-radius:{{ '50%' if is_round_photo else '3mm' }};background:var(--paper);box-shadow:0 2mm 5mm #00000018;overflow:hidden}
 .photo img{width:100%;height:100%;object-fit:cover;border-radius:{{ '50%' if is_round_photo else '1.5mm' }};display:block}
-.photo-empty{height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:8pt;text-align:center}
 .name{font-family:var(--display);font-size:27pt;line-height:1.12;color:var(--primary);font-weight:800;letter-spacing:.4px;overflow-wrap:anywhere;margin:0}
-.subtitle{margin-top:1.5mm;font-size:8pt;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:700}
 .contact-line{margin-top:2mm;color:var(--muted);font-size:8.5pt;overflow-wrap:anywhere}
 .resume-body{display:block}.side-column,.main-column{min-width:0}
 .section{margin-top:5mm;break-inside:auto}
 .section-title{display:flex;align-items:center;gap:2mm;margin:0 0 2.5mm;color:var(--primary);font-family:var(--display);font-size:12pt;font-weight:800;letter-spacing:1.1px;text-transform:uppercase}
 .section-title:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--accent),transparent)}
-.section-title .mark{color:var(--accent);font-size:9pt}
+.section-title .mark{color:var(--accent);font-size:11pt;font-weight:800;min-width:15px;text-align:left}
 .grid{display:grid;grid-template-columns:38mm 1fr;gap:1.7mm 3mm;padding:0 2mm}
 .label{font-size:8.5pt;color:var(--muted);font-weight:700}
 .value{font-size:9.5pt;color:var(--ink);font-weight:500;white-space:pre-line;overflow-wrap:anywhere}
@@ -133,7 +132,14 @@
 .signature{text-align:center;min-width:42mm}.signature-line{height:10mm;border-bottom:1px solid var(--muted);margin-bottom:1.5mm}
 .signature-label{text-transform:uppercase;letter-spacing:1px;font-weight:700;font-size:8pt}
 
-/* ── Layouts ── */
+/* Education Table */
+.edu-item { margin-bottom: 3mm; padding-bottom: 2mm; border-bottom: 1px dashed var(--track); }
+.edu-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.edu-header { display: flex; justify-content: space-between; font-weight: 700; font-size: 10pt; color: var(--primary); margin-bottom: 1mm; }
+.edu-sub { font-size: 9pt; color: var(--ink); margin-bottom: 0.5mm; }
+.edu-meta { font-size: 8.5pt; color: var(--muted); display: flex; gap: 4mm; }
+
+/* Layouts */
 .layout-traditional .header{padding-top:2mm;border-bottom:3px double var(--accent)}.layout-traditional .ornament{font-size:19pt}
 .layout-traditional .name{text-transform:uppercase;letter-spacing:1.3px}
 .layout-traditional .section-title{border-bottom:1px solid var(--accent);padding-bottom:1.5mm}
@@ -155,7 +161,7 @@
 .layout-sidebar .header .ornament{display:none}.layout-sidebar .header .name{padding-top:2mm}
 
 .layout-banner .header{background:var(--primary);color:white;border:0;border-radius:2mm;padding:6mm 6mm}
-.layout-banner .name{color:white}.layout-banner .subtitle,.layout-banner .contact-line{color:#fff;opacity:.9}
+.layout-banner .name{color:white}.layout-banner .contact-line{color:#fff;opacity:.9}
 .layout-banner .ornament{color:var(--accent)}
 .layout-banner .section-title{background:var(--title-tint);padding:2mm 3mm;border-radius:1mm}
 
@@ -171,7 +177,7 @@
 .page.layout-cards{background:var(--title-tint)}
 
 .layout-split .header{background:var(--primary);color:white;text-align:left;padding:6mm 7mm;border-radius:3mm 3mm 0 0}
-.layout-split .name{color:white}.layout-split .subtitle,.layout-split .contact-line{color:#fff}
+.layout-split .name{color:white}.layout-split .contact-line{color:#fff}
 .layout-split .photo{float:right;margin:0 0 2mm 8mm}.layout-split .ornament{display:none}
 .layout-split .section-title{border-bottom:2px solid var(--accent);padding-bottom:1.5mm}
 
@@ -196,9 +202,9 @@
 .layout-editorial .section-title{font-family:var(--body);font-size:10pt;letter-spacing:2px}
 .layout-editorial .section{margin-top:7mm}
 
-/* Theme-specific overrides (all use CSS vars) */
+/* Theme-specific overrides */
 .theme-cyan .header{background:linear-gradient(110deg,var(--primary) 0 48%,var(--accent) 48% 100%);padding:6mm;border:0;text-align:left}
-.theme-cyan .name,.theme-cyan .subtitle,.theme-cyan .contact-line{color:white}
+.theme-cyan .name,.theme-cyan .contact-line{color:white}
 .theme-cyan .photo{float:left;margin:0 7mm 2mm 0;border-radius:50%}
 .theme-cyan .ornament{display:none}
 .theme-cyan .section-title{background:var(--primary);color:white;padding:1.5mm 3mm;border-radius:10mm}
@@ -207,7 +213,7 @@
 .theme-orange_sidebar .header .name{color:var(--primary)}
 .theme-navy_classic .section-title{background:var(--primary);color:white;padding:1.5mm 3mm}
 .theme-blue_corporate .header{background:var(--primary);color:white;padding:6mm}
-.theme-blue_corporate .name,.theme-blue_corporate .subtitle,.theme-blue_corporate .contact-line{color:white}
+.theme-blue_corporate .name,.theme-blue_corporate .contact-line{color:white}
 .theme-blue_corporate .photo{float:left;margin:0 7mm 2mm 0}
 .theme-blue_corporate .ornament{display:none}
 
@@ -215,7 +221,7 @@
  html,body{background:var(--paper)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
  .page{width:210mm;min-height:0;margin:0;padding:11mm 14mm 12mm;overflow:visible;box-shadow:none}
  .page:before,.page:after{position:fixed;inset:5mm}.page:after{inset:8mm}
- .header,.section-title,.grid,.skill,.footer,.photo{break-inside:avoid;page-break-inside:avoid}
+ .header,.section-title,.grid,.skill,.footer,.photo,.edu-item{break-inside:avoid;page-break-inside:avoid}
  .section{break-inside:auto;page-break-inside:auto}
  .section-title{break-after:avoid;page-break-after:avoid}
  .block,.value{orphans:3;widows:3}
@@ -239,47 +245,131 @@
  <div class="photo" id="photoBox" style="{{ '' if photo else 'display:none' }}">
  {% if photo %}
  <img id="profilePhoto" src="{{ photo }}" alt="Profile photo">
- <div class="photo-empty" id="photoEmpty" style="display:none">PROFILE PHOTO</div>
  {% else %}
  <img id="profilePhoto" alt="Profile photo" style="display:none">
- <div class="photo-empty" id="photoEmpty">PROFILE PHOTO</div>
  {% endif %}
  </div>
  <h1 class="name">{{ name or 'YOUR NAME' }}</h1>
- <div class="subtitle">Personal Biodata</div>
  {% if phone or email %}<div class="contact-line">{% if phone %}{{ phone }}{% endif %}{% if phone and email %} &nbsp; • &nbsp; {% endif %}{% if email %}{{ email }}{% endif %}</div>{% endif %}
 </header>
 
 <div class="resume-body">
 <aside class="side-column">
- {% if phone or email or address %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Contact Details</h2><div class="grid">
- {% if phone %}<div class="label">Mobile Number</div><div class="value">{{ phone }}</div>{% endif %}
- {% if email %}<div class="label">Email</div><div class="value">{{ email }}</div>{% endif %}
- {% if address %}<div class="label">Address</div><div class="value">{{ address }}</div>{% endif %}
- </div></section>{% endif %}
+ {% if phone or email or address %}
+ {% set ns.num = ns.num + 1 %}
+ <section class="section">
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Contact Details</h2>
+   <div class="grid">
+     {% if phone %}<div class="label">Mobile Number</div><div class="value">{{ phone }}</div>{% endif %}
+     {% if email %}<div class="label">Email</div><div class="value">{{ email }}</div>{% endif %}
+     {% if address %}<div class="label">Address</div><div class="value">{{ address }}</div>{% endif %}
+   </div>
+ </section>
+ {% endif %}
+ 
  {% if dob or gender or height or weight or religion or caste or blood or marital or gotra or rashi or nakshatra or manglik %}
- <section class="section"><h2 class="section-title"><span class="mark">✦</span> Personal Details</h2><div class="grid">
- {% for label, value in [('Date of Birth',dob),('Gender',gender),('Height',height),('Weight',weight),('Blood Group',blood),('Marital Status',marital),('Religion',religion),('Caste / Community',caste),('Gotra',gotra),('Rashi',rashi),('Nakshatra',nakshatra),('Manglik',manglik)] %}{% if value %}<div class="label">{{ label }}</div><div class="value">{{ value }}</div>{% endif %}{% endfor %}
- </div></section>{% endif %}
- {% if father or mother or brothers or sisters %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Family Details</h2><div class="grid">
- {% if father %}<div class="label">Father</div><div class="value">{{ father }}{% if father_job %} — {{ father_job }}{% endif %}</div>{% endif %}
- {% if mother %}<div class="label">Mother</div><div class="value">{{ mother }}{% if mother_job %} — {{ mother_job }}{% endif %}</div>{% endif %}
- {% if brothers %}<div class="label">Brothers</div><div class="value">{{ brothers }}</div>{% endif %}
- {% if sisters %}<div class="label">Sisters</div><div class="value">{{ sisters }}</div>{% endif %}
- </div></section>{% endif %}
- {% if skills_list %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Skills</h2>
- {% for skill in skills_list %}<div class="skill"><div class="skill-name">{{ skill.name }}</div><div class="track"><div class="fill" style="width:{{ skill.level }}%"></div></div><div class="skill-pct">{{ skill.level }}%</div></div>{% endfor %}
- </section>{% endif %}
- {% if languages or hobbies %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Additional Details</h2><div class="grid">
- {% if languages %}<div class="label">Languages</div><div class="value">{{ languages }}</div>{% endif %}
- {% if hobbies %}<div class="label">Hobbies</div><div class="value">{{ hobbies }}</div>{% endif %}
- </div></section>{% endif %}
+ {% set ns.num = ns.num + 1 %}
+ <section class="section">
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Personal Details</h2>
+   <div class="grid">
+   {% for label, value in [('Date of Birth',dob),('Gender',gender),('Height',height),('Weight',weight),('Blood Group',blood),('Marital Status',marital),('Religion',religion),('Caste / Community',caste),('Gotra',gotra),('Rashi',rashi),('Nakshatra',nakshatra),('Manglik',manglik)] %}
+     {% if value %}<div class="label">{{ label }}</div><div class="value">{{ value }}</div>{% endif %}
+   {% endfor %}
+   </div>
+ </section>
+ {% endif %}
+
+ {% if father or mother or brothers or sisters %}
+ {% set ns.num = ns.num + 1 %}
+ <section class="section">
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Family Details</h2>
+   <div class="grid">
+     {% if father %}<div class="label">Father</div><div class="value">{{ father }}{% if father_job %} — {{ father_job }}{% endif %}</div>{% endif %}
+     {% if mother %}<div class="label">Mother</div><div class="value">{{ mother }}{% if mother_job %} — {{ mother_job }}{% endif %}</div>{% endif %}
+     {% if brothers %}<div class="label">Brothers</div><div class="value">{{ brothers }}</div>{% endif %}
+     {% if sisters %}<div class="label">Sisters</div><div class="value">{{ sisters }}</div>{% endif %}
+   </div>
+ </section>
+ {% endif %}
+
+ {% if skills_list %}
+ {% set ns.num = ns.num + 1 %}
+ <section class="section">
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Skills</h2>
+   {% for skill in skills_list %}
+   <div class="skill">
+     <div class="skill-name">{{ skill.name }}</div>
+     <div class="track"><div class="fill" style="width:{{ skill.level }}%"></div></div>
+     <div class="skill-pct">{{ skill.level }}%</div>
+   </div>
+   {% endfor %}
+ </section>
+ {% endif %}
+
+ {% if languages or hobbies %}
+ {% set ns.num = ns.num + 1 %}
+ <section class="section">
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Additional Details</h2>
+   <div class="grid">
+     {% if languages %}<div class="label">Languages</div><div class="value">{{ languages }}</div>{% endif %}
+     {% if hobbies %}<div class="label">Hobbies</div><div class="value">{{ hobbies }}</div>{% endif %}
+   </div>
+ </section>
+ {% endif %}
 </aside>
+
 <div class="main-column">
- {% if profile %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Profile / Objective</h2><div class="block">{{ profile }}</div></section>{% endif %}
- {% if education %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Education</h2><div class="block">{{ education }}</div></section>{% endif %}
- {% if experience %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Work Experience</h2><div class="block">{{ experience }}</div></section>{% endif %}
- {% if declaration %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Declaration</h2><div class="block">{{ declaration }}</div></section>{% endif %}
+ {% if profile %}
+ {% set ns.num = ns.num + 1 %}
+ <section class="section">
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Profile / Objective</h2>
+   <div class="block">{{ profile }}</div>
+ </section>
+ {% endif %}
+
+ {% if education_mode == 'detailed' and education_list %}
+ {% set ns.num = ns.num + 1 %}
+ <section class="section">
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Education</h2>
+   <div style="padding: 0 2mm;">
+     {% for edu in education_list %}
+     <div class="edu-item">
+       <div class="edu-header">
+         <span>{{ edu.level }}</span>
+         <span>{{ edu.score }}</span>
+       </div>
+       <div class="edu-sub">{{ edu.institute }}</div>
+       <div class="edu-meta">
+         {% if edu.board %}<span>Board: {{ edu.board }}</span>{% endif %}
+         {% if edu.year %}<span>Year: {{ edu.year }}</span>{% endif %}
+       </div>
+     </div>
+     {% endfor %}
+   </div>
+ </section>
+ {% elif education_simple %}
+ {% set ns.num = ns.num + 1 %}
+ <section class="section">
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Education</h2>
+   <div class="block">{{ education_simple }}</div>
+ </section>
+ {% endif %}
+
+ {% if experience %}
+ {% set ns.num = ns.num + 1 %}
+ <section class="section">
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Work Experience</h2>
+   <div class="block">{{ experience }}</div>
+ </section>
+ {% endif %}
+
+ {% if declaration %}
+ {% set ns.num = ns.num + 1 %}
+ <section class="section">
+   <h2 class="section-title"><span class="mark">{{ ns.num }}.</span> Declaration</h2>
+   <div class="block">{{ declaration }}</div>
+ </section>
+ {% endif %}
 </div>
 </div>
 <footer class="footer">
