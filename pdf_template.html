@@ -64,79 +64,51 @@
   'ivory_cards':          {'layout':'cards','label':'Ivory Cards','mood':'Traditional','primary':'#59616B','accent':'#C5CBD2','paper':'#FCFDFE','ink':'#2D333B','muted':'#737C85','track':'#EBECEE','tint':'#F4F5F6'}
 } %}
 {% set theme_catalog = dict(theme_catalog,
-  royal=theme_catalog['royal_banner'],
-  professional=theme_catalog['steel_corporate'],
-  emerald=theme_catalog['emerald_sidebar'],
-  midnight=theme_catalog['midnight_split'],
-  rose=theme_catalog['rose_card'],
-  lavender=theme_catalog['lavender_minimal'],
-  teal=theme_catalog['teal_header'],
-  charcoal=theme_catalog['charcoal_classic'],
-  minimal=theme_catalog['pearl_corporate'],
-  sky=theme_catalog['sky_banner'],
-  forest=theme_catalog['forest_timeline'],
-  terracotta=theme_catalog['terracotta_editorial'],
-  plum=theme_catalog['plum_sidebar'],
-  classic=theme_catalog['ivory_cards'],
-  coral=theme_catalog['coral_minimal'],
-  sapphire=theme_catalog['sapphire_corporate'],
-  champagne=theme_catalog['champagne_cards'],
-  burgundy=theme_catalog['burgundy_split'],
-  indigo=theme_catalog['indigo_minimal'],
-  copper=theme_catalog['copper_timeline'],
-  ocean=theme_catalog['ocean_editorial'],
-  sage=theme_catalog['sage_sidebar'],
-  ruby=theme_catalog['ruby_banner'],
-  steel=theme_catalog['steel_corporate'],
-  mint=theme_catalog['mint_cards'],
-  sunset=theme_catalog['sunset_split'],
-  peacock=theme_catalog['peacock_minimal'],
-  blush=theme_catalog['blush_timeline'],
-  olive=theme_catalog['olive_editorial'],
-  ice=theme_catalog['ice_sidebar'],
-  onyx=theme_catalog['onyx_banner'],
-  mauve=theme_catalog['mauve_corporate'],
-  amber=theme_catalog['amber_cards'],
-  crimson=theme_catalog['crimson_split'],
-  lagoon=theme_catalog['lagoon_minimal'],
-  sandstone=theme_catalog['sandstone_timeline'],
-  orchid=theme_catalog['orchid_editorial'],
-  cobalt=theme_catalog['cobalt_sidebar'],
-  pine=theme_catalog['pine_banner'],
-  pearl=theme_catalog['pearl_corporate']
+  royal=theme_catalog['royal_banner'], professional=theme_catalog['steel_corporate'],
+  emerald=theme_catalog['emerald_sidebar'], midnight=theme_catalog['midnight_split'],
+  rose=theme_catalog['rose_card'], lavender=theme_catalog['lavender_minimal'],
+  teal=theme_catalog['teal_header'], charcoal=theme_catalog['charcoal_classic'],
+  minimal=theme_catalog['pearl_corporate'], sky=theme_catalog['sky_banner'],
+  forest=theme_catalog['forest_timeline'], terracotta=theme_catalog['terracotta_editorial'],
+  plum=theme_catalog['plum_sidebar'], classic=theme_catalog['ivory_cards'],
+  coral=theme_catalog['coral_minimal'], sapphire=theme_catalog['sapphire_corporate'],
+  champagne=theme_catalog['champagne_cards'], burgundy=theme_catalog['burgundy_split'],
+  indigo=theme_catalog['indigo_minimal'], copper=theme_catalog['copper_timeline'],
+  ocean=theme_catalog['ocean_editorial'], sage=theme_catalog['sage_sidebar'],
+  ruby=theme_catalog['ruby_banner'], steel=theme_catalog['steel_corporate'],
+  mint=theme_catalog['mint_cards'], sunset=theme_catalog['sunset_split'],
+  peacock=theme_catalog['peacock_minimal'], blush=theme_catalog['blush_timeline'],
+  olive=theme_catalog['olive_editorial'], ice=theme_catalog['ice_sidebar'],
+  onyx=theme_catalog['onyx_banner'], mauve=theme_catalog['mauve_corporate'],
+  amber=theme_catalog['amber_cards'], crimson=theme_catalog['crimson_split'],
+  lagoon=theme_catalog['lagoon_minimal'], sandstone=theme_catalog['sandstone_timeline'],
+  orchid=theme_catalog['orchid_editorial'], cobalt=theme_catalog['cobalt_sidebar'],
+  pine=theme_catalog['pine_banner'], pearl=theme_catalog['pearl_corporate']
 ) %}
 {% set selected_theme = theme_catalog.get(theme, theme_catalog['cyan']) %}
 {% set layout = selected_theme.layout %}
 {% set is_round_photo = layout in ['sidebar','cards','editorial'] or theme == 'cyan' %}
 {% set mood_fonts = {
-  'Professional': ('Oswald','Inter'),
-  'Traditional': ('Libre Baskerville','Lato'),
-  'Elegant': ('Playfair Display','Lato'),
-  'Premium': ('Cinzel','Lato'),
-  'Modern': ('Montserrat','Inter'),
-  'Creative': ('Playfair Display','Poppins'),
-  'Fresh': ('Montserrat','Nunito Sans'),
-  'Luxury': ('Cormorant Garamond','Nunito Sans'),
-  'Classic': ('Libre Baskerville','Source Sans 3'),
-  'Royal': ('Cinzel','Lato'),
-  'Bold': ('Oswald','Roboto'),
-  'Minimal': ('DM Sans','Inter')
+  'Professional': ('Oswald','Inter'), 'Traditional': ('Libre Baskerville','Lato'),
+  'Elegant': ('Playfair Display','Lato'), 'Premium': ('Cinzel','Lato'),
+  'Modern': ('Montserrat','Inter'), 'Creative': ('Playfair Display','Poppins'),
+  'Fresh': ('Montserrat','Nunito Sans'), 'Luxury': ('Cormorant Garamond','Nunito Sans'),
+  'Classic': ('Libre Baskerville','Source Sans 3'), 'Royal': ('Cinzel','Lato'),
+  'Bold': ('Oswald','Roboto'), 'Minimal': ('DM Sans','Inter')
 } %}
 {% set fonts = mood_fonts.get(selected_theme.mood, ('Playfair Display','Lato')) %}
-{% set display_font = fonts[0] %}
-{% set body_font = fonts[1] %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:wght@600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=Lato:wght@400;700;900&family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&family=Oswald:wght@500;600;700&family=Playfair+Display:wght@600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--primary:{{ selected_theme.primary }};--accent:{{ selected_theme.accent }};--paper:{{ selected_theme.paper }};--ink:{{ selected_theme.ink }};--muted:{{ selected_theme.muted }};--track:{{ selected_theme.track }};--title-tint:{{ selected_theme.tint }};--display:'{{ display_font }}',Georgia,serif;--body:'{{ body_font }}',Arial,sans-serif}
+:root{--primary:{{ selected_theme.primary }};--accent:{{ selected_theme.accent }};--paper:{{ selected_theme.paper }};--ink:{{ selected_theme.ink }};--muted:{{ selected_theme.muted }};--track:{{ selected_theme.track }};--title-tint:{{ selected_theme.tint }};--display:'{{ fonts[0] }}',Georgia,serif;--body:'{{ fonts[1] }}',Arial,sans-serif}
 *{box-sizing:border-box}html,body{margin:0;padding:0;background:#e9edf2;color:var(--ink);font-family:var(--body);font-size:10pt;line-height:1.45}
 @page{size:A4;margin:0}
-.page{width:210mm;min-height:297mm;margin:0 auto;background:var(--paper);position:relative;padding:13mm 14mm 12mm;overflow:visible}
+.page{width:210mm;min-height:297mm;margin:0 auto;background:var(--paper);position:relative;padding:11mm 14mm 12mm;overflow:visible}
 .page:before{content:"";position:absolute;inset:5mm;border:1.2px solid var(--accent);pointer-events:none;opacity:.75}
 .page:after{content:"";position:absolute;inset:8mm;border:.45px solid var(--accent);pointer-events:none;opacity:.28}
 .content{position:relative;z-index:1}
-.header{position:relative;text-align:center;padding:5mm 4mm 6mm;border-bottom:1.5px solid var(--accent);min-height:45mm}
+.header{position:relative;text-align:center;padding:1mm 4mm 5mm;border-bottom:1.5px solid var(--accent);min-height:0}
 .ornament{color:var(--accent);font-size:15pt;letter-spacing:7px;margin-bottom:2mm}
 .photo{width:34mm;height:40mm;margin:0 auto 3mm;padding:1.2mm;border:2px solid var(--accent);border-radius:{{ '50%' if is_round_photo else '3mm' }};background:var(--paper);box-shadow:0 2mm 5mm #00000018;overflow:hidden}
 .photo img{width:100%;height:100%;object-fit:cover;border-radius:{{ '50%' if is_round_photo else '1.5mm' }};display:block}
@@ -161,13 +133,12 @@
 .signature{text-align:center;min-width:42mm}.signature-line{height:10mm;border-bottom:1px solid var(--muted);margin-bottom:1.5mm}
 .signature-label{text-transform:uppercase;letter-spacing:1px;font-weight:700;font-size:8pt}
 
-/* Layout 1: Classic centered (base styles, no override) */
-/* Layout 2: Traditional centered biodata */
-.layout-traditional .header{padding-top:7mm;border-bottom:3px double var(--accent)}.layout-traditional .ornament{font-size:19pt}
+/* ── Layouts ── */
+.layout-traditional .header{padding-top:2mm;border-bottom:3px double var(--accent)}.layout-traditional .ornament{font-size:19pt}
 .layout-traditional .name{text-transform:uppercase;letter-spacing:1.3px}
 .layout-traditional .section-title{border-bottom:1px solid var(--accent);padding-bottom:1.5mm}
-/* Layout 3: Coloured left sidebar */
-.layout-sidebar .resume-body{display:grid;grid-template-columns:62mm minmax(0,1fr);gap:7mm;margin-top:5mm}
+
+.layout-sidebar .resume-body{display:grid;grid-template-columns:62mm minmax(0,1fr);gap:7mm;margin-top:4mm}
 .layout-sidebar .side-column{background:var(--primary);color:#fff;padding:5mm 4mm;border-radius:2mm;align-self:start}
 .layout-sidebar .side-column .section{margin-top:5mm}.layout-sidebar .side-column .section-title{color:#fff;font-size:10pt}
 .layout-sidebar .side-column .section-title:after{background:var(--accent)}
@@ -179,54 +150,54 @@
 .layout-sidebar .side-column .skill-name{grid-column:1 / -1;font-size:8.5pt}
 .layout-sidebar .side-column .track{grid-column:1;height:1.8mm}
 .layout-sidebar .side-column .skill-pct{font-size:7.5pt}
-.layout-sidebar .header{text-align:left;padding-left:5mm;border:0;min-height:40mm}
+.layout-sidebar .header{text-align:left;padding-left:5mm;border:0;min-height:0}
 .layout-sidebar .header .photo{float:left;margin:0 6mm 2mm 0}
-.layout-sidebar .header .ornament{display:none}.layout-sidebar .header .name{padding-top:5mm}
-/* Layout 4: Full-width banner */
-.layout-banner .header{background:var(--primary);color:white;border:0;border-radius:2mm;padding:8mm 6mm}
+.layout-sidebar .header .ornament{display:none}.layout-sidebar .header .name{padding-top:2mm}
+
+.layout-banner .header{background:var(--primary);color:white;border:0;border-radius:2mm;padding:6mm 6mm}
 .layout-banner .name{color:white}.layout-banner .subtitle,.layout-banner .contact-line{color:#fff;opacity:.9}
 .layout-banner .ornament{color:var(--accent)}
 .layout-banner .section-title{background:var(--title-tint);padding:2mm 3mm;border-radius:1mm}
-/* Layout 5: Corporate header */
-.layout-corporate .header{text-align:left;padding:5mm 5mm 5mm 7mm;border-left:4mm solid var(--accent);min-height:39mm}
+
+.layout-corporate .header{text-align:left;padding:2mm 5mm 4mm 7mm;border-left:4mm solid var(--accent);min-height:0}
 .layout-corporate .photo{float:right;margin:0 0 2mm 7mm}.layout-corporate .ornament{display:none}
-.layout-corporate .name{padding-top:5mm}.layout-corporate .contact-line{max-width:125mm}
+.layout-corporate .name{padding-top:0}.layout-corporate .contact-line{max-width:125mm}
 .layout-corporate .section-title{font-family:var(--body);font-size:11pt;letter-spacing:1.5px;border-bottom:1px solid var(--accent);padding-bottom:1mm}
-/* Layout 6: Floating white cards */
+
 .layout-cards .section{background:#fff;padding:4mm;border:1px solid var(--track);border-radius:3mm;box-shadow:0 1mm 3mm #0000000b}
 .layout-cards .section-title{margin-bottom:3mm}
 .layout-cards .header{border:0;margin-bottom:3mm;background:linear-gradient(135deg,var(--title-tint),var(--paper));border-radius:4mm}
 .layout-cards .photo{border-radius:50%}
 .page.layout-cards{background:var(--title-tint)}
-/* Layout 7: Bold split panel */
-.layout-split .header{background:var(--primary);color:white;text-align:left;padding:8mm 7mm;border-radius:3mm 3mm 0 0}
+
+.layout-split .header{background:var(--primary);color:white;text-align:left;padding:6mm 7mm;border-radius:3mm 3mm 0 0}
 .layout-split .name{color:white}.layout-split .subtitle,.layout-split .contact-line{color:#fff}
 .layout-split .photo{float:right;margin:0 0 2mm 8mm}.layout-split .ornament{display:none}
 .layout-split .section-title{border-bottom:2px solid var(--accent);padding-bottom:1.5mm}
-/* Layout 8: Minimal typography */
+
 .layout-minimal .page:before,.layout-minimal .page:after{display:none}
 .layout-minimal .header{border-bottom:2px solid var(--primary);text-align:left;padding-left:0}
 .layout-minimal .ornament{display:none}
 .layout-minimal .photo{float:right;margin:0 0 2mm 8mm;border:1px solid var(--accent);box-shadow:none}
-.layout-minimal .name{padding-top:5mm}
+.layout-minimal .name{padding-top:2mm}
 .layout-minimal .section-title{font-family:var(--body);font-size:10pt;letter-spacing:1.8px}
 .layout-minimal .section-title:after{background:var(--primary);opacity:.35}
-/* Layout 9: Timeline accents */
+
 .layout-timeline .section{border-left:2px solid var(--accent);margin-left:3mm;padding-left:5mm}
 .layout-timeline .section-title{position:relative}
 .layout-timeline .section-title:before{content:"";position:absolute;left:-7.2mm;width:3mm;height:3mm;background:var(--primary);border:1px solid var(--paper);border-radius:50%}
 .layout-timeline .header{border-bottom:3px solid var(--primary)}
 .layout-timeline .ornament{letter-spacing:10px}
-/* Layout 10: Editorial asymmetry */
-.layout-editorial .header{text-align:left;padding:5mm 5mm 7mm;border-bottom:0}
+
+.layout-editorial .header{text-align:left;padding:3mm 5mm 6mm;border-bottom:0}
 .layout-editorial .header:after{content:"";position:absolute;left:0;bottom:0;width:45mm;height:3px;background:var(--accent)}
 .layout-editorial .photo{float:right;margin:0 0 2mm 8mm;border-radius:1mm}
 .layout-editorial .ornament{display:none}.layout-editorial .name{font-size:30pt}
 .layout-editorial .section-title{font-family:var(--body);font-size:10pt;letter-spacing:2px}
 .layout-editorial .section{margin-top:7mm}
 
-/* Theme-specific overrides (all use CSS vars - no hardcoded colors) */
-.theme-cyan .header{background:linear-gradient(110deg,var(--primary) 0 48%,var(--accent) 48% 100%);padding:8mm 6mm;border:0;text-align:left}
+/* Theme-specific overrides (all use CSS vars) */
+.theme-cyan .header{background:linear-gradient(110deg,var(--primary) 0 48%,var(--accent) 48% 100%);padding:6mm;border:0;text-align:left}
 .theme-cyan .name,.theme-cyan .subtitle,.theme-cyan .contact-line{color:white}
 .theme-cyan .photo{float:left;margin:0 7mm 2mm 0;border-radius:50%}
 .theme-cyan .ornament{display:none}
@@ -235,14 +206,14 @@
 .theme-orange_sidebar .side-column .section-title{color:white}
 .theme-orange_sidebar .header .name{color:var(--primary)}
 .theme-navy_classic .section-title{background:var(--primary);color:white;padding:1.5mm 3mm}
-.theme-blue_corporate .header{background:var(--primary);color:white}
+.theme-blue_corporate .header{background:var(--primary);color:white;padding:6mm}
 .theme-blue_corporate .name,.theme-blue_corporate .subtitle,.theme-blue_corporate .contact-line{color:white}
 .theme-blue_corporate .photo{float:left;margin:0 7mm 2mm 0}
 .theme-blue_corporate .ornament{display:none}
 
 @media print{
  html,body{background:var(--paper)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
- .page{width:210mm;min-height:0;margin:0;padding:13mm 14mm 12mm;overflow:visible;box-shadow:none}
+ .page{width:210mm;min-height:0;margin:0;padding:11mm 14mm 12mm;overflow:visible;box-shadow:none}
  .page:before,.page:after{position:fixed;inset:5mm}.page:after{inset:8mm}
  .header,.section-title,.grid,.skill,.footer,.photo{break-inside:avoid;page-break-inside:avoid}
  .section{break-inside:auto;page-break-inside:auto}
@@ -265,7 +236,7 @@
 <main class="content">
 <header class="header">
  <div class="ornament">✦ ❖ ✦</div>
- <div class="photo">
+ <div class="photo" id="photoBox" style="{{ '' if photo else 'display:none' }}">
  {% if photo %}
  <img id="profilePhoto" src="{{ photo }}" alt="Profile photo">
  <div class="photo-empty" id="photoEmpty" style="display:none">PROFILE PHOTO</div>
@@ -275,7 +246,7 @@
  {% endif %}
  </div>
  <h1 class="name">{{ name or 'YOUR NAME' }}</h1>
- <div class="subtitle">{% if selected_theme.mood == 'Professional' %}Professional Resume{% else %}{{ selected_theme.mood }} Biodata{% endif %}</div>
+ <div class="subtitle">Personal Biodata</div>
  {% if phone or email %}<div class="contact-line">{% if phone %}{{ phone }}{% endif %}{% if phone and email %} &nbsp; • &nbsp; {% endif %}{% if email %}{{ email }}{% endif %}</div>{% endif %}
 </header>
 
