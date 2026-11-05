@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>Biodata Maker Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#0f172a;--gold:#d4a853;--gold-2:#f59e0b;--gold-grad:linear-gradient(135deg,#d4a853,#f59e0b);--bg:#f1f5f9;--surface:#fff;--line:#e2e8f0;--ink:#0f172a;--ink-2:#475569;--ink-3:#94a3b8;--success:#10b981;--sh:0 4px 16px rgba(15,23,42,.06);--sh-lg:0 20px 48px rgba(15,23,42,.12);--r:12px;--t:.2s cubic-bezier(.4,0,.2,1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+img{max-width:100%;display:block}
+.app-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.9);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);border-bottom:1px solid var(--line);padding:12px 16px;padding-top:max(12px,env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;letter-spacing:-.02em}
+.logo-mark{width:34px;height:34px;background:var(--gold-grad);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;box-shadow:0 4px 12px rgba(212,168,83,.35)}
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#ecfdf5;color:#047857;font-size:11px;font-weight:700;border:1px solid #a7f3d0;white-space:nowrap}
+.status-pill::before{content:'';width:6px;height:6px;background:var(--success);border-radius:50%;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.tabs-mobile{display:none;background:var(--surface);border-bottom:1px solid var(--line);padding:8px;gap:6px}
+.tab-btn{flex:1;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:700;color:var(--ink-2);background:var(--bg);transition:all var(--t);min-height:44px}
+.tab-btn.active{background:var(--brand);color:#fff;box-shadow:0 4px 12px rgba(15,23,42,.15)}
+.app-main{display:grid;grid-template-columns:420px 1fr;height:calc(100vh - 63px);overflow:hidden}
+.editor{background:var(--surface);border-right:1px solid var(--line);overflow-y:auto;padding:16px;scrollbar-width:thin;scrollbar-color:#cbd5e1 transparent}
+.editor::-webkit-scrollbar{width:8px}
+.editor::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+.sec{border:1px solid var(--line);border-radius:var(--r);margin-bottom:10px;background:var(--surface);overflow:hidden;transition:all var(--t)}
+.sec[open]{border-color:rgba(212,168,83,.5);box-shadow:var(--sh)}
+.sec summary{list-style:none;padding:14px 16px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:13px;cursor:pointer;user-select:none;transition:background var(--t);min-height:52px}
+.sec summary:hover{background:#f8fafc}
+.sec summary::-webkit-details-marker{display:none}
+.sec summary::after{content:'';width:8px;height:8px;border-right:2px solid var(--ink-3);border-bottom:2px solid var(--ink-3);transform:rotate(-45deg);margin-left:auto;transition:transform var(--t);flex-shrink:0}
+.sec[open] summary::after{transform:rotate(45deg)}
+.sec-body{padding:0 16px 16px}
+.num-badge{width:24px;height:24px;border-radius:8px;background:var(--gold-grad);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;flex-shrink:0;box-shadow:0 2px 6px rgba(212,168,83,.3)}
+.fld{margin-bottom:12px}
+.fld:last-child{margin-bottom:0}
+.fld label{display:block;font-size:11px;font-weight:700;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.fld input,.fld textarea,.fld select{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;font-size:16px;background:var(--surface);outline:none;transition:all var(--t);min-height:46px;-webkit-appearance:none;appearance:none}
+@media(min-width:641px){.fld input,.fld textarea,.fld select{font-size:14px}}
+.fld input:focus,.fld textarea:focus,.fld select:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(212,168,83,.15);background:#fffdf8}
+.fld textarea{min-height:80px;resize:vertical;line-height:1.5}
+.fld input[type="file"]{padding:8px;font-size:12px}
+.fld-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tpl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tpl-btn{position:relative;padding:14px 10px;border:2px solid var(--line);border-radius:10px;background:var(--surface);text-align:left;font-size:12px;font-weight:700;color:var(--ink-2);min-height:70px;transition:all var(--t)}
+.tpl-btn:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:var(--sh)}
+.tpl-btn.active{border-color:var(--gold);background:linear-gradient(135deg,#fffdf8,#fdf8ec);color:var(--ink);box-shadow:0 0 0 4px rgba(212,168,83,.12)}
+.tpl-btn.active::before{content:'✓';position:absolute;top:8px;right:10px;width:18px;height:18px;background:var(--gold-grad);color:#fff;border-radius:50%;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;font-weight:800}
+.tpl-btn small{display:block;font-size:10px;font-weight:500;color:var(--ink-3);margin-top:3px;text-transform:none;letter-spacing:0}
+.tpl-swatch{width:100%;height:40px;border-radius:6px;margin-bottom:8px;display:flex;overflow:hidden}
+.tpl-swatch>div{flex:1}
+.preview-wrap{background:linear-gradient(135deg,#f8fafc,#e2e8f0);display:flex;flex-direction:column;overflow:hidden;position:relative}
+.preview-bar{padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0;border-bottom:1px solid var(--line);background:rgba(255,255,255,.6);backdrop-filter:blur(10px)}
+.preview-label{font-size:11px;font-weight:700;color:var(--ink-2);text-transform:uppercase;letter-spacing:.08em}
+.zoom-group{display:flex;gap:6px;background:rgba(255,255,255,.9);padding:4px;border-radius:999px;border:1px solid var(--line)}
+.zoom-btn{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--ink-2);transition:all var(--t)}
+.zoom-btn:hover{background:var(--brand);color:#fff}
+.preview-scroll{flex:1;overflow:auto;padding:20px;display:flex;justify-content:center;align-items:flex-start;scrollbar-width:thin}
+.preview-scroll::-webkit-scrollbar{width:10px;height:10px}
+.preview-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:5px}
+.preview-frame-holder{box-shadow:var(--sh-lg);border-radius:4px;overflow:hidden;background:#fff;transition:width .15s ease,height .15s ease}
+#previewFrame{width:794px;height:1123px;border:0;display:block;transform-origin:top left;transition:transform .15s ease}
+.app-footer{display:none;position:fixed;bottom:0;left:0;right:0;padding:12px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));background:rgba(255,255,255,.95);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);border-top:1px solid var(--line);gap:8px;z-index:100}
+.footer-btn{flex:1;min-height:48px;border-radius:12px;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:all var(--t)}
+.footer-btn:disabled{opacity:.6;cursor:not-allowed}
+.btn-pdf{background:var(--gold-grad);color:#fff;box-shadow:0 4px 14px rgba(212,168,83,.4);flex:2}
+.btn-pdf:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 22px rgba(212,168,83,.5)}
+.btn-save{background:var(--bg);color:var(--ink);border:1.5px solid var(--line)}
+@media(max-width:1023px){.app-main{display:block;height:auto;min-height:calc(100vh - 130px);padding-bottom:90px}.tabs-mobile{display:flex}.app-footer{display:flex}.panel{display:none}.panel.active{display:block}.editor{height:auto;border-right:0;padding:12px}.preview-wrap{height:calc(100vh - 180px);min-height:500px}.preview-scroll{padding:12px}}
+@media(max-width:400px){.tpl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tpl-btn{padding:10px 8px;font-size:11px}.fld-row{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo">
+    <div class="logo-mark">B</div>
+    <span>Biodata<span style="color:var(--gold)">Pro</span></span>
+  </div>
+  <div class="status-pill" id="statusPill">Auto-save</div>
+</header>
+
+<div class="tabs-mobile">
+  <button class="tab-btn active" data-tab="edit">✏️ Edit</button>
+  <button class="tab-btn" data-tab="preview">👁 Preview</button>
+</div>
+
+<main class="app-main">
+  <aside class="editor panel active" id="editPanel">
+
+    <details class="sec" open>
+      <summary><span class="num-badge">1</span> Choose Template <small style="margin-left:auto;color:#94a3b8;font-size:10px">56 DESIGNS</small></summary>
+      <div class="sec-body">
+        <div class="tpl-grid">
+          <!-- Traditional / Classic -->
+          <button class="tpl-btn active" data-theme="cyan">
+            <div class="tpl-swatch"><div style="background:#164E63"></div><div style="background:#38BDF8"></div></div>
+            Cyan Classic<small>Professional</small>
+          </button>
+          <button class="tpl-btn" data-theme="navy_classic">
+            <div class="tpl-swatch"><div style="background:#183153"></div><div style="background:#D9A441"></div></div>
+            Navy Classic<small>Traditional</small>
+          </button>
+          <button class="tpl-btn" data-theme="charcoal_classic">
+            <div class="tpl-swatch"><div style="background:#30343B"></div><div style="background:#D9B66D"></div></div>
+            Charcoal Classic<small>Classic</small>
+          </button>
+
+          <!-- Corporate -->
+          <button class="tpl-btn" data-theme="blue_corporate">
+            <div class="tpl-swatch"><div style="background:#155E9A"></div><div style="background:#55B9E8"></div></div>
+            Blue Corporate<small>Professional</small>
+          </button>
+          <button class="tpl-btn" data-theme="sapphire_corporate">
+            <div class="tpl-swatch"><div style="background:#174A86"></div><div style="background:#83B9EA"></div></div>
+            Sapphire Corporate<small>Professional</small>
+          </button>
+          <button class="tpl-btn" data-theme="steel_corporate">
+            <div class="tpl-swatch"><div style="background:#45586D"></div><div style="background:#B6C8D8"></div></div>
+            Steel Corporate<small>Professional</small>
+          </button>
+          <button class="tpl-btn" data-theme="mauve_corporate">
+            <div class="tpl-swatch"><div style="background:#875E7F"></div><div style="background:#E2BFD7"></div></div>
+            Mauve Corporate<small>Elegant</small>
+          </button>
+          <button class="tpl-btn" data-theme="pearl_corporate">
+            <div class="tpl-swatch"><div style="background:#62616A"></div><div style="background:#D4D1D9"></div></div>
+            Pearl Corporate<small>Minimal</small>
+          </button>
+          <button class="tpl-btn" data-theme="graphite_corporate">
+            <div class="tpl-swatch"><div style="background:#3A3A3F"></div><div style="background:#B5B5BA"></div></div>
+            Graphite Corporate<small>Professional</small>
+          </button>
+          <button class="tpl-btn" data-theme="smoke_corporate">
+            <div class="tpl-swatch"><div style="background:#5A6068"></div><div style="background:#B7BCC4"></div></div>
+            Smoke Corporate<small>Minimal</small>
+          </button>
+
+          <!-- Banner -->
+          <button class="tpl-btn" data-theme="teal_header">
+            <div class="tpl-swatch"><div style="background:#087E78"></div><div style="background:#6ED7CB"></div></div>
+            Teal Header<small>Professional</small>
+          </button>
+          <button class="tpl-btn" data-theme="sky_banner">
+            <div class="tpl-swatch"><div style="background:#1767A5"></div><div style="background:#79C9F2"></div></div>
+            Sky Banner<small>Professional</small>
+          </button>
+          <button class="tpl-btn" data-theme="ruby_banner">
+            <div class="tpl-swatch"><div style="background:#A51F45"></div><div style="background:#F2A0B5"></div></div>
+            Ruby Banner<small>Premium</small>
+          </button>
+          <button class="tpl-btn" data-theme="onyx_banner">
+            <div class="tpl-swatch"><div style="background:#292D36"></div><div style="background:#C0C9D4"></div></div>
+            Onyx Banner<small>Premium</small>
+          </button>
+          <button class="tpl-btn" data-theme="pine_banner">
+            <div class="tpl-swatch"><div style="background:#24533F"></div><div style="background:#B7D1B4"></div></div>
+            Pine Banner<small>Classic</small>
+          </button>
+          <button class="tpl-btn" data-theme="royal_banner">
+            <div class="tpl-swatch"><div style="background:#6B0F1A"></div><div style="background:#D4A853"></div></div>
+            Royal Banner<small>Royal</small>
+          </button>
+          <button class="tpl-btn" data-theme="turquoise_banner">
+            <div class="tpl-swatch"><div style="background:#1E8A90"></div><div style="background:#8DD9DD"></div></div>
+            Turquoise Banner<small>Modern</small>
+          </button>
+
+          <!-- Sidebar -->
+          <button class="tpl-btn" data-theme="orange_sidebar">
+            <div class="tpl-swatch"><div style="background:#F97316"></div><div style="background:#FFD08A"></div></div>
+            Orange Creative<small>Creative</small>
+          </button>
+          <button class="tpl-btn" data-theme="emerald_sidebar">
+            <div class="tpl-swatch"><div style="background:#075E49"></div><div style="background:#B8D8B0"></div></div>
+            Emerald Sidebar<small>Modern</small>
+          </button>
+          <button class="tpl-btn" data-theme="plum_sidebar">
+            <div class="tpl-swatch"><div style="background:#60345F"></div><div style="background:#D6A4D3"></div></div>
+            Plum Sidebar<small>Elegant</small>
+          </button>
+          <button class="tpl-btn" data-theme="sage_sidebar">
+            <div class="tpl-swatch"><div style="background:#526D54"></div><div style="background:#C5D2A6"></div></div>
+            Sage Sidebar<small>Elegant</small>
+          </button>
+          <button class="tpl-btn" data-theme="ice_sidebar">
+            <div class="tpl-swatch"><div style="background:#4B86A8"></div><div style="background:#B8DDEB"></div></div>
+            Ice Sidebar<small>Modern</small>
+          </button>
+          <button class="tpl-btn" data-theme="cobalt_sidebar">
+            <div class="tpl-swatch"><div style="background:#2457A6"></div><div style="background:#9CC5F4"></div></div>
+            Cobalt Sidebar<small>Professional</small>
+          </button>
+          <button class="tpl-btn" data-theme="arctic_sidebar">
+            <div class="tpl-swatch"><div style="background:#397C91"></div><div style="background:#B3DDE7"></div></div>
+            Arctic Sidebar<small>Modern</small>
+          </button>
+          <button class="tpl-btn" data-theme="maroon_sidebar">
+            <div class="tpl-swatch"><div style="background:#6B1F2E"></div><div style="background:#D4A0A8"></div></div>
+            Maroon Sidebar<small>Traditional</small>
+          </button>
+
+          <!-- Cards -->
+          <button class="tpl-btn" data-theme="rose_card">
+            <div class="tpl-swatch"><div style="background:#A33B5C"></div><div style="background:#F2B5C5"></div></div>
+            Rose Card<small>Elegant</small>
+          </button>
+          <button class="tpl-btn" data-theme="champagne_cards">
+            <div class="tpl-swatch"><div style="background:#8A6A42"></div><div style="background:#E6CE9D"></div></div>
+            Champagne Cards<small>Luxury</small>
+          </button>
+          <button class="tpl-btn" data-theme="mint_cards">
+            <div class="tpl-swatch"><div style="background:#177C68"></div><div style="background:#9BE0CD"></div></div>
+            Mint Cards<small>Fresh</small>
+          </button>
+          <button class="tpl-btn" data-theme="amber_cards">
+            <div class="tpl-swatch"><div style="background:#91621D"></div><div style="background:#F0C66E"></div></div>
+            Amber Cards<small>Luxury</small>
+          </button>
+          <button class="tpl-btn" data-theme="golden_cards">
+            <div class="tpl-swatch"><div style="background:#9B793A"></div><div style="background:#EBD18C"></div></div>
+            Golden Cards<small>Luxury</small>
+          </button>
+          <button class="tpl-btn" data-theme="ivory_cards">
+            <div class="tpl-swatch"><div style="background:#59616B"></div><div style="background:#C5CBD2"></div></div>
+            Ivory Cards<small>Traditional</small>
+          </button>
+          <button class="tpl-btn" data-theme="peach_cards">
+            <div class="tpl-swatch"><div style="background:#E8926A"></div><div style="background:#FAD5BF"></div></div>
+            Peach Cards<small>Elegant</small>
+          </button>
+
+          <!-- Split -->
+          <button class="tpl-btn" data-theme="midnight_split">
+            <div class="tpl-swatch"><div style="background:#24213D"></div><div style="background:#C7A7F5"></div></div>
+            Midnight Split<small>Premium</small>
+          </button>
+          <button class="tpl-btn" data-theme="burgundy_split">
+            <div class="tpl-swatch"><div style="background:#742B45"></div><div style="background:#E5A8B8"></div></div>
+            Burgundy Split<small>Premium</small>
+          </button>
+          <button class="tpl-btn" data-theme="sunset_split">
+            <div class="tpl-swatch"><div style="background:#B65336"></div><div style="background:#F6C07C"></div></div>
+            Sunset Split<small>Creative</small>
+          </button>
+          <button class="tpl-btn" data-theme="crimson_split">
+            <div class="tpl-swatch"><div style="background:#A52B36"></div><div style="background:#F0A3A4"></div></div>
+            Crimson Split<small>Bold</small>
+          </button>
+          <button class="tpl-btn" data-theme="slate_split">
+            <div class="tpl-swatch"><div style="background:#536879"></div><div style="background:#B7C9D5"></div></div>
+            Slate Split<small>Professional</small>
+          </button>
+          <button class="tpl-btn" data-theme="denim_split">
+            <div class="tpl-swatch"><div style="background:#2E5A88"></div><div style="background:#9FBAD1"></div></div>
+            Denim Split<small>Modern</small>
+          </button>
+
+          <!-- Minimal -->
+          <button class="tpl-btn" data-theme="lavender_minimal">
+            <div class="tpl-swatch"><div style="background:#6554A4"></div><div style="background:#C7B9F3"></div></div>
+            Lavender Minimal<small>Minimal</small>
+          </button>
+          <button class="tpl-btn" data-theme="indigo_minimal">
+            <div class="tpl-swatch"><div style="background:#443B91"></div><div style="background:#B5ADF4"></div></div>
+            Indigo Minimal<small>Modern</small>
+          </button>
+          <button class="tpl-btn" data-theme="peacock_minimal">
+            <div class="tpl-swatch"><div style="background:#075B59"></div><div style="background:#8AD8C8"></div></div>
+            Peacock Minimal<small>Modern</small>
+          </button>
+          <button class="tpl-btn" data-theme="lagoon_minimal">
+            <div class="tpl-swatch"><div style="background:#14747A"></div><div style="background:#82D9D2"></div></div>
+            Lagoon Minimal<small>Fresh</small>
+          </button>
+          <button class="tpl-btn" data-theme="coral_minimal">
+            <div class="tpl-swatch"><div style="background:#C45C58"></div><div style="background:#F4B8A7"></div></div>
+            Coral Minimal<small>Fresh</small>
+          </button>
+          <button class="tpl-btn" data-theme="lilac_minimal">
+            <div class="tpl-swatch"><div style="background:#B29BD8"></div><div style="background:#E0D3F0"></div></div>
+            Lilac Minimal<small>Elegant</small>
+          </button>
+
+          <!-- Timeline -->
+          <button class="tpl-btn" data-theme="forest_timeline">
+            <div class="tpl-swatch"><div style="background:#315B43"></div><div style="background:#C8B77A"></div></div>
+            Forest Timeline<small>Classic</small>
+          </button>
+          <button class="tpl-btn" data-theme="copper_timeline">
+            <div class="tpl-swatch"><div style="background:#96502E"></div><div style="background:#E8B18A"></div></div>
+            Copper Timeline<small>Classic</small>
+          </button>
+          <button class="tpl-btn" data-theme="blush_timeline">
+            <div class="tpl-swatch"><div style="background:#A65D79"></div><div style="background:#F0C4D2"></div></div>
+            Blush Timeline<small>Elegant</small>
+          </button>
+          <button class="tpl-btn" data-theme="sandstone_timeline">
+            <div class="tpl-swatch"><div style="background:#83705A"></div><div style="background:#D8C7AD"></div></div>
+            Sandstone Timeline<small>Classic</small>
+          </button>
+          <button class="tpl-btn" data-theme="moss_timeline">
+            <div class="tpl-swatch"><div style="background:#56704F"></div><div style="background:#C3D4A9"></div></div>
+            Moss Timeline<small>Classic</small>
+          </button>
+          <button class="tpl-btn" data-theme="bronze_timeline">
+            <div class="tpl-swatch"><div style="background:#8A5A2D"></div><div style="background:#D4A96A"></div></div>
+            Bronze Timeline<small>Classic</small>
+          </button>
+
+          <!-- Editorial -->
+          <button class="tpl-btn" data-theme="terracotta_editorial">
+            <div class="tpl-swatch"><div style="background:#A65338"></div><div style="background:#E8AA83"></div></div>
+            Terracotta Editorial<small>Modern</small>
+          </button>
+          <button class="tpl-btn" data-theme="ocean_editorial">
+            <div class="tpl-swatch"><div style="background:#075C78"></div><div style="background:#71C9D8"></div></div>
+            Ocean Editorial<small>Modern</small>
+          </button>
+          <button class="tpl-btn" data-theme="olive_editorial">
+            <div class="tpl-swatch"><div style="background:#626B32"></div><div style="background:#D1C58D"></div></div>
+            Olive Editorial<small>Classic</small>
+          </button>
+          <button class="tpl-btn" data-theme="orchid_editorial">
+            <div class="tpl-swatch"><div style="background:#74418A"></div><div style="background:#D4B1E8"></div></div>
+            Orchid Editorial<small>Creative</small>
+          </button>
+          <button class="tpl-btn" data-theme="wine_editorial">
+            <div class="tpl-swatch"><div style="background:#762D48"></div><div style="background:#D9A1B1"></div></div>
+            Wine Editorial<small>Premium</small>
+          </button>
+          <button class="tpl-btn" data-theme="jade_editorial">
+            <div class="tpl-swatch"><div style="background:#2F8B6F"></div><div style="background:#A5D8C6"></div></div>
+            Jade Editorial<small>Fresh</small>
+          </button>
+        </div>
+      </div>
+    </details>
+
+    <details class="sec" open>
+      <summary><span class="num-badge">2</span> Profile Photo</summary>
+      <div class="sec-body">
+        <div class="fld">
+          <label>Upload Photo</label>
+          <input type="file" id="photoFile" accept="image/*">
+        </div>
+      </div>
+    </details>
+
+    <details class="sec" open>
+      <summary><span class="num-badge">3</span> Personal Details</summary>
+      <div class="sec-body">
+        <div class="fld"><label>Full Name</label><input id="name" placeholder="Your Full Name"></div>
+        <div class="fld-row">
+          <div class="fld"><label>Date of Birth</label><input id="dob" placeholder="DD/MM/YYYY"></div>
+          <div class="fld"><label>Gender</label><input id="gender" placeholder="Male / Female"></div>
+        </div>
+        <div class="fld-row">
+          <div class="fld"><label>Height</label><input id="height" placeholder="5 ft 8 in"></div>
+          <div class="fld"><label>Weight</label><input id="weight" placeholder="70 kg"></div>
+        </div>
+        <div class="fld-row">
+          <div class="fld"><label>Blood Group</label><input id="blood" placeholder="O+"></div>
+          <div class="fld"><label>Marital Status</label><input id="marital" placeholder="Unmarried"></div>
+        </div>
+        <div class="fld-row">
+          <div class="fld"><label>Religion</label><input id="religion" placeholder="Hindu"></div>
+          <div class="fld"><label>Caste</label><input id="caste" placeholder="Optional"></div>
+        </div>
+        <div class="fld-row">
+          <div class="fld"><label>Gotra</label><input id="gotra" placeholder="Optional"></div>
+          <div class="fld"><label>Rashi</label><input id="rashi" placeholder="Optional"></div>
+        </div>
+        <div class="fld-row">
+          <div class="fld"><label>Nakshatra</label><input id="nakshatra" placeholder="Optional"></div>
+          <div class="fld"><label>Manglik</label><input id="manglik" placeholder="Yes / No"></div>
+        </div>
+        <div class="fld"><label>Profile / Objective</label><textarea id="profile" placeholder="Short introduction..."></textarea></div>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary><span class="num-badge">4</span> Contact Details</summary>
+      <div class="sec-body">
+        <div class="fld"><label>Mobile Number</label><input id="phone" placeholder="+91 XXXXX XXXXX" inputmode="tel"></div>
+        <div class="fld"><label>Email</label><input id="email" type="email" placeholder="name@example.com"></div>
+        <div class="fld"><label>Address</label><textarea id="address" placeholder="Full address..."></textarea></div>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary><span class="num-badge">5</span> Family Details</summary>
+      <div class="sec-body">
+        <div class="fld-row">
+          <div class="fld"><label>Father Name</label><input id="father" placeholder="Father name"></div>
+          <div class="fld"><label>Father Occupation</label><input id="father_job" placeholder="Occupation"></div>
+        </div>
+        <div class="fld-row">
+          <div class="fld"><label>Mother Name</label><input id="mother" placeholder="Mother name"></div>
+          <div class="fld"><label>Mother Occupation</label><input id="mother_job" placeholder="Occupation"></div>
+        </div>
+        <div class="fld"><label>Brothers</label><textarea id="brothers" placeholder="One per line..."></textarea></div>
+        <div class="fld"><label>Sisters</label><textarea id="sisters" placeholder="One per line..."></textarea></div>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary><span class="num-badge">6</span> Education</summary>
+      <div class="sec-body">
+        <div class="fld"><label>Qualifications</label><textarea id="education" placeholder="10th - 85%&#10;12th - 80%&#10;B.Tech - XYZ College"></textarea></div>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary><span class="num-badge">7</span> Work &amp; Skills</summary>
+      <div class="sec-body">
+        <div class="fld"><label>Experience</label><textarea id="experience" placeholder="2020-2023 - Company - Role"></textarea></div>
+        <div class="fld"><label>Skills (Name | Level 0-100)</label><textarea id="skills" placeholder="Python | 90&#10;Communication | 85&#10;Teamwork | 80"></textarea></div>
+        <div class="fld"><label>Languages</label><input id="languages" placeholder="Hindi, English"></div>
+        <div class="fld"><label>Hobbies</label><input id="hobbies" placeholder="Reading, Music"></div>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary><span class="num-badge">8</span> Declaration</summary>
+      <div class="sec-body">
+        <div class="fld"><label>Declaration</label><textarea id="declaration" placeholder="I hereby declare..."></textarea></div>
+        <div class="fld-row">
+          <div class="fld"><label>Place</label><input id="place" placeholder="Place"></div>
+          <div class="fld"><label>Date</label><input id="date" placeholder="DD/MM/YYYY"></div>
+        </div>
+      </div>
+    </details>
+
+  </aside>
+
+  <section class="preview-wrap panel" id="previewPanel">
+    <div class="preview-bar">
+      <span class="preview-label">Live Preview</span>
+      <div class="zoom-group">
+        <button class="zoom-btn" id="zoomOut" aria-label="Zoom out">−</button>
+        <button class="zoom-btn" id="zoomIn" aria-label="Zoom in">+</button>
+      </div>
+    </div>
+    <div class="preview-scroll" id="previewScroll">
+      <div class="preview-frame-holder" id="previewHolder">
+        <iframe id="previewFrame" title="Biodata Preview"></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="app-footer">
+  <button class="footer-btn btn-save" id="saveBtn">💾 Save</button>
+  <button class="footer-btn btn-pdf" id="pdfBtn">📥 Download PDF</button>
+</footer>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const FIELDS = ['name','dob','gender','height','weight','blood','marital','religion','caste','gotra','rashi','nakshatra','manglik','profile','phone','email','address','father','father_job','mother','mother_job','brothers','sisters','education','experience','skills','languages','hobbies','declaration','place','date'];
+let currentTheme = 'cyan', photoData = '', zoomLevel = 1;
+const STORAGE_KEY = 'biodata-pro-v4';
+
+function safeFilename(name) {
+  const base = String(name || 'Biodata').trim() || 'Biodata';
+  return base.replace(/[^a-zA-Z0-9_-]+/g, '_').replace(/^_+|_+$/g, '') || 'Biodata';
+}
+
+function collectData() {
+  const data = { theme: currentTheme, photo: photoData };
+  FIELDS.forEach(id => { data[id] = ($(id)?.value || '').trim(); });
+  return data;
+}
+
+let previewTimer = null;
+let pendingPreviewResolve = null;
+
+function scheduleUpdate() {
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(() => updatePreview(), 300);
+}
+
+function injectPhotoIntoFrame(frame) {
+  try {
+    const doc = frame.contentDocument;
+    if (!doc) return;
+    const photo = doc.getElementById('profilePhoto');
+    const empty = doc.getElementById('photoEmpty');
+    if (photo && photoData) {
+      photo.src = photoData;
+      photo.style.display = 'block';
+      if (empty) empty.style.display = 'none';
+    } else if (photo) {
+      photo.removeAttribute('src');
+      photo.style.display = 'none';
+      if (empty) empty.style.display = 'flex';
+    }
+  } catch (err) { console.warn('Photo inject failed:', err); }
+}
+
+function updatePreview() {
+  return new Promise(async (resolve) => {
+    try {
+      const previewData = collectData();
+      delete previewData.photo;
+      const res = await fetch('/api/preview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(previewData)
+      });
+      if (!res.ok) throw new Error('Preview failed');
+      const html = await res.text();
+      const frame = $('previewFrame');
+      const done = () => {
+        injectPhotoIntoFrame(frame);
+        fitPreview();
+        if (pendingPreviewResolve === done) pendingPreviewResolve = null;
+        resolve();
+      };
+      pendingPreviewResolve = done;
+      frame.onload = done;
+      frame.srcdoc = html;
+    } catch (err) {
+      console.warn('Preview error:', err);
+      resolve();
+    }
+  });
+}
+
+function fitPreview() {
+  const scroll = $('previewScroll'), holder = $('previewHolder'), frame = $('previewFrame');
+  if (!scroll || !frame) return;
+  const A4_W = 794, A4_H = 1123;
+  const styles = getComputedStyle(scroll);
+  const horizontalPadding = (parseFloat(styles.paddingLeft) || 0) + (parseFloat(styles.paddingRight) || 0);
+  const available = Math.max(160, scroll.clientWidth - horizontalPadding);
+  const scale = Math.min(1, available / A4_W) * zoomLevel;
+  frame.style.transform = `scale(${scale})`;
+  holder.style.width = (A4_W * scale) + 'px';
+  holder.style.height = (A4_H * scale) + 'px';
+}
+
+document.querySelectorAll('.tpl-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTheme = btn.dataset.theme;
+    saveDraft(); scheduleUpdate();
+  });
+});
+
+FIELDS.forEach(id => {
+  const el = $(id);
+  if (el) el.addEventListener('input', () => { scheduleUpdate(); saveDraft(); });
+});
+
+const photoInput = $('photoFile');
+if (photoInput) photoInput.addEventListener('change', (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { alert('Please select an image file'); e.target.value = ''; return; }
+  if (file.size > 8 * 1024 * 1024) { alert('Image must be under 8MB'); e.target.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX = 600;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        const ratio = Math.min(MAX / w, MAX / h);
+        w = Math.round(w * ratio); h = Math.round(h * ratio);
+      }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      photoData = canvas.toDataURL('image/jpeg', 0.85);
+      scheduleUpdate(); saveDraft();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+$('zoomIn').addEventListener('click', () => { zoomLevel = Math.min(2, zoomLevel * 1.15); fitPreview(); });
+$('zoomOut').addEventListener('click', () => { zoomLevel = Math.max(0.3, zoomLevel / 1.15); fitPreview(); });
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    $(tab === 'edit' ? 'editPanel' : 'previewPanel').classList.add('active');
+    if (tab === 'preview') setTimeout(fitPreview, 100);
+  });
+});
+
+function saveDraft() {
+  try {
+    const draft = { theme: currentTheme, photo: photoData, values: {} };
+    FIELDS.forEach(id => { draft.values[id] = $(id)?.value || ''; });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+    $('statusPill').textContent = '✓ Saved';
+    setTimeout(() => $('statusPill').textContent = 'Auto-save', 1500);
+  } catch (e) {
+    try {
+      const draft = { theme: currentTheme, values: {} };
+      FIELDS.forEach(id => { draft.values[id] = $(id)?.value || ''; });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+    } catch {}
+  }
+}
+
+function restoreDraft() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const draft = JSON.parse(raw);
+    if (draft.values) {
+      FIELDS.forEach(id => {
+        if (typeof draft.values[id] === 'string' && $(id)) $(id).value = draft.values[id];
+      });
+    }
+    if (draft.theme) {
+      currentTheme = draft.theme;
+      document.querySelectorAll('.tpl-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.theme === draft.theme);
+      });
+    }
+    if (draft.photo) photoData = draft.photo;
+  } catch (e) { console.warn('Restore failed:', e); }
+}
+
+$('saveBtn').addEventListener('click', saveDraft);
+
+async function downloadPDF() {
+  const btn = $('pdfBtn'), originalText = btn.textContent;
+  btn.disabled = true; btn.textContent = '⏳ Generating...';
+  try {
+    const data = collectData();
+    const res = await fetch('/api/pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Server PDF unavailable');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = safeFilename(data.name) + '_Biodata.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    btn.textContent = '✓ Downloaded!';
+    setTimeout(() => btn.textContent = originalText, 2000);
+  } catch (err) {
+    console.warn('Server PDF failed → client fallback:', err);
+    await clientSidePDF();
+    btn.textContent = originalText;
+  } finally { btn.disabled = false; }
+}
+
+async function clientSidePDF() {
+  try {
+    if (!window.html2canvas) await loadScriptFallback([
+      'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+      'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js'
+    ], () => !!window.html2canvas);
+    if (!window.jspdf) await loadScriptFallback([
+      'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+      'https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js'
+    ], () => !!window.jspdf);
+
+    clearTimeout(previewTimer);
+    await updatePreview();
+
+    const frame = $('previewFrame');
+    const frameDoc = frame.contentDocument;
+    if (!frameDoc) throw new Error('Preview not ready');
+    if (frameDoc.fonts && frameDoc.fonts.ready) {
+      try { await frameDoc.fonts.ready; } catch {}
+    }
+    if (document.fonts && document.fonts.ready) {
+      try { await document.fonts.ready; } catch {}
+    }
+
+    const page = frameDoc.querySelector('.page');
+    if (!page) throw new Error('Preview not ready');
+
+    const canvas = await html2canvas(page, {
+      scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: 794, logging: false
+    });
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+    const pdfWidth = 210;
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const pageHeight = 297;
+
+    if (pdfHeight <= pageHeight + 1) {
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+    } else {
+      let heightLeft = pdfHeight;
+      let position = 0;
+      pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft > 0) {
+        position -= pageHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight);
+        heightLeft -= pageHeight;
+      }
+    }
+    pdf.save(safeFilename($('name').value) + '_Biodata.pdf');
+  } catch (err) {
+    const message = 'PDF helper CDN load nahi ho paya. Internet connection check karein.\n\nAap browser ke Print / Save as PDF option se bhi PDF bana sakte hain.\n\nTechnical detail: ' + (err?.message || 'Unknown error');
+    if (confirm(message + '\n\nAbhi preview ko print ke liye kholen?')) {
+      try { $('previewFrame').contentWindow.focus(); $('previewFrame').contentWindow.print(); }
+      catch { alert('Preview print nahi ho saka. Page refresh karke dobara try karein.'); }
+    }
+  }
+}
+
+async function loadScriptFallback(urls, ready) {
+  let lastError;
+  for (const src of urls) {
+    try {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src; s.async = true; s.onload = resolve;
+        s.onerror = () => { s.remove(); reject(new Error('CDN unavailable: ' + new URL(src).hostname)); };
+        document.head.appendChild(s);
+      });
+      if (ready()) return;
+      lastError = new Error('CDN loaded but library was not initialized');
+    } catch (err) { lastError = err; }
+  }
+  throw lastError || new Error('All helper CDNs failed');
+}
+
+$('pdfBtn').addEventListener('click', downloadPDF);
+
+restoreDraft();
+updatePreview();
+window.addEventListener('resize', fitPreview);
+</script>
+</body>
+</html>
