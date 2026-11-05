@@ -2,13 +2,9 @@ from flask import Flask, send_from_directory, request, jsonify, send_file
 from io import BytesIO
 from pathlib import Path
 import os, re, datetime, logging
+import requests
+import urllib.parse
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-
-try:
-    from deep_translator import GoogleTranslator
-    TRANSLATOR_OK = True
-except Exception:
-    TRANSLATOR_OK = False
 
 try:
     from weasyprint import HTML
@@ -38,11 +34,10 @@ if GEMINI_API_KEY and GENAI_OK:
     except Exception:
         pass
 
-# 🔥 SMART CACHE FOR TRANSLATIONS (Fixes freeze & slow loading)
 TRANS_CACHE = {}
 
 def _translate(text, lang):
-    if not text or not lang or lang == "en" or not TRANSLATOR_OK:
+    if not text or not lang or lang == "en":
         return text
     
     text = str(text).strip()
@@ -52,16 +47,20 @@ def _translate(text, lang):
     if cache_key in TRANS_CACHE:
         return TRANS_CACHE[cache_key]
     
+    # 🔥 Direct Google API (100% Reliable, bypasses deep-translator blocks)
     try:
-        out = GoogleTranslator(source="auto", target=lang).translate(text)
-        TRANS_CACHE[cache_key] = out
-        return out
-    except Exception:
-        return text
+        url = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl={lang}&dt=t&q={urllib.parse.quote(text)}"
+        res = requests.get(url, timeout=5)
+        if res.status_code == 200:
+            data = res.json()
+            out = "".join([item[0] for item in data[0]])
+            TRANS_CACHE[cache_key] = out
+            return out
+    except Exception as e:
+        pass
+        
+    return text
 
-# ==========================================
-# UI LABELS DICTIONARY (Fast, 0ms)
-# ==========================================
 LABELS_MULTI = {
     "en": {"contact": "Contact Details", "personal": "Personal Details", "family": "Family Details", "skills": "Skills", "additional": "Additional Details", "profile": "Profile / Objective", "education": "Education", "experience": "Work Experience", "declaration": "Declaration", "dob": "Date of Birth", "gender": "Gender", "height": "Height", "weight": "Weight", "blood": "Blood Group", "marital": "Marital Status", "religion": "Religion", "caste": "Caste / Community", "gotra": "Gotra", "rashi": "Rashi", "nakshatra": "Nakshatra", "manglik": "Manglik", "phone": "Mobile Number", "email": "Email", "address": "Address", "father": "Father", "mother": "Mother", "brothers": "Brothers", "sisters": "Sisters", "languages": "Languages", "hobbies": "Hobbies", "place": "Place", "date": "Date", "signature": "Signature"},
     "hi": {"contact": "संपर्क विवरण", "personal": "व्यक्तिगत विवरण", "family": "पारिवारिक विवरण", "skills": "कौशल", "additional": "अतिरिक्त विवरण", "profile": "प्रोफ़ाइल / उद्देश्य", "education": "शिक्षा", "experience": "कार्य अनुभव", "declaration": "घोषणा", "dob": "जन्म तिथि", "gender": "लिंग", "height": "ऊंचाई", "weight": "वजन", "blood": "रक्त समूह", "marital": "वैवाहिक स्थिति", "religion": "धर्म", "caste": "जाति", "gotra": "गोत्र", "rashi": "राशि", "nakshatra": "नक्षत्र", "manglik": "मांगलिक", "phone": "मोबाइल नंबर", "email": "ईमेल", "address": "पता", "father": "पिता", "mother": "माता", "brothers": "भाई", "sisters": "बहनें", "languages": "भाषाएं", "hobbies": "शौक", "place": "स्थान", "date": "तिथि", "signature": "हस्ताक्षर"},
@@ -92,20 +91,39 @@ def _preprocess(payload):
             try: lv = max(0, min(100, int(float(lvl.strip()))))
             except: lv = 80
             if n.strip(): 
-                # Translate skill name
                 skills.append({"name": _translate(n.strip(), lang), "level": lv})
     data["skills_list"] = skills
 
-    # User Data Fields (Translate everything)
+    # 🔥 Direct Mapping for Dropdowns (Fixes Female, Muslim, No)
+    v_map = {
+        "hi": {"Male": "पुरुष", "Female": "महिला", "Other": "अन्य", "Unmarried": "अविवाहित", "Never Married": "कभी शादी नहीं की", "Divorced": "तलाकशुदा", "Widowed": "विधवा/विधुर", "Awaiting Divorce": "तालाक का इंतजार", "Yes": "हाँ", "No": "नहीं", "Partial": "आंशिक", "Hindu": "हिंदू", "Muslim": "मुस्लिम", "Christian": "ईसाई", "Sikh": "सिख", "Buddhist": "बौद्ध", "Jain": "जैन", "Parsi": "पारसी"},
+        "kn": {"Male": "ಪುರುಷ", "Female": "ಮಹಿಳೆ", "Other": "ಇತರೆ", "Unmarried": "ಅವಿವಾಹಿತ", "Never Married": "ಮದುವೆಯಾಗಿಲ್ಲ", "Divorced": "ವಿಚ್ಛೇದಿತ", "Widowed": "ವಿಧವೆ/ವಿಧುರ", "Awaiting Divorce": "ವಿಚ್ಛೇದನದ ನಿರೀಕ್ಷೆಯಲ್ಲಿದೆ", "Yes": "ಹೌದು", "No": "ಇಲ್ಲ", "Partial": "ಭಾಗಶಃ", "Hindu": "ಹಿಂದೂ", "Muslim": "ಮುಸ್ಲಿಂ", "Christian": "ಕ್ರಿಶ್ಚಿಯನ್", "Sikh": "ಸಿಖ್", "Buddhist": "ಬೌದ್ಧ", "Jain": "ಜೈನ", "Parsi": "ಪಾರ್ಸಿ"},
+        "ta": {"Male": "ஆண்", "Female": "பெண்", "Other": "மற்றவை", "Unmarried": "திருமணமாகாத", "Never Married": "திருமணம் செய்யவில்லை", "Divorced": "விவாகரத்து", "Widowed": "விதவை/விதுரர்", "Awaiting Divorce": "விவாகரத்துக்காக காத்திருக்கிறது", "Yes": "ஆம்", "No": "இல்லை", "Partial": "பகுதி", "Hindu": "இந்து", "Muslim": "முஸ்லீம்", "Christian": "கிறிஸ்தவர்", "Sikh": "சீக்கியர்", "Buddhist": "பௌத்தர்", "Jain": "சமணர்", "Parsi": "பார்சி"},
+        "te": {"Male": "పురుషుడు", "Female": "స్త్రీ", "Other": "ఇతర", "Unmarried": "అవివాహిత", "Never Married": "పెళ్లి కాదు", "Divorced": "విడాకులు", "Widowed": "వితంతువు", "Awaiting Divorce": "విడాకుల కోసం వేచి ఉంది", "Yes": "అవును", "No": "కాదు", "Partial": "పాక్షికం", "Hindu": "హిందూ", "Muslim": "ముస్లిం", "Christian": "క్రిస్టియన్", "Sikh": "సిక్కు", "Buddhist": "బౌద్ధ", "Jain": "జైన", "Parsi": "పార్సీ"},
+        "mr": {"Male": "पुरुष", "Female": "स्त्री", "Other": "इतर", "Unmarried": "अविवाहित", "Never Married": "लग्न झाले नाही", "Divorced": "घटस्पोटित", "Widowed": "विधवा/विधुर", "Awaiting Divorce": "घटस्फोटाच्या प्रतीक्षेत", "Yes": "होय", "No": "नाही", "Partial": "अर्धवट", "Hindu": "हिंदू", "Muslim": "मुस्लिम", "Christian": "ख्रिश्चन", "Sikh": "शीख", "Buddhist": "बौद्ध", "Jain": "जैन", "Parsi": "पारशी"},
+        "gu": {"Male": "પુરુષ", "Female": "સ્ત્રી", "Other": "અન્ય", "Unmarried": "અવિવાહિત", "Never Married": "કદી લગ્ન કર્યા નથી", "Divorced": "છૂટાછેડા", "Widowed": "વિધવા/વિધુર", "Awaiting Divorce": "છૂટાછેડાની રાહ જોઈ રહ્યા છે", "Yes": "હા", "No": "ના", "Partial": "આંશિક", "Hindu": "હિન્દુ", "Muslim": "મુસ્લિમ", "Christian": "ખ્રિસ્તી", "Sikh": "શીખ", "Buddhist": "બૌદ્ધ", "Jain": "જૈન", "Parsi": "પારસી"},
+        "bn": {"Male": "পুরুষ", "Female": "মহিলা", "Other": "অন্যান্য", "Unmarried": "অবিবাহিত", "Never Married": "কখনো বিয়ে করেননি", "Divorced": "বিচ্ছেদ", "Widowed": "বিধবা/বিপত্নীক", "Awaiting Divorce": "বিচ্ছেদের অপেক্ষায়", "Yes": "হ্যাঁ", "No": "না", "Partial": "আংশিক", "Hindu": "হিন্দু", "Muslim": "মুসলিম", "Christian": "খ্রিস্টান", "Sikh": "শিখ", "Buddhist": "বৌদ্ধ", "Jain": "জৈন", "Parsi": "পারসি"},
+        "ml": {"Male": "പുരുഷൻ", "Female": "സ്ത്രീ", "Other": "മറ്റുള്ളവർ", "Unmarried": "അവിവാഹിതൻ", "Never Married": "വിവാഹം കഴിച്ചിട്ടില്ല", "Divorced": "വിവാഹമോചിതൻ", "Widowed": "വിധവ/വിധുരൻ", "Awaiting Divorce": "വിവാഹമോചനത്തിനായി കാത്തിരിക്കുന്നു", "Yes": "അതെ", "No": "ഇല്ല", "Partial": "ഭാഗികം", "Hindu": "ഹിന്ദു", "Muslim": "മുസ്ലിം", "Christian": "ക്രിസ്ത്യൻ", "Sikh": "സിഖ്", "Buddhist": "ബുദ്ധമതക്കാർ", "Jain": "ജൈന", "Parsi": "പാർസി"},
+        "pa": {"Male": "ਪੁਰਸ਼", "Female": "ਔਰਤ", "Other": "ਹੋਰ", "Unmarried": "ਅਣਵਿਆਹਿਆ", "Never Married": "ਕਦੇ ਵਿਆਹ ਨਹੀਂ ਕਰਵਾਇਆ", "Divorced": "ਤਲਾਕਸ਼ੁਦਾ", "Widowed": "ਵਿਧਵਾ/ਵਿਧੁਰ", "Awaiting Divorce": "ਤਲਾਕ ਦੀ ਉਡੀਕ", "Yes": "ਹਾਂ", "No": "ਨਹੀਂ", "Partial": "ਅੰਸ਼ਕ", "Hindu": "ਹਿੰਦੂ", "Muslim": "ਮੁਸਲਿਮ", "Christian": "ਈਸਾਈ", "Sikh": "ਸਿੱਖ", "Buddhist": "ਬੁੱਧ", "Jain": "ਜੈਨ", "Parsi": "ਪਾਰਸੀ"},
+        "or": {"Male": "ପୁରୁଷ", "Female": "ମହିଳା", "Other": "ଅନ୍ୟାନ୍ୟ", "Unmarried": "ଅବିବାହିତ", "Never Married": "କେବେ ବିବାହ କରିନାହାଁନ୍ତି", "Divorced": "ଛାଡପତ୍ର", "Widowed": "ବିଧବା/ବିଧୁର", "Awaiting Divorce": "ଛାଡପତ୍ର ଅପେକ୍ଷାରେ", "Yes": "ହଁ", "No": "ନା", "Partial": "ଆଂଶିକ", "Hindu": "ହିନ୍ଦୁ", "Muslim": "ମୁସଲିମ", "Christian": "ଖ୍ରୀଷ୍ଟିଆନ", "Sikh": "ଶିଖ", "Buddhist": "ବୌଦ୍ଧ", "Jain": "ଜୈନ", "Parsi": "ପାର୍ସି"}
+    }.get(lang, {})
+
+    for k in ["gender", "marital", "manglik", "religion", "caste"]:
+        val = str(data.get(k) or "").strip()
+        if val in v_map:
+            data[k] = v_map[val]
+        else:
+            data[k] = val
+
+    # Translate ALL text fields (including Name)
     translate_keys = [
         "name", "address", "profile", "father", "mother", "father_job", "mother_job", 
         "brothers", "sisters", "education_simple", "experience", "languages", "hobbies", 
-        "declaration", "place", "gender", "marital", "manglik", "religion", "caste"
+        "declaration", "place"
     ]
     for k in translate_keys:
         data[k] = _translate(str(data.get(k) or "").strip(), lang)
 
-    # Non-translated (Numbers, Dates, Contact)
     for k in ("dob", "weight", "phone", "email", "date"):
         data[k] = str(data.get(k) or "").strip()
 
