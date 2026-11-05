@@ -1,102 +1,119 @@
-# Biodata Maker Pro — 56 Unique Templates
+# ─────────────────────────────────────────────────────────────────────────────
+#  Biodata Maker Pro — GitHub Actions + Cloudflare Quick Tunnel
+#
+#  ⚠️  Use this ONLY with a PUBLIC repository.
+#      Private repos consume GitHub Actions minutes fast:
+#      350 min × 4 runs/day × 30 days ≈ 42,000 min/month
+#      (Free tier for private repos = 2,000 min/month → exhausted in ~1 day).
+#
+#  ℹ️  Each job produces a NEW Cloudflare tunnel URL. Copy it from the
+#      workflow run summary. The URL dies when the job ends (after ~6 h).
+#      The next scheduled run (every 6 h) starts a fresh tunnel.
+# ─────────────────────────────────────────────────────────────────────────────
+name: Biodata Maker Preview Server
 
-## Files
-- index.html                    — responsive editor, 56 template swatches,
-                                  live preview, client PDF fallback (multi-page).
-- app.py                        — Flask preview + PDF API (56 base + 40 alias themes).
-- pdf_template.html             — 56 unique templates across 10 layout families:
-                                  classic, traditional, sidebar, banner, corporate,
-                                  cards, split, minimal, timeline, editorial.
-- requirements.txt              — Python dependencies.
-- .github/workflows/server.yml  — optional GitHub Actions + Cloudflare Quick Tunnel.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
 
-## Run locally
-    python -m pip install -r requirements.txt
-    python app.py
-Open http://127.0.0.1:5000
+permissions:
+  contents: read
 
-## Templates included (56)
-Traditional / Classic (3): Cyan Classic, Navy Classic, Charcoal Classic.
-Corporate (7): Blue Corporate, Sapphire Corporate, Steel Corporate,
-Mauve Corporate, Pearl Corporate, Graphite Corporate, Smoke Corporate.
-Banner (7): Teal Header, Sky Banner, Ruby Banner, Onyx Banner, Pine Banner,
-Royal Banner, Turquoise Banner.
-Sidebar (8): Orange Creative, Emerald Sidebar, Plum Sidebar, Sage Sidebar,
-Ice Sidebar, Cobalt Sidebar, Arctic Sidebar, Maroon Sidebar.
-Cards (7): Rose Card, Champagne Cards, Mint Cards, Amber Cards, Golden Cards,
-Ivory Cards, Peach Cards.
-Split (6): Midnight Split, Burgundy Split, Sunset Split, Crimson Split,
-Slate Split, Denim Split.
-Minimal (6): Lavender Minimal, Indigo Minimal, Peacock Minimal,
-Lagoon Minimal, Coral Minimal, Lilac Minimal.
-Timeline (6): Forest Timeline, Copper Timeline, Blush Timeline,
-Sandstone Timeline, Moss Timeline, Bronze Timeline.
-Editorial (6): Terracotta Editorial, Ocean Editorial, Olive Editorial,
-Orchid Editorial, Wine Editorial, Jade Editorial.
+jobs:
+  serve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v4
 
-## Backward-compatible aliases (40)
-royal, professional, emerald, midnight, rose, lavender, teal, charcoal,
-minimal, sky, forest, terracotta, plum, classic, coral, sapphire, champagne,
-burgundy, indigo, copper, ocean, sage, ruby, steel, mint, sunset, peacock,
-blush, olive, ice, onyx, mauve, amber, crimson, lagoon, sandstone, orchid,
-cobalt, pine, pearl.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
 
-## Per-theme fonts
-Each template auto-selects a display + body font pair based on its mood:
-  Professional → Oswald / Inter
-  Traditional  → Libre Baskerville / Lato
-  Elegant      → Playfair Display / Lato
-  Premium      → Cinzel / Lato
-  Modern       → Montserrat / Inter
-  Creative     → Playfair Display / Poppins
-  Fresh        → Montserrat / Nunito Sans
-  Luxury       → Cormorant Garamond / Nunito Sans
-  Classic      → Libre Baskerville / Source Sans 3
-  Royal        → Cinzel / Lato
-  Bold         → Oswald / Roboto
-  Minimal      → DM Sans / Inter
+      - name: Install system libraries for WeasyPrint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libpango-1.0-0 libpangoft2-1.0-0 libcairo2 libgdk-pixbuf-2.0-0 \
+            libffi-dev shared-mime-info fonts-liberation fonts-dejavu
 
-## GitHub Actions deployment (optional demo)
-The workflow starts Flask, exposes it through a Cloudflare Quick Tunnel, and
-prints the public URL in the run summary. Keep in mind:
+      - name: Install Python dependencies (tolerant of WeasyPrint failure)
+        run: |
+          pip install --upgrade pip
+          pip install Flask==3.0.3 Jinja2==3.1.4 gunicorn==22.0.0
+          if ! pip install WeasyPrint==62.3; then
+            echo "::warning::WeasyPrint install failed — server-side PDF will 503 and client-side fallback will be used."
+          fi
 
-- Public repo only. Private-repo minutes run out in ~1 day at this duty cycle.
-- URL changes every 6 hours. Each cron run creates a new *.trycloudflare.com URL.
-  Bookmark the Actions tab and copy the latest URL from the step summary.
-- Not for production. Quick Tunnels are ephemeral and rate-limited. Use a
-  stable host (Render / Railway / Fly.io / a small VPS) if you need a
-  permanent URL.
-- WeasyPrint is optional. If it fails to install, /api/pdf returns 503 and the
-  client falls back to html2canvas + jsPDF (multi-page aware).
+      - name: Install Cloudflare Quick Tunnel
+        run: |
+          curl -L --fail -o cloudflared \
+            https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          chmod +x cloudflared
+          sudo mv cloudflared /usr/local/bin/cloudflared
+          cloudflared --version
 
-## What was fixed in this release
-- Palette misalignment in 12 templates corrected:
-    royal_banner         → real deep maroon (#6B0F1A) + gold (#D4A853)
-    graphite_corporate   → real graphite grey
-    peach_cards          → real peach
-    denim_split          → real denim blue
-    lilac_minimal        → real lilac
-    bronze_timeline      → real bronze
-    jade_editorial       → real jade green
-    maroon_sidebar       → real maroon
-    turquoise_banner     → real turquoise
-    smoke_corporate      → real smoke grey
-    (plus minor fixes to peach/pink tone continuity)
-- color-mix() removed everywhere → WeasyPrint + html2canvas now render skill
-  tracks and card tints correctly. Pre-computed --track / --title-tint per theme.
-- .layout-cards .page selector fixed → .page.layout-cards (card backgrounds now
-  actually render).
-- Sidebar skill bars no longer squeezed: stacked layout (name → bar → percent).
-- Per-theme display + body fonts restored (was DM Sans everywhere).
-- Hardcoded hex colors in theme overrides replaced with var(--primary) / var(--accent).
-- Subtitle uses theme mood (Professional Resume / {Mood} Biodata) — consistent
-  for professional and steel aliases.
-- app.py VALID_THEMES includes all 56 base names + 40 aliases = 96 keys.
-- index.html shows all 56 swatches with their correct palette preview.
-- Client PDF is multi-page: tall content sliced into A4 pages.
-- Download filenames sanitized (works with /, ?, <, > in names).
-- Fonts inside the preview iframe are awaited before html2canvas capture.
-- GitHub Actions: sleep shortened to fit inside timeout-minutes so cleanup runs;
-  Python deps split so a WeasyPrint failure doesn't kill the job; tunnel
-  health-check added; public-repo / ephemeral-URL warnings documented.
-- Mobile print boundary: page decorations hidden below 700 px.
+      - name: Start Flask
+        run: |
+          nohup python app.py >/tmp/flask.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:5000/api/health >/dev/null; then
+              echo "Flask is up."; break
+            fi
+            sleep 2
+          done
+          curl -sf http://127.0.0.1:5000/api/health || { echo "Flask failed:"; cat /tmp/flask.log; exit 1; }
+
+      - name: Start Cloudflare Quick Tunnel
+        id: tunnel
+        run: |
+          nohup cloudflared tunnel --url http://localhost:5000 --no-autoupdate >/tmp/tunnel.log 2>&1 &
+          URL=""
+          for i in $(seq 1 60); do
+            URL=$(grep -oE 'https://[a-z0-9-]+\.trycloudflare\.com' /tmp/tunnel.log | head -1 || true)
+            [ -n "$URL" ] && break
+            sleep 2
+          done
+          if [ -z "$URL" ]; then
+            echo "Tunnel failed to start:"; cat /tmp/tunnel.log; exit 1
+          fi
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "URL=$URL"
+
+      - name: Verify public URL responds
+        run: |
+          URL="${{ steps.tunnel.outputs.url }}"
+          for i in $(seq 1 20); do
+            if curl -sf "$URL/api/health" >/dev/null; then
+              echo "✅ Public URL is healthy: $URL"; exit 0
+            fi
+            sleep 3
+          done
+          echo "❌ Tunnel URL is not reachable (Cloudflare may still be warming up)."
+          curl -v "$URL/api/health" || true
+          exit 1
+
+      - name: Publish URL in run summary
+        run: |
+          URL="${{ steps.tunnel.outputs.url }}"
+          {
+            echo "## 🌐 Biodata Maker is live"
+            echo ""
+            echo "**URL:** $URL"
+            echo ""
+            echo "⏱️ This URL stays alive until this job ends (~6 h from start)."
+            echo "📅 The next scheduled run will publish a fresh URL — check this page again."
+            echo ""
+            echo "🧾 Health check: \`$URL/api/health\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep server alive (≈ 342 min)
+        run: sleep 20500
+
+      - name: Cleanup
+        if: always()
+        run: |
+          pkill -f cloudflared || true
+          pkill -f "python app.py" || true
