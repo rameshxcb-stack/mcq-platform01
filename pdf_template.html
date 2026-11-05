@@ -11,53 +11,24 @@
 {% set is_round = layout in ['sidebar','cards','editorial','classic','vintage'] %}
 {% set page_size = page_size or 'A4' %}
 
-<!-- Base fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&family=Lato:wght@400;700&family=Oswald:wght@500;600&family=Roboto:wght@400;500&family=Cormorant+Garamond:wght@600;700&family=Nunito+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600&family=Cinzel:wght@600;700&family=Fraunces:opsz,wght@9..144,700&family=Outfit:wght@400;500&family=Instrument+Serif&family=Instrument+Sans:wght@400;500&family=Anton&family=Martian+Mono:wght@400&family=Plus+Jakarta+Sans:wght@400;700&family=Space+Grotesk:wght@700&family=Space+Mono:wght@400&family=Syne:wght@700&family=DM+Serif+Display&family=DM+Sans:wght@400&family=Sora:wght@700&family=Manrope:wght@400&family=Bodoni+Moda:wght@700&family=Figtree:wght@400&family=Poiret+One&family=Josefin+Sans:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&family=Lato:wght@400;700&family=Oswald:wght@500;600&family=Roboto:wght@400;500&family=Cormorant+Garamond:wght@600;700&family=Nunito+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600&family=Cinzel:wght@600;700&family=Fraunces:opsz,wght@9..144,700&family=Outfit:wght@400;500&family=Instrument+Serif&family=Instrument+Sans:wght@400;500&family=Anton&family=Martian+Mono:wght@400&family=Plus+Jakarta+Sans:wght@400;700&family=Space+Grotesk:wght@700&family=Space+Mono:wght@400&family=Syne:wght@700&family=DM+Serif+Display&family=DM+Sans:wght@400&family=Sora:wght@700&family=Manrope:wght@400&family=Bodoni+Moda:wght@700&family=Figtree:wght@400&family=Poiret+One&family=Josefin+Sans:wght@400&family=Bitter:wght@700&family=PT+Sans:wght@400&family=Rajdhani:wght@700&family=Fira+Sans:wght@400&display=swap" rel="stylesheet">
 
-<!-- Script-specific fonts (loaded only when needed) -->
-{% if language in ['hi','mr','ne'] %}
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
-{% endif %}
-{% if language == 'bn' %}
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">
-{% endif %}
-{% if language == 'ta' %}
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet">
-{% endif %}
-{% if language == 'te' %}
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;700&display=swap" rel="stylesheet">
-{% endif %}
-{% if language == 'kn' %}
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;500;700&display=swap" rel="stylesheet">
-{% endif %}
-{% if language == 'ml' %}
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;500;700&display=swap" rel="stylesheet">
-{% endif %}
-{% if language == 'gu' %}
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;700&display=swap" rel="stylesheet">
-{% endif %}
-{% if language == 'pa' %}
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gurmukhi:wght@400;500;700&display=swap" rel="stylesheet">
-{% endif %}
-{% if language == 'or' %}
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Oriya:wght@400;500;700&display=swap" rel="stylesheet">
-{% endif %}
+{% if language in ['hi','mr','ne'] %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
+{% if language == 'bn' %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
+{% if language == 'ta' %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
+{% if language == 'te' %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
+{% if language == 'kn' %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
+{% if language == 'ml' %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
+{% if language == 'gu' %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
+{% if language == 'pa' %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gurmukhi:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
+{% if language == 'or' %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Oriya:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
 
 <style>
-/* =====================================================
-   ROOT TOKENS
-   ===================================================== */
 :root {
-  --primary: {{ t.primary }};
-  --accent: {{ t.accent }};
-  --tint: {{ t.tint }};
-  --ink: {{ t.ink }};
-  --muted: {{ t.ink }}99;
-  --track: {{ t.tint }};
-  --display: '{{ t.displayFont }}', serif;
-  --body: '{{ t.bodyFont }}', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --primary: {{ t.primary }}; --accent: {{ t.accent }}; --tint: {{ t.tint }}; --ink: {{ t.ink }}; --muted: {{ t.ink }}99; --track: {{ t.tint }};
+  --display: '{{ t.displayFont }}', serif; --body: '{{ t.bodyFont }}', system-ui, -apple-system, sans-serif;
   {% if language in ['hi','mr','ne'] %}--script: 'Noto Sans Devanagari', var(--body);{% endif %}
   {% if language == 'bn' %}--script: 'Noto Sans Bengali', var(--body);{% endif %}
   {% if language == 'ta' %}--script: 'Noto Sans Tamil', var(--body);{% endif %}
@@ -70,605 +41,118 @@
 }
 
 * { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font-family: var(--script, var(--body)); font-size: 10pt; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
-html, body {
-  margin: 0; padding: 0;
-  background: #e9edf2;
-  color: var(--ink);
-  font-family: var(--script, var(--body));
-  font-size: 10pt;
-  line-height: 1.5;
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
-}
-
-/* =====================================================
-   PAGE
-   ===================================================== */
-@page {
-  size: {{ page_size }} portrait;
-  margin: 0;
-}
-
-.page {
-  width: 210mm;
-  min-height: 297mm;
-  margin: 0 auto;
-  background: #fff;
-  position: relative;
-  padding: 11mm 14mm 14mm;
-  overflow: visible;
-  counter-reset: page;
-}
-
-.page::before {
-  content: "";
-  position: absolute;
-  inset: 5mm;
-  border: 1.2px solid var(--accent);
-  pointer-events: none;
-  opacity: .55;
-}
-
-.page::after {
-  content: "";
-  position: absolute;
-  inset: 8mm;
-  border: .45px solid var(--accent);
-  pointer-events: none;
-  opacity: .22;
-}
-
+@page { size: {{ page_size }} portrait; margin: 0; }
+.page { width: 210mm; min-height: 297mm; margin: 0 auto; background: #fff; position: relative; padding: 11mm 14mm 14mm; overflow: visible; counter-reset: page; }
+.page::before { content: ""; position: absolute; inset: 5mm; border: 1.2px solid var(--accent); pointer-events: none; opacity: .55; }
+.page::after { content: ""; position: absolute; inset: 8mm; border: .45px solid var(--accent); pointer-events: none; opacity: .22; }
 .content { position: relative; z-index: 1; }
 
-/* WATERMARK */
-.page.has-wm::before,
-.page.has-wm::after { z-index: 0; }
+.watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-family: var(--display); font-size: 130pt; color: var(--primary); opacity: .04; font-weight: 900; letter-spacing: 3mm; pointer-events: none; z-index: 0; white-space: nowrap; }
 
-.watermark {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) rotate(-30deg);
-  font-family: var(--display);
-  font-size: 130pt;
-  color: var(--primary);
-  opacity: .04;
-  font-weight: 900;
-  letter-spacing: 3mm;
-  pointer-events: none;
-  z-index: 0;
-  white-space: nowrap;
-}
+.header { position: relative; text-align: center; padding: 1mm 4mm 5mm; border-bottom: 1.5px solid var(--accent); }
+.ornament { color: var(--accent); font-size: 15pt; letter-spacing: 7px; margin-bottom: 2mm; }
+.photo { width: 34mm; height: 40mm; margin: 0 auto 3mm; padding: 1.2mm; border: 2px solid var(--accent); border-radius: {{ '50%' if is_round else '3mm' }}; background: #fff; box-shadow: 0 2mm 5mm #00000015; overflow: hidden; }
+.photo img { width: 100%; height: 100%; object-fit: cover; border-radius: {{ '50%' if is_round else '1.5mm' }}; display: block; }
+.name { font-family: var(--display); font-size: 27pt; line-height: 1.12; color: var(--primary); font-weight: 800; letter-spacing: .4px; overflow-wrap: anywhere; margin: 0; }
+.contact-line { margin-top: 2mm; color: var(--muted); font-size: 8.5pt; overflow-wrap: anywhere; }
 
-/* =====================================================
-   HEADER
-   ===================================================== */
-.header {
-  position: relative;
-  text-align: center;
-  padding: 1mm 4mm 5mm;
-  border-bottom: 1.5px solid var(--accent);
-}
-
-.ornament {
-  color: var(--accent);
-  font-size: 15pt;
-  letter-spacing: 7px;
-  margin-bottom: 2mm;
-}
-
-.photo {
-  width: 34mm; height: 40mm;
-  margin: 0 auto 3mm;
-  padding: 1.2mm;
-  border: 2px solid var(--accent);
-  border-radius: {{ '50%' if is_round else '3mm' }};
-  background: #fff;
-  box-shadow: 0 2mm 5mm #00000015;
-  overflow: hidden;
-}
-
-.photo img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  border-radius: {{ '50%' if is_round else '1.5mm' }};
-  display: block;
-}
-
-.name {
-  font-family: var(--display);
-  font-size: 27pt;
-  line-height: 1.12;
-  color: var(--primary);
-  font-weight: 800;
-  letter-spacing: .4px;
-  overflow-wrap: anywhere;
-  margin: 0;
-}
-
-.contact-line {
-  margin-top: 2mm;
-  color: var(--muted);
-  font-size: 8.5pt;
-  overflow-wrap: anywhere;
-}
-
-/* =====================================================
-   BODY
-   ===================================================== */
 .resume-body { display: block; }
 .side-column, .main-column { min-width: 0; }
-
 .section { margin-top: 5mm; break-inside: auto; }
+.section-title { display: flex; align-items: center; gap: 2mm; margin: 0 0 2.5mm; color: var(--primary); font-family: var(--display); font-size: 12pt; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; }
+.section-title::after { content: ""; height: 1px; flex: 1; background: linear-gradient(90deg, var(--accent), transparent); }
+.section-title .mark { color: var(--accent); font-size: 11pt; font-weight: 800; min-width: 15px; text-align: left; }
 
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 2mm;
-  margin: 0 0 2.5mm;
-  color: var(--primary);
-  font-family: var(--display);
-  font-size: 12pt;
-  font-weight: 800;
-  letter-spacing: 1.1px;
-  text-transform: uppercase;
-}
-
-.section-title::after {
-  content: "";
-  height: 1px;
-  flex: 1;
-  background: linear-gradient(90deg, var(--accent), transparent);
-}
-
-.section-title .mark {
-  color: var(--accent);
-  font-size: 11pt;
-  font-weight: 800;
-  min-width: 15px;
-  text-align: left;
-}
-
-/* GRID */
-.grid {
-  display: grid;
-  grid-template-columns: 38mm 1fr;
-  gap: 1.7mm 3mm;
-  padding: 0 2mm;
-}
-
+.grid { display: grid; grid-template-columns: 38mm 1fr; gap: 1.7mm 3mm; padding: 0 2mm; }
 .label { font-size: 8.5pt; color: var(--muted); font-weight: 700; }
 .value { font-size: 9.5pt; color: var(--ink); font-weight: 500; white-space: pre-line; overflow-wrap: anywhere; }
 .block { padding: 0 2mm; white-space: pre-line; text-align: justify; overflow-wrap: anywhere; }
 
-/* SKILLS */
-.skill {
-  display: grid;
-  grid-template-columns: 38mm 1fr 10mm;
-  gap: 3mm;
-  align-items: center;
-  margin: 2mm 2mm;
-}
-
-.skill-name { font-size: 9pt; font-weight: 700; }
-.track { height: 2.2mm; background: var(--track); border-radius: 10mm; overflow: hidden; }
+/* FIX: Skill Track Length */
+.skill { display: grid; grid-template-columns: 35mm 1fr 10mm; gap: 3mm; align-items: center; margin: 2mm 2mm; }
+.skill-name { font-size: 9pt; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.track { height: 2.2mm; background: var(--track); border-radius: 10mm; overflow: hidden; width: 100%; max-width: 85mm; /* Prevents bar from stretching to the end */ }
 .fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--primary)); border-radius: 10mm; }
 .skill-pct { font-size: 8pt; color: var(--muted); text-align: right; }
 
-/* FOOTER */
-.footer {
-  margin-top: 8mm;
-  padding-top: 3mm;
-  border-top: 1px solid var(--accent);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 10mm;
-  color: var(--muted);
-  font-size: 8.5pt;
-  break-inside: avoid;
-}
-
+.footer { margin-top: 8mm; padding-top: 3mm; border-top: 1px solid var(--accent); display: flex; justify-content: space-between; align-items: flex-end; gap: 10mm; color: var(--muted); font-size: 8.5pt; break-inside: avoid; }
 .signature { text-align: center; min-width: 42mm; }
 .signature-line { height: 10mm; border-bottom: 1px solid var(--muted); margin-bottom: 1.5mm; }
 .signature-label { text-transform: uppercase; letter-spacing: 1px; font-weight: 700; font-size: 8pt; }
 
-/* EDUCATION */
 .edu-item { margin-bottom: 3mm; padding-bottom: 2mm; border-bottom: 1px dashed var(--track); }
 .edu-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 .edu-header { display: flex; justify-content: space-between; font-weight: 700; font-size: 10pt; color: var(--primary); margin-bottom: 1mm; }
 .edu-sub { font-size: 9pt; color: var(--ink); margin-bottom: .5mm; }
 .edu-meta { font-size: 8.5pt; color: var(--muted); display: flex; gap: 4mm; }
 
-/* PAGE NUMBER */
-.page-num {
-  position: absolute;
-  bottom: 4mm; left: 0; right: 0;
-  text-align: center;
-  color: var(--muted);
-  font-size: 7.5pt;
-  letter-spacing: 1px;
-}
-
-/* =====================================================
-   LAYOUT 1 — CLASSIC (default)
-   ===================================================== */
-/* Default = centered header, bordered sections */
-
-/* =====================================================
-   LAYOUT 2 — SIDEBAR
-   ===================================================== */
-.layout-sidebar .resume-body {
-  display: grid;
-  grid-template-columns: 62mm minmax(0, 1fr);
-  gap: 7mm;
-  margin-top: 4mm;
-}
-
-.layout-sidebar .side-column {
-  background: var(--primary);
-  color: #fff;
-  padding: 5mm 4mm;
-  border-radius: 2mm;
-  align-self: start;
-}
-
-.layout-sidebar .side-column .section { margin-top: 5mm; }
-.layout-sidebar .side-column .section-title { color: #fff; font-size: 10pt; }
+/* LAYOUT SPECIFIC STYLES */
+.layout-sidebar .resume-body { display: grid; grid-template-columns: 62mm minmax(0, 1fr); gap: 7mm; margin-top: 4mm; }
+.layout-sidebar .side-column { background: var(--primary); color: #fff; padding: 5mm 4mm; border-radius: 2mm; align-self: start; }
+.layout-sidebar .side-column .section { margin-top: 5mm; } .layout-sidebar .side-column .section-title { color: #fff; font-size: 10pt; }
 .layout-sidebar .side-column .section-title::after { background: var(--accent); }
-.layout-sidebar .side-column .label,
-.layout-sidebar .side-column .value,
-.layout-sidebar .side-column .skill-name,
-.layout-sidebar .side-column .skill-pct { color: #fff; }
-.layout-sidebar .side-column .grid { grid-template-columns: 1fr; gap: 1mm; }
-.layout-sidebar .side-column .track { background: #ffffff55; }
+.layout-sidebar .side-column .label, .layout-sidebar .side-column .value, .layout-sidebar .side-column .skill-name, .layout-sidebar .side-column .skill-pct { color: #fff; }
+.layout-sidebar .side-column .grid { grid-template-columns: 1fr; gap: 1mm; } .layout-sidebar .side-column .track { background: #ffffff55; max-width: 100%; }
 .layout-sidebar .side-column .fill { background: var(--accent); }
-.layout-sidebar .side-column .skill {
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto;
-  gap: 1mm 2mm;
-}
-.layout-sidebar .side-column .skill-name { grid-column: 1 / -1; font-size: 8.5pt; }
-.layout-sidebar .side-column .track { grid-column: 1; height: 1.8mm; }
-.layout-sidebar .side-column .skill-pct { font-size: 7.5pt; }
+.layout-sidebar .side-column .skill { grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 1mm 2mm; }
+.layout-sidebar .side-column .skill-name { grid-column: 1 / -1; font-size: 8.5pt; } .layout-sidebar .side-column .track { grid-column: 1; height: 1.8mm; } .layout-sidebar .side-column .skill-pct { font-size: 7.5pt; }
+.layout-sidebar .header { text-align: left; padding-left: 5mm; border: 0; } .layout-sidebar .header .photo { float: left; margin: 0 6mm 2mm 0; } .layout-sidebar .header .ornament { display: none; } .layout-sidebar .header .name { padding-top: 2mm; }
 
-.layout-sidebar .header { text-align: left; padding-left: 5mm; border: 0; }
-.layout-sidebar .header .photo { float: left; margin: 0 6mm 2mm 0; }
-.layout-sidebar .header .ornament { display: none; }
-.layout-sidebar .header .name { padding-top: 2mm; }
+.layout-banner .header { background: var(--primary); color: white; border: 0; border-radius: 2mm; padding: 6mm; } .layout-banner .name { color: white; } .layout-banner .contact-line { color: #fff; opacity: .9; } .layout-banner .ornament { color: var(--accent); } .layout-banner .section-title { background: var(--tint); padding: 2mm 3mm; border-radius: 1mm; }
 
-/* =====================================================
-   LAYOUT 3 — BANNER
-   ===================================================== */
-.layout-banner .header {
-  background: var(--primary);
-  color: white;
-  border: 0;
-  border-radius: 2mm;
-  padding: 6mm;
-}
-.layout-banner .name { color: white; }
-.layout-banner .contact-line { color: #fff; opacity: .9; }
-.layout-banner .ornament { color: var(--accent); }
-.layout-banner .section-title { background: var(--tint); padding: 2mm 3mm; border-radius: 1mm; }
+.layout-corporate .header { text-align: left; padding: 2mm 5mm 4mm 7mm; border-left: 4mm solid var(--accent); } .layout-corporate .photo { float: right; margin: 0 0 2mm 7mm; } .layout-corporate .ornament { display: none; } .layout-corporate .name { padding-top: 0; } .layout-corporate .contact-line { max-width: 125mm; } .layout-corporate .section-title { font-family: var(--body); font-size: 11pt; letter-spacing: 1.5px; border-bottom: 1px solid var(--accent); padding-bottom: 1mm; }
 
-/* =====================================================
-   LAYOUT 4 — CORPORATE
-   ===================================================== */
-.layout-corporate .header {
-  text-align: left;
-  padding: 2mm 5mm 4mm 7mm;
-  border-left: 4mm solid var(--accent);
-}
-.layout-corporate .photo { float: right; margin: 0 0 2mm 7mm; }
-.layout-corporate .ornament { display: none; }
-.layout-corporate .name { padding-top: 0; }
-.layout-corporate .contact-line { max-width: 125mm; }
-.layout-corporate .section-title {
-  font-family: var(--body);
-  font-size: 11pt;
-  letter-spacing: 1.5px;
-  border-bottom: 1px solid var(--accent);
-  padding-bottom: 1mm;
-}
+.layout-cards .section { background: #fff; padding: 4mm; border: 1px solid var(--track); border-radius: 3mm; box-shadow: 0 1mm 3mm #0000000b; } .layout-cards .section-title { margin-bottom: 3mm; } .layout-cards .header { border: 0; margin-bottom: 3mm; background: linear-gradient(135deg, var(--tint), #fff); border-radius: 4mm; } .layout-cards .photo { border-radius: 50%; } .page.layout-cards { background: var(--tint); }
 
-/* =====================================================
-   LAYOUT 5 — CARDS
-   ===================================================== */
-.layout-cards .section {
-  background: #fff;
-  padding: 4mm;
-  border: 1px solid var(--track);
-  border-radius: 3mm;
-  box-shadow: 0 1mm 3mm #0000000b;
-}
-.layout-cards .section-title { margin-bottom: 3mm; }
-.layout-cards .header {
-  border: 0;
-  margin-bottom: 3mm;
-  background: linear-gradient(135deg, var(--tint), #fff);
-  border-radius: 4mm;
-}
-.layout-cards .photo { border-radius: 50%; }
-.page.layout-cards { background: var(--tint); }
+.layout-split .header { background: var(--primary); color: white; text-align: left; padding: 6mm 7mm; border-radius: 3mm 3mm 0 0; } .layout-split .name { color: white; } .layout-split .contact-line { color: #fff; } .layout-split .photo { float: right; margin: 0 0 2mm 8mm; } .layout-split .ornament { display: none; } .layout-split .section-title { border-bottom: 2px solid var(--accent); padding-bottom: 1.5mm; }
 
-/* =====================================================
-   LAYOUT 6 — SPLIT
-   ===================================================== */
-.layout-split .header {
-  background: var(--primary);
-  color: white;
-  text-align: left;
-  padding: 6mm 7mm;
-  border-radius: 3mm 3mm 0 0;
-}
-.layout-split .name { color: white; }
-.layout-split .contact-line { color: #fff; }
-.layout-split .photo { float: right; margin: 0 0 2mm 8mm; }
-.layout-split .ornament { display: none; }
-.layout-split .section-title { border-bottom: 2px solid var(--accent); padding-bottom: 1.5mm; }
+.layout-minimal .page::before, .layout-minimal .page::after { display: none; } .layout-minimal .header { border-bottom: 2px solid var(--primary); text-align: left; padding-left: 0; } .layout-minimal .ornament { display: none; } .layout-minimal .photo { float: right; margin: 0 0 2mm 8mm; border: 1px solid var(--accent); box-shadow: none; } .layout-minimal .name { padding-top: 2mm; } .layout-minimal .section-title { font-family: var(--body); font-size: 10pt; letter-spacing: 1.8px; } .layout-minimal .section-title::after { background: var(--primary); opacity: .35; }
 
-/* =====================================================
-   LAYOUT 7 — MINIMAL
-   ===================================================== */
-.layout-minimal .page::before,
-.layout-minimal .page::after { display: none; }
-.layout-minimal .header { border-bottom: 2px solid var(--primary); text-align: left; padding-left: 0; }
-.layout-minimal .ornament { display: none; }
-.layout-minimal .photo { float: right; margin: 0 0 2mm 8mm; border: 1px solid var(--accent); box-shadow: none; }
-.layout-minimal .name { padding-top: 2mm; }
-.layout-minimal .section-title { font-family: var(--body); font-size: 10pt; letter-spacing: 1.8px; }
-.layout-minimal .section-title::after { background: var(--primary); opacity: .35; }
+.layout-timeline .section { border-left: 2px solid var(--accent); margin-left: 3mm; padding-left: 5mm; } .layout-timeline .section-title { position: relative; } .layout-timeline .section-title::before { content: ""; position: absolute; left: -7.2mm; width: 3mm; height: 3mm; background: var(--primary); border: 1px solid #fff; border-radius: 50%; } .layout-timeline .header { border-bottom: 3px solid var(--primary); }
 
-/* =====================================================
-   LAYOUT 8 — TIMELINE
-   ===================================================== */
-.layout-timeline .section {
-  border-left: 2px solid var(--accent);
-  margin-left: 3mm;
-  padding-left: 5mm;
-}
-.layout-timeline .section-title { position: relative; }
-.layout-timeline .section-title::before {
-  content: "";
-  position: absolute;
-  left: -7.2mm;
-  width: 3mm;
-  height: 3mm;
-  background: var(--primary);
-  border: 1px solid #fff;
-  border-radius: 50%;
-}
-.layout-timeline .header { border-bottom: 3px solid var(--primary); }
+.layout-editorial .header { text-align: left; padding: 3mm 5mm 6mm; border-bottom: 0; } .layout-editorial .header::after { content: ""; position: absolute; left: 0; bottom: 0; width: 45mm; height: 3px; background: var(--accent); } .layout-editorial .photo { float: right; margin: 0 0 2mm 8mm; border-radius: 1mm; } .layout-editorial .ornament { display: none; } .layout-editorial .name { font-size: 30pt; } .layout-editorial .section-title { font-family: var(--body); font-size: 10pt; letter-spacing: 2px; } .layout-editorial .section { margin-top: 7mm; }
 
-/* =====================================================
-   LAYOUT 9 — EDITORIAL
-   ===================================================== */
-.layout-editorial .header { text-align: left; padding: 3mm 5mm 6mm; border-bottom: 0; }
-.layout-editorial .header::after {
-  content: "";
-  position: absolute;
-  left: 0; bottom: 0;
-  width: 45mm;
-  height: 3px;
-  background: var(--accent);
-}
-.layout-editorial .photo { float: right; margin: 0 0 2mm 8mm; border-radius: 1mm; }
-.layout-editorial .ornament { display: none; }
-.layout-editorial .name { font-size: 30pt; }
-.layout-editorial .section-title { font-family: var(--body); font-size: 10pt; letter-spacing: 2px; }
-.layout-editorial .section { margin-top: 7mm; }
+.layout-traditional .header { padding-top: 2mm; border-bottom: 3px double var(--accent); } .layout-traditional .ornament { font-size: 19pt; } .layout-traditional .name { text-transform: uppercase; letter-spacing: 1.3px; } .layout-traditional .section-title { border-bottom: 1px solid var(--accent); padding-bottom: 1.5mm; }
 
-/* =====================================================
-   LAYOUT 10 — TRADITIONAL
-   ===================================================== */
-.layout-traditional .header { padding-top: 2mm; border-bottom: 3px double var(--accent); }
-.layout-traditional .ornament { font-size: 19pt; }
-.layout-traditional .name { text-transform: uppercase; letter-spacing: 1.3px; }
-.layout-traditional .section-title { border-bottom: 1px solid var(--accent); padding-bottom: 1.5mm; }
+.layout-magazine .header { display: flex; align-items: flex-end; justify-content: space-between; text-align: left; padding-bottom: 2mm; border-bottom: 4px solid var(--primary); } .layout-magazine .header-copy { flex: 1; } .layout-magazine .photo { width: 28mm; height: 34mm; margin: 0 0 0 5mm; border: none; box-shadow: none; border-radius: 0; padding: 0; } .layout-magazine .name { font-size: 32pt; line-height: .95; } .layout-magazine .ornament { display: none; } .layout-magazine .resume-body { columns: 2; column-gap: 8mm; } .layout-magazine .section { break-inside: avoid; }
 
-/* =====================================================
-   LAYOUT 11 — MAGAZINE
-   ===================================================== */
-.layout-magazine .header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  text-align: left;
-  padding-bottom: 2mm;
-  border-bottom: 4px solid var(--primary);
-}
-.layout-magazine .header-copy { flex: 1; }
-.layout-magazine .photo {
-  width: 28mm;
-  height: 34mm;
-  margin: 0 0 0 5mm;
-  border: none;
-  box-shadow: none;
-  border-radius: 0;
-  padding: 0;
-}
-.layout-magazine .name { font-size: 32pt; line-height: .95; }
-.layout-magazine .ornament { display: none; }
-.layout-magazine .resume-body { columns: 2; column-gap: 8mm; }
-.layout-magazine .section { break-inside: avoid; }
+.layout-executive .header { background: var(--tint); color: var(--primary); padding: 5mm 6mm; border-bottom: 2px solid var(--primary); border-radius: 0; } .layout-executive .name { color: var(--primary); font-size: 24pt; } .layout-executive .photo { float: right; margin: 0 0 2mm 6mm; width: 30mm; height: 36mm; } .layout-executive .section-title { background: var(--primary); color: #fff; padding: 1.5mm 3mm; font-size: 10pt; } .layout-executive .section-title::after { display: none; }
 
-/* =====================================================
-   LAYOUT 12 — EXECUTIVE
-   ===================================================== */
-.layout-executive .header {
-  background: var(--tint);
-  color: var(--primary);
-  padding: 5mm 6mm;
-  border-bottom: 2px solid var(--primary);
-  border-radius: 0;
-}
-.layout-executive .name { color: var(--primary); font-size: 24pt; }
-.layout-executive .photo { float: right; margin: 0 0 2mm 6mm; width: 30mm; height: 36mm; }
-.layout-executive .section-title {
-  background: var(--primary);
-  color: #fff;
-  padding: 1.5mm 3mm;
-  font-size: 10pt;
-}
-.layout-executive .section-title::after { display: none; }
+.layout-vintage .page { background: #FCFBF5; } .layout-vintage .page::before { border: 3px double var(--primary); inset: 3mm; opacity: 1; } .layout-vintage .page::after { border: 1px solid var(--primary); inset: 4mm; opacity: .6; } .layout-vintage .header { border-bottom: 1px solid var(--primary); } .layout-vintage .name { font-family: 'Libre Baskerville', serif; font-size: 24pt; } .layout-vintage .photo { border-radius: 0; border: 1px solid var(--primary); padding: 1mm; } .layout-vintage .photo img { border-radius: 0; } .layout-vintage .section-title { font-family: 'Libre Baskerville', serif; text-transform: none; border-bottom: 1px dashed var(--primary); padding-bottom: 1mm; } .layout-vintage .section-title::after { display: none; }
 
-/* =====================================================
-   LAYOUT 13 — VINTAGE
-   ===================================================== */
-.layout-vintage .page { background: #FCFBF5; }
-.layout-vintage .page::before { border: 3px double var(--primary); inset: 3mm; opacity: 1; }
-.layout-vintage .page::after { border: 1px solid var(--primary); inset: 4mm; opacity: .6; }
-.layout-vintage .header { border-bottom: 1px solid var(--primary); }
-.layout-vintage .name { font-family: 'Libre Baskerville', serif; font-size: 24pt; }
-.layout-vintage .photo { border-radius: 0; border: 1px solid var(--primary); padding: 1mm; }
-.layout-vintage .photo img { border-radius: 0; }
-.layout-vintage .section-title {
-  font-family: 'Libre Baskerville', serif;
-  text-transform: none;
-  border-bottom: 1px dashed var(--primary);
-  padding-bottom: 1mm;
-}
-.layout-vintage .section-title::after { display: none; }
+.layout-gradient .page::before { display: none; } .layout-gradient .page::after { display: none; } .layout-gradient .page { background: linear-gradient(135deg, var(--tint) 0%, #fff 40%, var(--tint) 100%); } .layout-gradient .header { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; border: 0; border-radius: 0 0 8mm 8mm; padding: 8mm 6mm 6mm; } .layout-gradient .name { color: white; } .layout-gradient .contact-line { color: rgba(255,255,255,.9); } .layout-gradient .ornament { color: white; opacity: .85; } .layout-gradient .photo { border-color: white; } .layout-gradient .section-title { background: linear-gradient(90deg, var(--primary), var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
-/* =====================================================
-   LAYOUT 14 — GRADIENT
-   ===================================================== */
-.layout-gradient .page::before { display: none; }
-.layout-gradient .page::after { display: none; }
-.layout-gradient .page {
-  background:
-    linear-gradient(135deg, var(--tint) 0%, #fff 40%, var(--tint) 100%);
-}
-.layout-gradient .header {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  color: white;
-  border: 0;
-  border-radius: 0 0 8mm 8mm;
-  padding: 8mm 6mm 6mm;
-}
-.layout-gradient .name { color: white; }
-.layout-gradient .contact-line { color: rgba(255,255,255,.9); }
-.layout-gradient .ornament { color: white; opacity: .85; }
-.layout-gradient .photo { border-color: white; }
-.layout-gradient .section-title {
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
+.layout-geometric .page::before { display: none; } .layout-geometric .page::after { display: block; inset: 0; border: 0; background: radial-gradient(circle at 5% 5%, var(--accent) 0 4mm, transparent 4mm), radial-gradient(circle at 95% 5%, var(--primary) 0 6mm, transparent 6mm), radial-gradient(circle at 95% 95%, var(--accent) 0 5mm, transparent 5mm), radial-gradient(circle at 5% 95%, var(--primary) 0 4mm, transparent 4mm); opacity: .14; } .layout-geometric .header { border-bottom: 0; padding-bottom: 4mm; } .layout-geometric .header::after { content: ""; display: block; margin: 4mm auto 0; width: 30mm; height: 3mm; background: var(--accent); clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%); } .layout-geometric .section-title .mark { background: var(--primary); color: #fff; width: 7mm; height: 7mm; border-radius: 1mm; display: inline-flex; align-items: center; justify-content: center; text-align: center; }
 
-/* =====================================================
-   LAYOUT 15 — GEOMETRIC
-   ===================================================== */
-.layout-geometric .page::before { display: none; }
-.layout-geometric .page::after {
-  display: block;
-  inset: 0;
-  border: 0;
-  background:
-    radial-gradient(circle at 5% 5%, var(--accent) 0 4mm, transparent 4mm),
-    radial-gradient(circle at 95% 5%, var(--primary) 0 6mm, transparent 6mm),
-    radial-gradient(circle at 95% 95%, var(--accent) 0 5mm, transparent 5mm),
-    radial-gradient(circle at 5% 95%, var(--primary) 0 4mm, transparent 4mm);
-  opacity: .14;
-}
-.layout-geometric .header { border-bottom: 0; padding-bottom: 4mm; }
-.layout-geometric .header::after {
-  content: "";
-  display: block;
-  margin: 4mm auto 0;
-  width: 30mm;
-  height: 3mm;
-  background: var(--accent);
-  clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
-}
-.layout-geometric .section-title .mark {
-  background: var(--primary);
-  color: #fff;
-  width: 7mm;
-  height: 7mm;
-  border-radius: 1mm;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-/* =====================================================
-   PRINT
-   ===================================================== */
-@media print {
-  html, body {
-    background: #fff !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  .page {
-    width: 210mm;
-    min-height: 0;
-    margin: 0;
-    padding: 11mm 14mm 14mm;
-    overflow: visible;
-    box-shadow: none;
-  }
-  .page::before, .page::after { position: fixed; }
-  .page::before { inset: 5mm; }
-  .page::after { inset: 8mm; }
-  .header, .section-title, .grid, .skill, .footer, .photo, .edu-item {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-  .section { break-inside: auto; page-break-inside: auto; }
-  .section-title { break-after: avoid; page-break-after: avoid; }
-  .block, .value { orphans: 3; widows: 3; }
-}
-
-@media screen {
-  body { padding: 12px 0; }
-  .page { box-shadow: 0 10px 40px #15223822; }
-}
+@media print { html, body { background: #fff !important; } .page { width: 210mm; min-height: 0; margin: 0; padding: 11mm 14mm 14mm; overflow: visible; box-shadow: none; } .page::before, .page::after { position: fixed; } .page::before { inset: 5mm; } .page::after { inset: 8mm; } .header, .section-title, .grid, .skill, .footer, .photo, .edu-item { break-inside: avoid; page-break-inside: avoid; } .section { break-inside: auto; page-break-inside: auto; } .section-title { break-after: avoid; page-break-after: avoid; } .block, .value { orphans: 3; widows: 3; } }
+@media screen { body { padding: 12px 0; } .page { box-shadow: 0 10px 40px #15223822; } }
 </style>
 </head>
 <body>
 
 <div class="page layout-{{ layout }}{% if watermark %} has-wm{% endif %}">
-
-  {% if watermark %}
-    <div class="watermark">{{ watermark_text }}</div>
-  {% endif %}
-
+  {% if watermark %}<div class="watermark">{{ watermark_text }}</div>{% endif %}
   <main class="content">
-
-    <!-- ================= HEADER ================= -->
     <header class="header">
       <div class="ornament">✦ ❖ ✦</div>
       <div class="photo" id="photoBox" {% if not photo %}style="display:none"{% endif %}>
-        {% if photo %}
-          <img id="profilePhoto" src="{{ photo }}" alt="Profile photo">
-        {% else %}
-          <img id="profilePhoto" alt="Profile photo" style="display:none">
-        {% endif %}
+        {% if photo %}<img id="profilePhoto" src="{{ photo }}" alt="Profile photo">{% else %}<img id="profilePhoto" alt="Profile photo" style="display:none">{% endif %}
       </div>
       <div class="header-copy">
         <h1 class="name">{{ name or 'YOUR NAME' }}</h1>
         {% if phone or email %}
         <div class="contact-line">
-          {% if phone %}{{ phone }}{% endif %}
-          {% if phone and email %} &nbsp;•&nbsp; {% endif %}
-          {% if email %}{{ email }}{% endif %}
+          {% if phone %}{{ phone }}{% endif %}{% if phone and email %} &nbsp;•&nbsp; {% endif %}{% if email %}{{ email }}{% endif %}
         </div>
         {% endif %}
       </div>
     </header>
 
-    <!-- ================= BODY ================= -->
     <div class="resume-body">
-
-      <!-- SIDE COLUMN -->
       <aside class="side-column">
         {% set ns = namespace(n=0) %}
-
         {% if phone or email or address %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -686,14 +170,7 @@ html, body {
         <section class="section">
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.personal }}</h2>
           <div class="grid">
-            {% for l, v in [
-              (labels.dob, dob), (labels.gender, gender),
-              (labels.height, height), (labels.weight, weight),
-              (labels.blood, blood), (labels.marital, marital),
-              (labels.religion, religion), (labels.caste, caste),
-              (labels.gotra, gotra), (labels.rashi, rashi),
-              (labels.nakshatra, nakshatra), (labels.manglik, manglik)
-            ] %}
+            {% for l, v in [(labels.dob, dob), (labels.gender, gender), (labels.height, height), (labels.weight, weight), (labels.blood, blood), (labels.marital, marital), (labels.religion, religion), (labels.caste, caste), (labels.gotra, gotra), (labels.rashi, rashi), (labels.nakshatra, nakshatra), (labels.manglik, manglik)] %}
               {% if v %}<div class="label">{{ l }}</div><div class="value">{{ v }}</div>{% endif %}
             {% endfor %}
           </div>
@@ -739,9 +216,7 @@ html, body {
         {% endif %}
       </aside>
 
-      <!-- MAIN COLUMN -->
       <div class="main-column">
-
         {% if profile %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -757,15 +232,9 @@ html, body {
           <div style="padding: 0 2mm;">
             {% for edu in education_list %}
             <div class="edu-item">
-              <div class="edu-header">
-                <span>{{ edu.level }}</span>
-                <span>{{ edu.score }}</span>
-              </div>
+              <div class="edu-header"><span>{{ edu.level }}</span><span>{{ edu.score }}</span></div>
               <div class="edu-sub">{{ edu.institute }}</div>
-              <div class="edu-meta">
-                {% if edu.board %}<span>{{ edu.board }}</span>{% endif %}
-                {% if edu.year %}<span>{{ edu.year }}</span>{% endif %}
-              </div>
+              <div class="edu-meta">{% if edu.board %}<span>{{ edu.board }}</span>{% endif %}{% if edu.year %}<span>{{ edu.year }}</span>{% endif %}</div>
             </div>
             {% endfor %}
           </div>
@@ -796,19 +265,10 @@ html, body {
       </div>
     </div>
 
-    <!-- ================= FOOTER ================= -->
     <footer class="footer">
-      <div>
-        {% if place %}{{ labels.place }}: {{ place }}{% endif %}
-        {% if place and date %}<br>{% endif %}
-        {% if date %}{{ labels.date }}: {{ date }}{% endif %}
-      </div>
-      <div class="signature">
-        <div class="signature-line"></div>
-        <div class="signature-label">{{ labels.signature }}</div>
-      </div>
+      <div>{% if place %}{{ labels.place }}: {{ place }}{% endif %}{% if place and date %}<br>{% endif %}{% if date %}{{ labels.date }}: {{ date }}{% endif %}</div>
+      <div class="signature"><div class="signature-line"></div><div class="signature-label">{{ labels.signature }}</div></div>
     </footer>
-
   </main>
 </div>
 
