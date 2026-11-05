@@ -4,7 +4,7 @@ from pathlib import Path
 import os, re, traceback, datetime
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-# Naye imports
+# Translation & AI Imports
 from deep_translator import GoogleTranslator
 import google.generativeai as genai
 
@@ -20,7 +20,7 @@ except Exception:
     HTML = None
     WEASYPRINT_AVAILABLE = False
 
-# Gemini API Config
+# Gemini API Setup
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
@@ -38,7 +38,11 @@ VALID_THEMES = {
     "lagoon_minimal", "sandstone_timeline", "orchid_editorial", "cobalt_sidebar", "pine_banner", 
     "pearl_corporate", "golden_cards", "slate_split", "coral_minimal", "moss_timeline", "wine_editorial", 
     "arctic_sidebar", "royal_banner", "graphite_corporate", "peach_cards", "denim_split", "lilac_minimal", 
-    "bronze_timeline", "jade_editorial", "maroon_sidebar", "turquoise_banner", "smoke_corporate", "ivory_cards"
+    "bronze_timeline", "jade_editorial", "maroon_sidebar", "turquoise_banner", "smoke_corporate", "ivory_cards",
+    "royal", "professional", "emerald", "midnight", "rose", "lavender", "teal", "charcoal", "minimal", 
+    "sky", "forest", "terracotta", "plum", "classic", "coral", "sapphire", "champagne", "burgundy", 
+    "indigo", "copper", "ocean", "sage", "ruby", "steel", "mint", "sunset", "peacock", "blush", "olive", 
+    "ice", "onyx", "mauve", "amber", "crimson", "lagoon", "sandstone", "orchid", "cobalt", "pine", "pearl"
 }
 
 def _format_date(value):
@@ -53,18 +57,15 @@ def _translate(text, lang_code):
     if not text or not lang_code or lang_code == 'en':
         return text
     try:
-        # Agar text pehle se hi bahut lamba hai, toh chunk me translate karna padega
-        # Par filhal simple approach:
+        # GoogleTranslator auto-detects source
         return GoogleTranslator(source='auto', target=lang_code).translate(text)
-    except Exception:
+    except Exception as e:
+        print(f"Translation error: {e}")
         return text
 
 def preprocess(payload):
     data = dict(payload or {})
-    
-    # Language Code (e.g., 'hi', 'mr', 'ta', 'te')
     lang = str(data.get("language") or "en").lower()
-    
     theme = str(data.get("theme") or "cyan").lower()
     data["theme"] = theme if theme in VALID_THEMES else "cyan"
 
@@ -80,7 +81,7 @@ def preprocess(payload):
             skills.append({"name": raw.strip(), "level": 80})
     data["skills_list"] = skills
 
-    # Fields to translate (excluding Name, Email, Phone, Dates)
+    # Translate user text (Skip Names, Emails, Dates)
     translate_keys = ["gender", "height", "blood", "marital", "religion", "caste", "gotra", "rashi", 
                       "nakshatra", "manglik", "profile", "address", "father_job", "mother_job", 
                       "brothers", "sisters", "education_simple", "experience", "languages", "hobbies", "declaration"]
@@ -88,14 +89,13 @@ def preprocess(payload):
     for key in translate_keys:
         data[key] = _translate(str(data.get(key) or "").strip(), lang)
         
-    # Direct fields
     for key in ("name", "dob", "weight", "phone", "email", "father", "mother", "place", "date"):
         data[key] = str(data.get(key) or "").strip()
 
     data["dob"] = _format_date(data.get("dob"))
     data["date"] = _format_date(data.get("date"))
 
-    # Education List Translation
+    # Education Parsing & Translation
     edu_mode = data.get("education_mode", "simple")
     data["education_mode"] = edu_mode
     data["education_list"] = []
@@ -111,7 +111,7 @@ def preprocess(payload):
                     "score": str(item.get("score", "")).strip()
                 })
 
-    # Translate Section Labels for PDF
+    # Static Labels Translation
     labels = {
         "contact": "Contact Details", "personal": "Personal Details", "family": "Family Details",
         "skills": "Skills", "additional": "Additional Details", "profile": "Profile / Objective",
@@ -138,22 +138,24 @@ def render_document(payload):
 @app.route("/")
 def index(): return send_from_directory(BASE_DIR, "index.html")
 
+@app.route("/favicon.ico")
+def favicon(): return "", 204
+
 @app.route("/api/health")
 def health():
     return jsonify(status="ok", weasyprint=WEASYPRINT_AVAILABLE, ai=bool(gemini_model))
 
-# AI PROFILE GENERATION ENDPOINT
 @app.route("/api/generate-profile", methods=["POST"])
 def generate_profile():
     if not gemini_model:
-        return jsonify(error="Gemini API key nahi mili. GitHub Secrets me GEMINI_API_KEY set karein."), 500
+        return jsonify(error="Gemini API key nahi mili. Environment variable set karein."), 500
     try:
         payload = request.get_json(silent=True) or {}
         name = payload.get("name", "The candidate")
         edu = payload.get("education", "Graduation")
         skills = payload.get("skills", "Good communication")
         
-        prompt = f"Write a short, humble, and traditional Indian marriage biodata profile (3-4 sentences) for {name}. Education: {edu}. Skills: {skills}. Focus on family values and career goals."
+        prompt = f"Write a short, humble, and traditional Indian marriage biodata profile (3-4 sentences) for {name}. Education: {edu}. Skills: {skills}. Focus on family values and career goals. Do not add markdown format, just plain text."
         
         response = gemini_model.generate_content(prompt)
         return jsonify(profile=response.text.strip())
@@ -167,6 +169,7 @@ def preview():
         payload.pop("photo", None)
         return render_document(payload)
     except Exception as exc:
+        traceback.print_exc()
         return f"<p>Error: {exc}</p>", 500
 
 @app.route("/api/pdf", methods=["POST"])
@@ -179,6 +182,7 @@ def pdf():
         safe = re.sub(r"[^a-zA-Z0-9_-]", "", (data.get("name") or "Biodata").replace(" ", "_")) or "Biodata"
         return send_file(BytesIO(pdf_bytes), mimetype="application/pdf", as_attachment=True, download_name=f"{safe}_Biodata.pdf")
     except Exception as exc:
+        traceback.print_exc()
         return jsonify(error=str(exc)), 500
 
 if __name__ == "__main__":
