@@ -6,12 +6,13 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 BASE_DIR = Path(__file__).resolve().parent
 app = Flask(__name__, static_folder=None)
+app.config["MAX_CONTENT_LENGTH"] = 32 * 1024 * 1024
 env = Environment(loader=FileSystemLoader(str(BASE_DIR)), autoescape=select_autoescape(("html", "xml")))
 
 try:
     from weasyprint import HTML
     WEASYPRINT_AVAILABLE = True
-except Exception:
+except Exception as exc:
     HTML = None
     WEASYPRINT_AVAILABLE = False
 
@@ -94,6 +95,14 @@ def render_document(payload):
 @app.route("/")
 def index(): return send_from_directory(BASE_DIR, "index.html")
 
+@app.route("/favicon.ico")
+def favicon(): return "", 204
+
+@app.route("/keepalive")
+@app.route("/api/health")
+def health():
+    return jsonify(status="ok", weasyprint=WEASYPRINT_AVAILABLE, service="biodata-maker-pro", templates=len(VALID_THEMES))
+
 @app.route("/api/preview", methods=["POST"])
 def preview():
     try:
@@ -101,6 +110,7 @@ def preview():
         payload.pop("photo", None)
         return render_document(payload)
     except Exception as exc:
+        traceback.print_exc()
         return f"<p>Error: {exc}</p>", 500
 
 @app.route("/api/pdf", methods=["POST"])
@@ -113,6 +123,7 @@ def pdf():
         safe = re.sub(r"[^a-zA-Z0-9_-]", "", (data.get("name") or "Biodata").replace(" ", "_")) or "Biodata"
         return send_file(BytesIO(pdf_bytes), mimetype="application/pdf", as_attachment=True, download_name=f"{safe}_Biodata.pdf")
     except Exception as exc:
+        traceback.print_exc()
         return jsonify(error=str(exc)), 500
 
 if __name__ == "__main__":
