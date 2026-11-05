@@ -3,21 +3,35 @@ name: Biodata Maker Preview Server
 on:
   workflow_dispatch:
   schedule:
+    # Har 6 ghante mein trigger hoga
     - cron: "0 */6 * * *"
 
 permissions:
   contents: read
 
+# 🔥 QUEUE SYSTEM (Yahan hai asli magic)
+# Agar pehla run chal raha hai, toh naya run cancel nahi hoga, balki queue mein wait karega.
+# Jaise hi pehla run khatam hoga, yeh turant start ho jayega. (Zero Downtime)
+concurrency:
+  group: biodata-server-queue
+  cancel-in-progress: false
+
 jobs:
   serve:
     runs-on: ubuntu-latest
-    timeout-minutes: 355
+    # GitHub Actions ka maximum limit 360 minutes (6 hours) hota hai
+    timeout-minutes: 360
+    
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Check out repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
+          cache-dependency-path: requirements.txt
 
       - name: Install system libraries for WeasyPrint
         run: |
@@ -30,7 +44,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-          # Fallback if WeasyPrint fails due to system lib mismatch
+          # Fallback check
           if ! python -c "import weasyprint"; then
             echo "::warning::WeasyPrint install failed — fallback to client-side PDF."
           fi
@@ -45,7 +59,7 @@ jobs:
 
       - name: Start Flask
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} # <--- ADDED AI KEY HERE
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           nohup python app.py >/tmp/flask.log 2>&1 &
           for i in $(seq 1 30); do
@@ -91,11 +105,13 @@ jobs:
             echo ""
             echo "**URL:** $URL"
             echo ""
-            echo "⏱️ Alive until this job ends (~6 h)."
+            echo "⏱️ Alive until this job ends (~6 h). Next run is queued automatically."
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Keep server alive (≈ 342 min)
-        run: sleep 20500
+      - name: Keep server alive (Queue tak zinda rakhega)
+        # 360 minutes ka limit hai, hum 357 minutes (21420 seconds) sleep karayenge
+        # Taaki timeout hone se pehle hi naya queued run aas paas start ho jaye
+        run: sleep 21420
 
       - name: Cleanup
         if: always()
