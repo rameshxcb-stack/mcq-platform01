@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<meta name="description" content="Create beautiful marriage biodata with 12,000+ unique templates. PDF ready, multilingual, free.">
-<title>Biodata Maker Pro — 12,000+ Designs</title>
+<meta name="description" content="Create beautiful marriage biodata or job resume with 12,000+ unique templates.">
+<title>Biodata Maker Pro</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -56,6 +56,9 @@ body {
 
 button, input, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; border: 0; background: none; }
+
+/* Hide specific sections based on mode */
+body.mode-job .marriage-only { display: none !important; }
 
 /* =====================================================
    HEADER
@@ -182,7 +185,6 @@ body.dark .app-header { background: rgba(17, 26, 46, .9); }
   border-color: var(--gold);
   box-shadow: 0 0 0 4px rgba(212, 168, 83, .15);
 }
-.fld input.invalid, .fld textarea.invalid { border-color: var(--danger); }
 .fld textarea { min-height: 80px; resize: vertical; }
 .fld-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
@@ -254,11 +256,10 @@ body.dark .tpl-btn.active { background: linear-gradient(135deg, #2a2318, #1a1610
 
 /* Skills editor */
 .skill-row {
-  display: grid; grid-template-columns: 1fr 80px 32px;
+  display: grid; grid-template-columns: 1fr 120px 32px;
   gap: 6px; margin-bottom: 6px;
   align-items: center;
 }
-.skill-row input[type="range"] { min-height: auto; padding: 0; }
 .skill-row .del { color: var(--danger); font-weight: 800; font-size: 18px; }
 
 /* Education rows */
@@ -356,16 +357,6 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Draft manager */
-.draft-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 8px 10px; border: 1px solid var(--line);
-  border-radius: 8px; margin-bottom: 6px;
-  font-size: 12px;
-}
-.draft-row.active { border-color: var(--gold); background: rgba(212, 168, 83, .08); }
-.draft-row button { padding: 4px 8px; font-size: 11px; border-radius: 4px; background: var(--bg); border: 1px solid var(--line); }
-
 /* Modal */
 .modal {
   position: fixed; inset: 0; z-index: 300;
@@ -391,11 +382,11 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
   .panel { display: none; }
   .panel.active { display: block; }
   .editor { padding: 12px; border-right: none; }
-  .preview-wrap { height: calc(100vh - 63px - 73px); /* Adjust for header and footer */ }
+  .preview-wrap { height: calc(100vh - 63px - 73px); }
 }
 </style>
 </head>
-<body>
+<body class="mode-marriage">
 
 <!-- =====================================================
      HEADER
@@ -420,6 +411,15 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
 
   <!-- EDITOR -->
   <aside class="editor panel active" id="editPanel">
+
+    <!-- CATEGORY SELECTOR -->
+    <div class="sec" style="padding: 12px; border-color: var(--gold); background: #fffdf8; margin-bottom: 12px;">
+      <div style="font-size: 12px; font-weight: bold; margin-bottom: 10px; color: var(--ink-2); text-align:center;">CHOOSE BIODATA TYPE</div>
+      <div style="display: flex; gap: 10px;">
+        <button type="button" class="cat-btn active" id="catMarriage" style="flex:1; padding: 10px; border-radius: 8px; border: 2px solid var(--gold); background: var(--gold); color: #fff; font-weight: 700; font-size: 13px;">💍 Marriage</button>
+        <button type="button" class="cat-btn" id="catJob" style="flex:1; padding: 10px; border-radius: 8px; border: 2px solid var(--line); background: var(--bg); color: var(--ink-2); font-weight: 700; font-size: 13px;">💼 Job / Career</button>
+      </div>
+    </div>
 
     <!-- Progress -->
     <div class="progress-wrap">
@@ -547,7 +547,9 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
             </select>
           </div>
         </div>
-        <div class="fld-row">
+        
+        <!-- MARRIAGE ONLY FIELDS -->
+        <div class="fld-row marriage-only">
           <div class="fld"><label>Religion</label>
             <input id="religion" list="religion-list" placeholder="Hindu">
             <datalist id="religion-list">
@@ -557,11 +559,11 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
           </div>
           <div class="fld"><label>Caste</label><input id="caste" placeholder="Optional"></div>
         </div>
-        <div class="fld-row">
+        <div class="fld-row marriage-only">
           <div class="fld"><label>Gotra</label><input id="gotra" placeholder="Optional"></div>
           <div class="fld"><label>Rashi</label><input id="rashi" placeholder="Optional"></div>
         </div>
-        <div class="fld-row">
+        <div class="fld-row marriage-only">
           <div class="fld"><label>Nakshatra</label><input id="nakshatra" placeholder="Optional"></div>
           <div class="fld"><label>Manglik</label>
             <select id="manglik">
@@ -570,9 +572,10 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
             </select>
           </div>
         </div>
+
         <div class="fld" style="margin-top:16px;">
           <label style="display:flex; justify-content:space-between; align-items:center;">
-            <span>Profile / Objective</span>
+            <span id="profileLabel">Profile / Objective</span>
             <button type="button" id="aiGenBtn" style="background:linear-gradient(135deg,#8b5cf6,#3b82f6); color:white; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:700;">✨ AI Generate</button>
           </label>
           <textarea id="profile" placeholder="Short introduction..." maxlength="600"></textarea>
@@ -596,8 +599,8 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
       </div>
     </details>
 
-    <!-- 5. FAMILY -->
-    <details class="sec">
+    <!-- 5. FAMILY (MARRIAGE ONLY) -->
+    <details class="sec marriage-only">
       <summary><span class="num-badge">5</span> Family Details<span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="fld-row">
@@ -768,6 +771,9 @@ function toast(msg, type = 'info') {
 function safeJSON(o) {
   try { return JSON.stringify(o); } catch (e) { return '{}'; }
 }
+
+// Limit DOB to today
+$('dob').max = new Date().toISOString().split('T')[0];
 
 /* =====================================================
    TEMPLATE ENGINE — 12,000 combinations
@@ -940,6 +946,53 @@ $('filterLayout').onchange = (e) => { filterLayout = e.target.value; renderTempl
 $('loadMoreBtn').onclick = () => { visibleCount += 20; renderTemplates(); };
 
 /* =====================================================
+   CATEGORY MODE (Marriage / Job)
+   ===================================================== */
+let currentMode = 'marriage';
+
+$('catMarriage').onclick = () => {
+  currentMode = 'marriage';
+  $('catMarriage').classList.add('active');
+  $('catMarriage').style.background = 'var(--gold)';
+  $('catMarriage').style.color = '#fff';
+  $('catMarriage').style.borderColor = 'var(--gold)';
+  
+  $('catJob').classList.remove('active');
+  $('catJob').style.background = 'var(--bg)';
+  $('catJob').style.color = 'var(--ink-2)';
+  $('catJob').style.borderColor = 'var(--line)';
+  
+  document.body.classList.remove('mode-job');
+  document.body.classList.add('mode-marriage');
+  $('profileLabel').textContent = 'Profile / About Me';
+  $('profile').placeholder = 'Write a short introduction about yourself and your family...';
+  
+  scheduleUpdate();
+  saveDraft();
+};
+
+$('catJob').onclick = () => {
+  currentMode = 'job';
+  $('catJob').classList.add('active');
+  $('catJob').style.background = 'var(--gold)';
+  $('catJob').style.color = '#fff';
+  $('catJob').style.borderColor = 'var(--gold)';
+  
+  $('catMarriage').classList.remove('active');
+  $('catMarriage').style.background = 'var(--bg)';
+  $('catMarriage').style.color = 'var(--ink-2)';
+  $('catMarriage').style.borderColor = 'var(--line)';
+  
+  document.body.classList.remove('mode-marriage');
+  document.body.classList.add('mode-job');
+  $('profileLabel').textContent = 'Career Objective';
+  $('profile').placeholder = 'Write a brief professional summary or career objective...';
+  
+  scheduleUpdate();
+  saveDraft();
+};
+
+/* =====================================================
    FORM FIELDS
    ===================================================== */
 const TEXT_FIELDS = [
@@ -1004,8 +1057,11 @@ function addSkillRow(data = { name: '', level: 75 }) {
   const row = document.createElement('div');
   row.className = 'skill-row';
   row.innerHTML = `
-    <input class="skill-name" value="${data.name}" placeholder="Python">
-    <input type="range" class="skill-level" min="0" max="100" value="${data.level}">
+    <input class="skill-name" value="${data.name}" placeholder="Skill name">
+    <div style="display:flex; align-items:center; gap:6px;">
+      <input type="range" class="skill-level" min="0" max="100" value="${data.level}" style="flex:1; padding:0; min-height:auto;">
+      <span class="skill-val" style="font-size:11px; font-weight:700; min-width:32px; text-align:right;">${data.level}%</span>
+    </div>
     <button type="button" class="del" onclick="this.parentElement.remove(); collectSkills();">✕</button>
   `;
   $('skillsList').appendChild(row);
@@ -1021,7 +1077,13 @@ function collectSkills() {
 }
 
 $('addSkillBtn').onclick = () => addSkillRow();
-$('skillsList').addEventListener('input', collectSkills);
+$('skillsList').addEventListener('input', (e) => {
+  if (e.target.classList.contains('skill-level')) {
+    const valSpan = e.target.closest('.skill-row').querySelector('.skill-val');
+    if (valSpan) valSpan.textContent = e.target.value + '%';
+  }
+  collectSkills();
+});
 
 /* =====================================================
    STATE COLLECT
@@ -1052,7 +1114,8 @@ function snapshot() {
     data: collectData(),
     eduData,
     skillData,
-    photoData
+    photoData,
+    mode: currentMode
   });
 }
 
@@ -1083,6 +1146,9 @@ function applySnapshot(snap) {
     skillData = s.skillData || [];
     $('skillsList').innerHTML = '';
     skillData.forEach(r => addSkillRow(r));
+
+    if (s.mode === 'job') $('catJob').click();
+    else $('catMarriage').click();
 
     renderTemplates();
     updateProgress();
@@ -1227,7 +1293,23 @@ async function updatePreview() {
     if (!res.ok) throw new Error('Preview failed');
     const html = await res.text();
     const frame = $('previewFrame');
-    frame.onload = () => fitPreview();
+    
+    frame.onload = () => {
+      // Inject photo manually since backend strips it for preview
+      if (photoData) {
+        try {
+          const doc = frame.contentDocument;
+          const photoBox = doc.getElementById('photoBox');
+          const photoImg = doc.getElementById('profilePhoto');
+          if (photoBox) photoBox.style.display = 'block';
+          if (photoImg) {
+            photoImg.src = photoData;
+            photoImg.style.display = 'block';
+          }
+        } catch(e) { console.error("Preview photo inject error", e); }
+      }
+      fitPreview();
+    };
     frame.srcdoc = html;
   } catch (e) {
     $('previewFrame').srcdoc = `
@@ -1270,7 +1352,7 @@ if (previewToggleBtn) {
       editPanel.classList.remove('active');
       previewPanel.classList.add('active');
       previewToggleBtn.innerHTML = '✏️ Edit';
-      setTimeout(fitPreview, 50); // Let layout settle before fitting
+      setTimeout(fitPreview, 50); 
     } else {
       previewPanel.classList.remove('active');
       editPanel.classList.add('active');
@@ -1288,6 +1370,7 @@ function saveDraft() {
       theme: currentTheme,
       photo: photoData,
       values: {},
+      mode: currentMode,
       eduMode: document.querySelector('input[name="edu_mode"]:checked').value,
       eduData: eduData,
       skillData: skillData,
@@ -1310,6 +1393,10 @@ function restoreDraft() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
     const d = JSON.parse(raw);
+    
+    if (d.mode === 'job') $('catJob').click();
+    else $('catMarriage').click();
+
     if (d.values) {
       TEXT_FIELDS.forEach(id => { if ($(id)) $(id).value = d.values[id] || ''; });
       $('height_ft').value = d.values.height_ft || '';
@@ -1454,7 +1541,6 @@ $('copyUrlBtn').onclick = () => {
   toast('URL copied', 'success');
 };
 
-// Load from shared URL on boot
 function loadShared() {
   const hash = window.location.hash.slice(3);
   if (!hash) return;
@@ -1628,12 +1714,10 @@ $('declarationPreset').onchange = (e) => {
 
 window.addEventListener('resize', () => {
   if (window.innerWidth >= 1024) {
-    // Ensure if user rotates desktop window back, editor is shown
     $('editPanel').classList.add('active');
     $('previewPanel').classList.add('active');
     fitPreview();
   } else {
-    // On mobile, only show active panel
     const isEdit = $('editPanel').classList.contains('active');
     if (!isEdit) setTimeout(fitPreview, 50);
   }
@@ -1655,7 +1739,6 @@ updateProgress();
 updatePreview();
 pushHistory();
 
-// Fix for mobile if preview is open on load
 if (window.innerWidth < 1024) {
   if ($('previewPanel').classList.contains('active')) {
     $('previewToggleBtn').innerHTML = '✏️ Edit';
