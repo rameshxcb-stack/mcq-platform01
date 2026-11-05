@@ -29,7 +29,6 @@ app.config["MAX_CONTENT_LENGTH"] = 32 * 1024 * 1024
 
 env = Environment(loader=FileSystemLoader(str(BASE_DIR)), autoescape=select_autoescape(("html", "xml")))
 
-# Gemini AI Setup
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 gemini_model = None
 if GEMINI_API_KEY and GENAI_OK:
@@ -39,43 +38,43 @@ if GEMINI_API_KEY and GENAI_OK:
     except Exception:
         pass
 
-CACHE = {}
+# 🔥 SMART CACHE FOR TRANSLATIONS (Fixes freeze & slow loading)
+TRANS_CACHE = {}
 
 def _translate(text, lang):
     if not text or not lang or lang == "en" or not TRANSLATOR_OK:
         return text
-    cache_key = f"tr:{lang}:{text}"
-    if cache_key in CACHE:
-        return CACHE[cache_key]
+    
+    text = str(text).strip()
+    if not text: return text
+    
+    cache_key = f"{lang}:{text}"
+    if cache_key in TRANS_CACHE:
+        return TRANS_CACHE[cache_key]
+    
     try:
         out = GoogleTranslator(source="auto", target=lang).translate(text)
-        CACHE[cache_key] = out
+        TRANS_CACHE[cache_key] = out
         return out
     except Exception:
         return text
 
-LABELS_EN = {
-    "contact": "Contact Details", "personal": "Personal Details", "family": "Family Details", "skills": "Skills",
-    "additional": "Additional Details", "profile": "Profile / Objective", "education": "Education", "experience": "Work Experience",
-    "declaration": "Declaration", "dob": "Date of Birth", "gender": "Gender", "height": "Height", "weight": "Weight",
-    "blood": "Blood Group", "marital": "Marital Status", "religion": "Religion", "caste": "Caste / Community",
-    "gotra": "Gotra", "rashi": "Rashi", "nakshatra": "Nakshatra", "manglik": "Manglik", "phone": "Mobile Number",
-    "email": "Email", "address": "Address", "father": "Father", "mother": "Mother", "brothers": "Brothers",
-    "sisters": "Sisters", "languages": "Languages", "hobbies": "Hobbies", "place": "Place", "date": "Date", "signature": "Signature"
+# ==========================================
+# UI LABELS DICTIONARY (Fast, 0ms)
+# ==========================================
+LABELS_MULTI = {
+    "en": {"contact": "Contact Details", "personal": "Personal Details", "family": "Family Details", "skills": "Skills", "additional": "Additional Details", "profile": "Profile / Objective", "education": "Education", "experience": "Work Experience", "declaration": "Declaration", "dob": "Date of Birth", "gender": "Gender", "height": "Height", "weight": "Weight", "blood": "Blood Group", "marital": "Marital Status", "religion": "Religion", "caste": "Caste / Community", "gotra": "Gotra", "rashi": "Rashi", "nakshatra": "Nakshatra", "manglik": "Manglik", "phone": "Mobile Number", "email": "Email", "address": "Address", "father": "Father", "mother": "Mother", "brothers": "Brothers", "sisters": "Sisters", "languages": "Languages", "hobbies": "Hobbies", "place": "Place", "date": "Date", "signature": "Signature"},
+    "hi": {"contact": "संपर्क विवरण", "personal": "व्यक्तिगत विवरण", "family": "पारिवारिक विवरण", "skills": "कौशल", "additional": "अतिरिक्त विवरण", "profile": "प्रोफ़ाइल / उद्देश्य", "education": "शिक्षा", "experience": "कार्य अनुभव", "declaration": "घोषणा", "dob": "जन्म तिथि", "gender": "लिंग", "height": "ऊंचाई", "weight": "वजन", "blood": "रक्त समूह", "marital": "वैवाहिक स्थिति", "religion": "धर्म", "caste": "जाति", "gotra": "गोत्र", "rashi": "राशि", "nakshatra": "नक्षत्र", "manglik": "मांगलिक", "phone": "मोबाइल नंबर", "email": "ईमेल", "address": "पता", "father": "पिता", "mother": "माता", "brothers": "भाई", "sisters": "बहनें", "languages": "भाषाएं", "hobbies": "शौक", "place": "स्थान", "date": "तिथि", "signature": "हस्ताक्षर"},
+    "kn": {"contact": "ಸಂಪರ್ಕ ವಿವರಗಳು", "personal": "ವೈಯಕ್ತಿಕ ವಿವರಗಳು", "family": "ಕುಟುಂಬದ ವಿವರಗಳು", "skills": "ಕೌಶಲ್ಯಗಳು", "additional": "ಹೆಚ್ಚುವರಿ ವಿವರಗಳು", "profile": "ಪ್ರೊಫೈಲ್ / ಉದ್ದೇಶ", "education": "ಶಿಕ್ಷಣ", "experience": "ಕೆಲಸದ ಅನುಭವ", "declaration": "ಘೋಷಣೆ", "dob": "ಜನ್ಮ ದಿನಾಂಕ", "gender": "ಲಿಂಗ", "height": "ಎತ್ತರ", "weight": "ತೂಕ", "blood": "ರಕ್ತ ಗುಂಪು", "marital": "ವೈವಾಹಿಕ ಸ್ಥಿತಿ", "religion": "ಧರ್ಮ", "caste": "ಜಾತಿ", "gotra": "ಗೋತ್ರ", "rashi": "ರಾಶಿ", "nakshatra": "ನಕ್ಷತ್ರ", "manglik": "ಮಾಂಗಲಿಕ", "phone": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ", "email": "ಇಮೇಲ್", "address": "ವಿಳಾಸ", "father": "ತಂದೆ", "mother": "ತಾಯಿ", "brothers": "ಸಹೋದರರು", "sisters": "ಸಹೋದರಿಯರು", "languages": "ಭಾಷೆಗಳು", "hobbies": "ಹವ್ಯಾಸಗಳು", "place": "ಸ್ಥಳ", "date": "ದಿನಾಂಕ", "signature": "ಸಹಿ"},
+    "ta": {"contact": "தொடர்பு விவரங்கள்", "personal": "தனிப்பட்ட விவரங்கள்", "family": "குடும்ப விவரங்கள்", "skills": "திறன்கள்", "additional": "கூடுதல் விவரங்கள்", "profile": "சுயவிவரம் / குறிக்கோள்", "education": "கல்வி", "experience": "பணி அனுபவம்", "declaration": "பிரகடனம்", "dob": "பிறந்த தேதி", "gender": "பாலினம்", "height": "உயரம்", "weight": "எடை", "blood": "இரத்தக் குழு", "marital": "திருமண நிலை", "religion": "மதம்", "caste": "சாதி", "gotra": "கோத்திரம்", "rashi": "ராசி", "nakshatra": "நட்சத்திரம்", "manglik": "மாங்கல்யம்", "phone": "கைபேசி எண்", "email": "மின்னஞ்சல்", "address": "முகவரி", "father": "தந்தை", "mother": "தாய்", "brothers": "சகோதரர்கள்", "sisters": "சகோதரிகள்", "languages": "மொழிகள்", "hobbies": "பொழுதுபோக்கு", "place": "இடம்", "date": "தேதி", "signature": "கையொப்பம்"},
+    "te": {"contact": "సంప్రదింపు వివరాలు", "personal": "వ్యక్తిగత వివరాలు", "family": "కుటుంబ వివరాలు", "skills": "నైపుణ్యాలు", "additional": "అదనపు వివరాలు", "profile": "ప్రొఫైల్ / లక్ష్యం", "education": "విద్య", "experience": "పని అనుభవం", "declaration": "ప్రకటన", "dob": "పుట్టిన తేదీ", "gender": "లింగం", "height": "ఎత్తు", "weight": "బరువు", "blood": "రక్త వర్గం", "marital": "వైవాహిక స్థితి", "religion": "మతం", "caste": "కులం", "gotra": "గోత్రం", "rashi": "రాశి", "nakshatra": "నక్షత్రం", "manglik": "మాంగలిక్", "phone": "మొబైల్ నంబర్", "email": "ఇమెయిల్", "address": "చిరునామా", "father": "తండ్రి", "mother": "తల్లి", "brothers": "సహోదరులు", "sisters": "సహోదరులు (అక్కచెల్లెళ్ళు)", "languages": "భాషలు", "hobbies": "అభిరుచులు", "place": "స్థలం", "date": "తేదీ", "signature": "సంతకం"},
+    "mr": {"contact": "संपर्क तपशील", "personal": "वैयक्तिक तपशील", "family": "कौटुंबिक तपशील", "skills": "कौशल्ये", "additional": "अतिरिक्त तपशील", "profile": "प्रोफाइल / उद्दिष्ट", "education": "शिक्षण", "experience": "कामाचा अनुभव", "declaration": "घोषणा", "dob": "जन्मतारीख", "gender": "लिंग", "height": "उंची", "weight": "वजन", "blood": "रक्तगट", "marital": "वैवाहिक स्थिती", "religion": "धर्म", "caste": "जात", "gotra": "गोत्र", "rashi": "राशी", "nakshatra": "नक्षत्र", "manglik": "मांगलिक", "phone": "मोबाइल क्रमांक", "email": "ईमेल", "address": "पत्ता", "father": "वडील", "mother": "आई", "brothers": "भाऊ", "sisters": "बहिणी", "languages": "भाषा", "hobbies": "छंद", "place": "ठिकाण", "date": "तारीख", "signature": "स्वाक्षरी"},
+    "gu": {"contact": "સંપર્ક વિગતો", "personal": "અંગત વિગતો", "family": "કૌટુંબિક વિગતો", "skills": "કૌશલ્યો", "additional": "વધારાની વિગતો", "profile": "પ્રોફાઇલ / ઉદ્દેશ્ય", "education": "શિક્ષણ", "experience": "કાર્ય અનુભવ", "declaration": "ઘોષણા", "dob": "જન્મ તારીખ", "gender": "જાતિ", "height": "ઊંચાઈ", "weight": "વજન", "blood": "બ્લડ ગ્રુપ", "marital": "વૈવાહિક સ્થિતિ", "religion": "ધર્મ", "caste": "જ્ઞાતિ", "gotra": "ગોત્ર", "rashi": "રાશિ", "nakshatra": "નક્ષત્ર", "manglik": "માંગલિક", "phone": "મોબાઇલ નંબર", "email": "ઇમેઇલ", "address": "સરનામું", "father": "પિતા", "mother": "માતા", "brothers": "ભાઈઓ", "sisters": "બહેનો", "languages": "ભાષાઓ", "hobbies": "શોખ", "place": "સ્થળ", "date": "તારીખ", "signature": "સહી"},
+    "bn": {"contact": "যোগাযোগের বিবরণ", "personal": "ব্যক্তিগত বিবরণ", "family": "পারিবারিক বিবরণ", "skills": "দক্ষতা", "additional": "অতিরিক্ত বিবরণ", "profile": "প্রোফাইল / উদ্দেশ্য", "education": "শিক্ষা", "experience": "কাজের অভিজ্ঞতা", "declaration": "ঘোষণা", "dob": "জন্ম তারিখ", "gender": "লিঙ্গ", "height": "উচ্চতা", "weight": "ওজন", "blood": "রক্তের গ্রুপ", "marital": "বৈবাহিক অবস্থা", "religion": "ধর্ম", "caste": "বর্ণ", "gotra": "গোত্র", "rashi": "রাশি", "nakshatra": "নক্ষত্র", "manglik": "মাঙ্গলিক", "phone": "মোবাইল নম্বর", "email": "ইমেল", "address": "ঠিকানা", "father": "পিতা", "mother": "মাতা", "brothers": "ভাই", "sisters": "বোন", "languages": "ভাষা", "hobbies": "শখ", "place": "স্থান", "date": "তারিখ", "signature": "স্বাক্ষর"},
+    "ml": {"contact": "ബന്ധപ്പെടാനുള്ള വിവരങ്ങൾ", "personal": "വ്യക്തിഗത വിവരങ്ങൾ", "family": "കുടുംബ വിവരങ്ങൾ", "skills": "കഴിവുകൾ", "additional": "അധിക വിവരങ്ങൾ", "profile": "പ്രൊഫൈൽ / ലക്ഷ്യം", "education": "വിദ്യാഭ്യാസം", "experience": "ജോലി പരിചയം", "declaration": "സത്യവാങ്മൂലം", "dob": "ജനനത്തീയതി", "gender": "ലിംഗഭേദം", "height": "ഉയരം", "weight": "ഭാരം", "blood": "രക്തഗ്രൂപ്പ്", "marital": "വൈവാഹിക നില", "religion": "മതം", "caste": "ജാതി", "gotra": "ഗോത്രം", "rashi": "രാശി", "nakshatra": "നക്ഷത്രം", "manglik": "മാംഗല്യം", "phone": "മൊബൈൽ നമ്പർ", "email": "ഇമെയിൽ", "address": "വിലാസം", "father": "പിതാവ്", "mother": "മാതാവ്", "brothers": "സഹോദരങ്ങൾ", "sisters": "സഹോദരിമാർ", "languages": "ഭാഷകൾ", "hobbies": "വിനോദങ്ങൾ", "place": "സ്ഥലം", "date": "തീയതി", "signature": "ഒപ്പ്"},
+    "pa": {"contact": "ਸੰਪਰਕ ਵੇਰਵੇ", "personal": "ਨਿੱਜੀ ਵੇਰਵੇ", "family": "ਪਰਿਵਾਰਕ ਵੇਰਵੇ", "skills": "ਹੁਨਰ", "additional": "ਵਾਧੂ ਵੇਰਵੇ", "profile": "ਪ੍ਰੋਫਾਈਲ / ਉਦੇਸ਼", "education": "ਸਿੱਖਿਆ", "experience": "ਕੰਮ ਦਾ ਤਜਰਬਾ", "declaration": "ਐਲਾਨ", "dob": "ਜਨਮ ਤਾਰੀਖ", "gender": "ਲਿੰਗ", "height": "ਕੱਦ", "weight": "ਭਾਰ", "blood": "ਬਲੱਡ ਗਰੁੱਪ", "marital": "ਵਿਆਹੁਤਾ ਸਥਿਤੀ", "religion": "ਧਰਮ", "caste": "ਜਾਤੀ", "gotra": "ਗੋਤਰ", "rashi": "ਰਾਸ਼ੀ", "nakshatra": "ਨਛੱਤਰ", "manglik": "ਮਾਂਗਲਿਕ", "phone": "ਮੋਬਾਈਲ ਨੰਬਰ", "email": "ਈਮੇਲ", "address": "ਪਤਾ", "father": "ਪਿਤਾ", "mother": "ਮਾਤਾ", "brothers": "ਭਰਾ", "sisters": "ਭੈਣਾਂ", "languages": "ਭਾਸ਼ਾਵਾਂ", "hobbies": "ਸ਼ੌਕ", "place": "ਜਗ੍ਹਾ", "date": "ਤਾਰੀਖ", "signature": "ਦਸਤਖਤ"},
+    "or": {"contact": "ଯୋଗାଯୋଗ ବିବରଣୀ", "personal": "ବ୍ୟକ୍ତିଗତ ବିବରଣୀ", "family": "ପାରିବାରିକ ବିବରଣୀ", "skills": "ଦକ୍ଷତା", "additional": "ଅତିରିକ୍ତ ବିବରଣୀ", "profile": "ପ୍ରୋଫାଇଲ୍ / ଉଦ୍ଦେଶ୍ୟ", "education": "ଶିକ୍ଷା", "experience": "କାର୍ଯ୍ୟ ଅଭିଜ୍ଞତା", "declaration": "ଘୋଷଣା", "dob": "ଜନ୍ମ ତାରିଖ", "gender": "ଲିଙ୍ଗ", "height": "ଉଚ୍ଚତା", "weight": "ଓଜନ", "blood": "ରକ୍ତ ଗ୍ରୁପ୍", "marital": "ବୈବାହିକ ସ୍ଥିତି", "religion": "ଧର୍ମ", "caste": "ଜାତି", "gotra": "ଗୋତ୍ର", "rashi": "ରାଶି", "nakshatra": "ନକ୍ଷତ୍ର", "manglik": "ମାଙ୍ଗଳିକ", "phone": "ମୋବାଇଲ୍ ନମ୍ବର", "email": "ଇମେଲ୍", "address": "ଠିକଣା", "father": "ପିତା", "mother": "ମାତା", "brothers": "ଭାଇ", "sisters": "ଭଉଣୀ", "languages": "ଭାଷା", "hobbies": "ଶଉକ", "place": "ସ୍ଥାନ", "date": "ତାରିଖ", "signature": "ଦସ୍ତଖତ"}
 }
-
-def _labels_for(lang):
-    if not lang or lang == "en":
-        return LABELS_EN
-    cache_key = f"labels:{lang}"
-    if cache_key in CACHE:
-        return CACHE[cache_key]
-    
-    out = {}
-    for k, v in LABELS_EN.items():
-        out[k] = _translate(v, lang)
-    CACHE[cache_key] = out
-    return out
 
 def _preprocess(payload):
     data = dict(payload or {})
@@ -92,18 +91,23 @@ def _preprocess(payload):
             n, lvl = raw.split("|", 1)
             try: lv = max(0, min(100, int(float(lvl.strip()))))
             except: lv = 80
-            if n.strip(): skills.append({"name": _translate(n.strip(), lang), "level": lv})
+            if n.strip(): 
+                # Translate skill name
+                skills.append({"name": _translate(n.strip(), lang), "level": lv})
     data["skills_list"] = skills
 
-    translate_keys = ["gender", "height", "blood", "marital", "religion", "caste", "gotra", "rashi", "nakshatra", "manglik", "profile", "address", "father_job", "mother_job", "brothers", "sisters", "education_simple", "experience", "languages", "hobbies", "declaration"]
+    # User Data Fields (Translate everything)
+    translate_keys = [
+        "name", "address", "profile", "father", "mother", "father_job", "mother_job", 
+        "brothers", "sisters", "education_simple", "experience", "languages", "hobbies", 
+        "declaration", "place", "gender", "marital", "manglik", "religion", "caste"
+    ]
     for k in translate_keys:
         data[k] = _translate(str(data.get(k) or "").strip(), lang)
 
-    for k in ("name", "dob", "weight", "phone", "email", "father", "mother", "place", "date"):
+    # Non-translated (Numbers, Dates, Contact)
+    for k in ("dob", "weight", "phone", "email", "date"):
         data[k] = str(data.get(k) or "").strip()
-
-    data["dob"] = _translate(data.get("dob"), lang)
-    data["date"] = _translate(data.get("date"), lang)
 
     edu_mode = str(data.get("education_mode") or "simple").lower()
     data["education_mode"] = edu_mode
@@ -119,7 +123,8 @@ def _preprocess(payload):
                     "score": str(item.get("score", "")).strip()
                 })
 
-    data["labels"] = _labels_for(lang)
+    data["labels"] = LABELS_MULTI.get(lang, LABELS_MULTI["en"])
+    
     data["photo"] = str(data.get("photo") or "")
     data["watermark"] = bool(data.get("watermark"))
     data["watermark_text"] = str(data.get("watermark_text") or "Biodata")[:50]
@@ -128,35 +133,29 @@ def _preprocess(payload):
 
     return data
 
-# ==========================================
-# ROUTES
-# ==========================================
-
 @app.route("/")
 def index(): return send_from_directory(BASE_DIR, "index.html")
 
 @app.route("/manifest.json")
 def manifest():
-    return jsonify({
-        "name": "Biodata Maker Pro", "short_name": "BiodataPro", "start_url": "/",
-        "display": "standalone", "background_color": "#f1f5f9", "theme_color": "#0f172a"
-    })
+    return jsonify({"name": "Biodata Maker Pro", "short_name": "BiodataPro", "start_url": "/", "display": "standalone", "background_color": "#f1f5f9", "theme_color": "#0f172a"})
 
-# 🔥 YEH ROUTE MISSING THA JISKI WAJAH SE ERROR AA RAHA THA
 @app.route("/api/health")
 def health():
     return jsonify(status="ok", ai=bool(gemini_model))
 
 @app.route("/api/generate-profile", methods=["POST"])
 def generate_profile():
-    if not gemini_model: 
-        return jsonify(error="AI not configured. Set GEMINI_API_KEY env var."), 503
+    if not gemini_model: return jsonify(error="AI not configured"), 503
     try:
         data = request.get_json(silent=True) or {}
         name = str(data.get("name") or "the candidate").strip()
         education = str(data.get("education") or "Graduation").strip()
         skills = str(data.get("skills") or "Good communication").strip()
-        prompt = f"Write a 3-4 sentence humble biodata profile for an Indian marriage profile. Name: {name}. Education: {education}. Skills: {skills}. Focus on family values, career goals. Return plain text only."
+        lang = str(data.get("language") or "en")
+        lang_name = {"hi": "Hindi", "kn": "Kannada", "ta": "Tamil", "te": "Telugu", "mr": "Marathi", "gu": "Gujarati", "bn": "Bengali", "ml": "Malayalam", "pa": "Punjabi", "or": "Odia"}.get(lang, "English")
+        
+        prompt = f"Write a 3-4 sentence humble biodata profile in {lang_name} language for an Indian marriage profile. Name: {name}. Education: {education}. Skills: {skills}. Focus on family values, career goals. Return plain text only."
         resp = gemini_model.generate_content(prompt)
         return jsonify(profile=(resp.text or "").strip())
     except Exception as e:
@@ -164,8 +163,7 @@ def generate_profile():
 
 @app.route("/api/suggest-skills", methods=["POST"])
 def suggest_skills():
-    if not gemini_model: 
-        return jsonify(error="AI not configured"), 503
+    if not gemini_model: return jsonify(error="AI not configured"), 503
     try:
         data = request.get_json(silent=True) or {}
         education = str(data.get("education") or "").strip()
