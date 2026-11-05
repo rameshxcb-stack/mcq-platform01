@@ -47,7 +47,7 @@ def _translate(text, lang):
     if cache_key in TRANS_CACHE:
         return TRANS_CACHE[cache_key]
     
-    # 🔥 Direct Google API (100% Reliable, bypasses deep-translator blocks)
+    # Direct Google API (Bypasses deep-translator blocks)
     try:
         url = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl={lang}&dt=t&q={urllib.parse.quote(text)}"
         res = requests.get(url, timeout=5)
@@ -56,7 +56,7 @@ def _translate(text, lang):
             out = "".join([item[0] for item in data[0]])
             TRANS_CACHE[cache_key] = out
             return out
-    except Exception as e:
+    except Exception:
         pass
         
     return text
@@ -94,7 +94,6 @@ def _preprocess(payload):
                 skills.append({"name": _translate(n.strip(), lang), "level": lv})
     data["skills_list"] = skills
 
-    # 🔥 Direct Mapping for Dropdowns (Fixes Female, Muslim, No)
     v_map = {
         "hi": {"Male": "पुरुष", "Female": "महिला", "Other": "अन्य", "Unmarried": "अविवाहित", "Never Married": "कभी शादी नहीं की", "Divorced": "तलाकशुदा", "Widowed": "विधवा/विधुर", "Awaiting Divorce": "तालाक का इंतजार", "Yes": "हाँ", "No": "नहीं", "Partial": "आंशिक", "Hindu": "हिंदू", "Muslim": "मुस्लिम", "Christian": "ईसाई", "Sikh": "सिख", "Buddhist": "बौद्ध", "Jain": "जैन", "Parsi": "पारसी"},
         "kn": {"Male": "ಪುರುಷ", "Female": "ಮಹಿಳೆ", "Other": "ಇತರೆ", "Unmarried": "ಅವಿವಾಹಿತ", "Never Married": "ಮದುವೆಯಾಗಿಲ್ಲ", "Divorced": "ವಿಚ್ಛೇದಿತ", "Widowed": "ವಿಧವೆ/ವಿಧುರ", "Awaiting Divorce": "ವಿಚ್ಛೇದನದ ನಿರೀಕ್ಷೆಯಲ್ಲಿದೆ", "Yes": "ಹೌದು", "No": "ಇಲ್ಲ", "Partial": "ಭಾಗಶಃ", "Hindu": "ಹಿಂದೂ", "Muslim": "ಮುಸ್ಲಿಂ", "Christian": "ಕ್ರಿಶ್ಚಿಯನ್", "Sikh": "ಸಿಖ್", "Buddhist": "ಬೌದ್ಧ", "Jain": "ಜೈನ", "Parsi": "ಪಾರ್ಸಿ"},
@@ -115,7 +114,6 @@ def _preprocess(payload):
         else:
             data[k] = val
 
-    # Translate ALL text fields (including Name)
     translate_keys = [
         "name", "address", "profile", "father", "mother", "father_job", "mother_job", 
         "brothers", "sisters", "education_simple", "experience", "languages", "hobbies", 
@@ -129,17 +127,21 @@ def _preprocess(payload):
 
     edu_mode = str(data.get("education_mode") or "simple").lower()
     data["education_mode"] = edu_mode
-    data["education_list"] = []
-    if edu_mode == "detailed" and isinstance(data.get("education_list"), list):
-        for item in data["education_list"]:
+    
+    raw_edu_list = data.get("education_list", [])
+    processed_edu = []
+    
+    if edu_mode == "detailed" and isinstance(raw_edu_list, list):
+        for item in raw_edu_list:
             if item.get("level") or item.get("institute"):
-                data["education_list"].append({
+                processed_edu.append({
                     "level": _translate(str(item.get("level", "")).strip(), lang),
                     "board": _translate(str(item.get("board", "")).strip(), lang),
                     "institute": _translate(str(item.get("institute", "")).strip(), lang),
                     "year": str(item.get("year", "")).strip(),
                     "score": str(item.get("score", "")).strip()
                 })
+    data["education_list"] = processed_edu
 
     data["labels"] = LABELS_MULTI.get(lang, LABELS_MULTI["en"])
     
