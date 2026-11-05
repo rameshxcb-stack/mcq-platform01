@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>{{ name or 'Biodata' }}</title>
+{% set theme_catalog = {
+  'cyan':                 {'layout':'classic','label':'Cyan Classic','mood':'Professional','primary':'#164E63','accent':'#38BDF8','paper':'#F8FDFF','ink':'#172B3A','muted':'#647987','track':'#DCF1F8','tint':'#EAF8FC'},
+  'orange_sidebar':       {'layout':'sidebar','label':'Orange Creative','mood':'Creative','primary':'#F97316','accent':'#FFD08A','paper':'#FFF9F3','ink':'#38291F','muted':'#806B5C','track':'#FFF0D9','tint':'#FFF5E8'},
+  'navy_classic':         {'layout':'traditional','label':'Navy Classic','mood':'Traditional','primary':'#183153','accent':'#D9A441','paper':'#FFFFFF','ink':'#1D2939','muted':'#667085','track':'#F4E6C6','tint':'#FAF0DA'},
+  'teal_header':          {'layout':'banner','label':'Teal Header','mood':'Professional','primary':'#087E78','accent':'#6ED7CB','paper':'#F7FFFE','ink':'#183B3A','muted':'#607A78','track':'#DCF4F1','tint':'#EBFAF8'},
+  'blue_corporate':       {'layout':'corporate','label':'Blue Corporate','mood':'Professional','primary':'#155E9A','accent':'#55B9E8','paper':'#FFFFFF','ink':'#1E293B','muted':'#64748B','track':'#DCF0F9','tint':'#EDF8FC'},
+  'emerald_sidebar':      {'layout':'sidebar','label':'Emerald Sidebar','mood':'Modern','primary':'#075E49','accent':'#B8D8B0','paper':'#F7FCF7','ink':'#20372C','muted':'#667B6B','track':'#E3EFE0','tint':'#EFF7EC'},
+  'rose_card':            {'layout':'cards','label':'Rose Card','mood':'Elegant','primary':'#A33B5C','accent':'#F2B5C5','paper':'#FFFAFC','ink':'#382A31','muted':'#806B76','track':'#FBE2E8','tint':'#FDEEF2'},
+  'midnight_split':       {'layout':'split','label':'Midnight Split','mood':'Premium','primary':'#24213D','accent':'#C7A7F5','paper':'#FAF9FF','ink':'#29263B','muted':'#77718B','track':'#E8DFFA','tint':'#F2ECFC'},
+  'lavender_minimal':     {'layout':'minimal','label':'Lavender Minimal','mood':'Minimal','primary':'#6554A4','accent':'#C7B9F3','paper':'#FCFAFF','ink':'#302B42','muted':'#77718B','track':'#E6E0F7','tint':'#F1ECFA'},
+  'forest_timeline':      {'layout':'timeline','label':'Forest Timeline','mood':'Classic','primary':'#315B43','accent':'#C8B77A','paper':'#FCFCF5','ink':'#26372D','muted':'#6C786A','track':'#EDE7CE','tint':'#F7F3DE'},
+  'terracotta_editorial': {'layout':'editorial','label':'Terracotta Editorial','mood':'Modern','primary':'#A65338','accent':'#E8AA83','paper':'#FFFAF6','ink':'#3D2D28','muted':'#806B62','track':'#F5E0D2','tint':'#FBEEE3'},
+  'plum_sidebar':         {'layout':'sidebar','label':'Plum Sidebar','mood':'Elegant','primary':'#60345F','accent':'#D6A4D3','paper':'#FFFAFF','ink':'#392B3B','muted':'#7D6D7F','track':'#F0DDEE','tint':'#F8ECF6'},
+  'sky_banner':           {'layout':'banner','label':'Sky Banner','mood':'Professional','primary':'#1767A5','accent':'#79C9F2','paper':'#F7FCFF','ink':'#1E3348','muted':'#64788C','track':'#DDEEFA','tint':'#EEF8FD'},
+  'charcoal_classic':     {'layout':'traditional','label':'Charcoal Classic','mood':'Classic','primary':'#30343B','accent':'#D9B66D','paper':'#FCFBF8','ink':'#292D33','muted':'#77736A','track':'#F3E8CD','tint':'#FAF3E3'},
+  'sapphire_corporate':   {'layout':'corporate','label':'Sapphire Corporate','mood':'Professional','primary':'#174A86','accent':'#83B9EA','paper':'#F8FBFF','ink':'#203248','muted':'#65758A','track':'#DFEDFA','tint':'#EFF7FD'},
+  'champagne_cards':      {'layout':'cards','label':'Champagne Cards','mood':'Luxury','primary':'#8A6A42','accent':'#E6CE9D','paper':'#FFFCF5','ink':'#403528','muted':'#827564','track':'#F5EBD7','tint':'#FBF4E8'},
+  'burgundy_split':       {'layout':'split','label':'Burgundy Split','mood':'Premium','primary':'#742B45','accent':'#E5A8B8','paper':'#FFF9FB','ink':'#3A2730','muted':'#826B73','track':'#F6DEE4','tint':'#FBEDF1'},
+  'indigo_minimal':       {'layout':'minimal','label':'Indigo Minimal','mood':'Modern','primary':'#443B91','accent':'#B5ADF4','paper':'#FCFBFF','ink':'#2E2A48','muted':'#77738D','track':'#E3E0F9','tint':'#EFECFC'},
+  'copper_timeline':      {'layout':'timeline','label':'Copper Timeline','mood':'Classic','primary':'#96502E','accent':'#E8B18A','paper':'#FFFAF6','ink':'#3E2E27','muted':'#806D61','track':'#F6E2D3','tint':'#FBEFE5'},
+  'ocean_editorial':      {'layout':'editorial','label':'Ocean Editorial','mood':'Modern','primary':'#075C78','accent':'#71C9D8','paper':'#F5FCFE','ink':'#1B3945','muted':'#637D86','track':'#DEF0F3','tint':'#EEF8FA'},
+  'sage_sidebar':         {'layout':'sidebar','label':'Sage Sidebar','mood':'Elegant','primary':'#526D54','accent':'#C5D2A6','paper':'#FBFDF8','ink':'#303D31','muted':'#71806D','track':'#EBEFDC','tint':'#F4F7EA'},
+  'ruby_banner':          {'layout':'banner','label':'Ruby Banner','mood':'Premium','primary':'#A51F45','accent':'#F2A0B5','paper':'#FFF8FA','ink':'#3D2730','muted':'#806A74','track':'#FADCE3','tint':'#FCEBF0'},
+  'steel_corporate':      {'layout':'corporate','label':'Steel Corporate','mood':'Professional','primary':'#45586D','accent':'#B6C8D8','paper':'#FBFCFE','ink':'#283746','muted':'#687786','track':'#E5EBF0','tint':'#F1F5F8'},
+  'mint_cards':           {'layout':'cards','label':'Mint Cards','mood':'Fresh','primary':'#177C68','accent':'#9BE0CD','paper':'#F5FFFB','ink':'#203B35','muted':'#668078','track':'#DDF3EC','tint':'#ECF9F4'},
+  'sunset_split':         {'layout':'split','label':'Sunset Split','mood':'Creative','primary':'#B65336','accent':'#F6C07C','paper':'#FFFAF4','ink':'#412D27','muted':'#806D62','track':'#FCEAD5','tint':'#FDF4E5'},
+  'peacock_minimal':      {'layout':'minimal','label':'Peacock Minimal','mood':'Modern','primary':'#075B59','accent':'#8AD8C8','paper':'#F5FFFD','ink':'#203B38','muted':'#657D78','track':'#DDF3EF','tint':'#ECF9F5'},
+  'blush_timeline':       {'layout':'timeline','label':'Blush Timeline','mood':'Elegant','primary':'#A65D79','accent':'#F0C4D2','paper':'#FFFAFC','ink':'#403039','muted':'#826E77','track':'#FAE5EB','tint':'#FCF0F4'},
+  'olive_editorial':      {'layout':'editorial','label':'Olive Editorial','mood':'Classic','primary':'#626B32','accent':'#D1C58D','paper':'#FFFDF4','ink':'#363A28','muted':'#77765E','track':'#F0EDD6','tint':'#F8F6E7'},
+  'ice_sidebar':          {'layout':'sidebar','label':'Ice Sidebar','mood':'Modern','primary':'#4B86A8','accent':'#B8DDEB','paper':'#F8FDFF','ink':'#263A46','muted':'#6D8089','track':'#E1F1F7','tint':'#F0F8FB'},
+  'onyx_banner':          {'layout':'banner','label':'Onyx Banner','mood':'Premium','primary':'#292D36','accent':'#C0C9D4','paper':'#FBFCFD','ink':'#292D34','muted':'#6C7480','track':'#EAF0F4','tint':'#F5F7FA'},
+  'mauve_corporate':      {'layout':'corporate','label':'Mauve Corporate','mood':'Elegant','primary':'#875E7F','accent':'#E2BFD7','paper':'#FFFAFD','ink':'#3D3040','muted':'#7E6E7D','track':'#F5E5EE','tint':'#FAF1F6'},
+  'amber_cards':          {'layout':'cards','label':'Amber Cards','mood':'Luxury','primary':'#91621D','accent':'#F0C66E','paper':'#FFFCF5','ink':'#40321F','muted':'#81715A','track':'#FAE7BC','tint':'#FCF3DB'},
+  'crimson_split':        {'layout':'split','label':'Crimson Split','mood':'Bold','primary':'#A52B36','accent':'#F0A3A4','paper':'#FFF9F8','ink':'#40292B','muted':'#80696B','track':'#FADCDD','tint':'#FCEDED'},
+  'lagoon_minimal':       {'layout':'minimal','label':'Lagoon Minimal','mood':'Fresh','primary':'#14747A','accent':'#82D9D2','paper':'#F5FFFE','ink':'#203B3C','muted':'#66817F','track':'#DDF3F1','tint':'#EDF9F8'},
+  'sandstone_timeline':   {'layout':'timeline','label':'Sandstone Timeline','mood':'Classic','primary':'#83705A','accent':'#D8C7AD','paper':'#FDFBF7','ink':'#39332C','muted':'#7D7468','track':'#F0E9DC','tint':'#F7F2E9'},
+  'orchid_editorial':     {'layout':'editorial','label':'Orchid Editorial','mood':'Creative','primary':'#74418A','accent':'#D4B1E8','paper':'#FDF9FF','ink':'#392D43','muted':'#786B83','track':'#EFE2F4','tint':'#F7EFFA'},
+  'cobalt_sidebar':       {'layout':'sidebar','label':'Cobalt Sidebar','mood':'Professional','primary':'#2457A6','accent':'#9CC5F4','paper':'#F8FAFF','ink':'#25354A','muted':'#687A91','track':'#DFE9F8','tint':'#EFF4FC'},
+  'pine_banner':          {'layout':'banner','label':'Pine Banner','mood':'Classic','primary':'#24533F','accent':'#B7D1B4','paper':'#F8FCF8','ink':'#26392F','muted':'#6B7F71','track':'#E2ECE2','tint':'#F0F5EF'},
+  'pearl_corporate':      {'layout':'corporate','label':'Pearl Corporate','mood':'Minimal','primary':'#62616A','accent':'#D4D1D9','paper':'#FFFFFF','ink':'#2E2D34','muted':'#77757D','track':'#ECE9ED','tint':'#F5F3F6'},
+  'golden_cards':         {'layout':'cards','label':'Golden Cards','mood':'Luxury','primary':'#9B793A','accent':'#EBD18C','paper':'#FFFCF5','ink':'#403624','muted':'#81745F','track':'#F6EAD1','tint':'#FBF4E3'},
+  'slate_split':          {'layout':'split','label':'Slate Split','mood':'Professional','primary':'#536879','accent':'#B7C9D5','paper':'#FAFCFD','ink':'#2D3B45','muted':'#71808A','track':'#E5ECF0','tint':'#F1F5F7'},
+  'coral_minimal':        {'layout':'minimal','label':'Coral Minimal','mood':'Fresh','primary':'#C45C58','accent':'#F4B8A7','paper':'#FFFAF8','ink':'#442F30','muted':'#846E6A','track':'#FADDD3','tint':'#FCEEE8'},
+  'moss_timeline':        {'layout':'timeline','label':'Moss Timeline','mood':'Classic','primary':'#56704F','accent':'#C3D4A9','paper':'#FAFCF7','ink':'#303D2F','muted':'#71806B','track':'#EAF0DE','tint':'#F4F7EC'},
+  'wine_editorial':       {'layout':'editorial','label':'Wine Editorial','mood':'Premium','primary':'#762D48','accent':'#D9A1B1','paper':'#FFFAFC','ink':'#3D2931','muted':'#806D75','track':'#F2DDE3','tint':'#F8ECEF'},
+  'arctic_sidebar':       {'layout':'sidebar','label':'Arctic Sidebar','mood':'Modern','primary':'#397C91','accent':'#B3DDE7','paper':'#F7FCFE','ink':'#263B45','muted':'#6D808A','track':'#E0F1F4','tint':'#EFF8FA'},
+  'royal_banner':         {'layout':'banner','label':'Royal Banner','mood':'Royal','primary':'#6B0F1A','accent':'#D4A853','paper':'#FFFBF5','ink':'#3D3028','muted':'#7D6F62','track':'#F0E6C9','tint':'#FAF4E2'},
+  'graphite_corporate':   {'layout':'corporate','label':'Graphite Corporate','mood':'Professional','primary':'#3A3A3F','accent':'#B5B5BA','paper':'#F9FBFF','ink':'#1F3048','muted':'#68788D','track':'#EBEBEC','tint':'#F4F4F5'},
+  'peach_cards':          {'layout':'cards','label':'Peach Cards','mood':'Elegant','primary':'#E8926A','accent':'#FAD5BF','paper':'#FBFCFD','ink':'#2B323A','muted':'#6E7882','track':'#FEF0E8','tint':'#FEF6F1'},
+  'denim_split':          {'layout':'split','label':'Denim Split','mood':'Modern','primary':'#2E5A88','accent':'#9FBAD1','paper':'#FFFAF7','ink':'#46332D','muted':'#887168','track':'#E3EBF1','tint':'#F0F4F8'},
+  'lilac_minimal':        {'layout':'minimal','label':'Lilac Minimal','mood':'Elegant','primary':'#B29BD8','accent':'#E0D3F0','paper':'#F8FBFF','ink':'#26394C','muted':'#687C90','track':'#F2EDF9','tint':'#F8F5FC'},
+  'bronze_timeline':      {'layout':'timeline','label':'Bronze Timeline','mood':'Classic','primary':'#8A5A2D','accent':'#D4A96A','paper':'#FFFBFF','ink':'#3A3246','muted':'#7D7388','track':'#F3E5D3','tint':'#F9F2E5'},
+  'jade_editorial':       {'layout':'editorial','label':'Jade Editorial','mood':'Fresh','primary':'#2F8B6F','accent':'#A5D8C6','paper':'#FFFBF6','ink':'#403329','muted':'#827467','track':'#E4F2EB','tint':'#F1F8F5'},
+  'maroon_sidebar':       {'layout':'sidebar','label':'Maroon Sidebar','mood':'Traditional','primary':'#6B1F2E','accent':'#D4A0A8','paper':'#F7FFFB','ink':'#263B32','muted':'#6B8075','track':'#F2E1E4','tint':'#F9F1F3'},
+  'turquoise_banner':     {'layout':'banner','label':'Turquoise Banner','mood':'Modern','primary':'#1E8A90','accent':'#8DD9DD','paper':'#FFFAFB','ink':'#3C2930','muted':'#806D73','track':'#E3F3F4','tint':'#F1F9FA'},
+  'smoke_corporate':      {'layout':'corporate','label':'Smoke Corporate','mood':'Minimal','primary':'#5A6068','accent':'#B7BCC4','paper':'#F5FFFF','ink':'#203B40','muted':'#668184','track':'#EBEDEF','tint':'#F4F5F7'},
+  'ivory_cards':          {'layout':'cards','label':'Ivory Cards','mood':'Traditional','primary':'#59616B','accent':'#C5CBD2','paper':'#FCFDFE','ink':'#2D333B','muted':'#737C85','track':'#EBECEE','tint':'#F4F5F6'}
+} %}
+{% set theme_catalog = dict(theme_catalog,
+  royal=theme_catalog['royal_banner'],
+  professional=theme_catalog['steel_corporate'],
+  emerald=theme_catalog['emerald_sidebar'],
+  midnight=theme_catalog['midnight_split'],
+  rose=theme_catalog['rose_card'],
+  lavender=theme_catalog['lavender_minimal'],
+  teal=theme_catalog['teal_header'],
+  charcoal=theme_catalog['charcoal_classic'],
+  minimal=theme_catalog['pearl_corporate'],
+  sky=theme_catalog['sky_banner'],
+  forest=theme_catalog['forest_timeline'],
+  terracotta=theme_catalog['terracotta_editorial'],
+  plum=theme_catalog['plum_sidebar'],
+  classic=theme_catalog['ivory_cards'],
+  coral=theme_catalog['coral_minimal'],
+  sapphire=theme_catalog['sapphire_corporate'],
+  champagne=theme_catalog['champagne_cards'],
+  burgundy=theme_catalog['burgundy_split'],
+  indigo=theme_catalog['indigo_minimal'],
+  copper=theme_catalog['copper_timeline'],
+  ocean=theme_catalog['ocean_editorial'],
+  sage=theme_catalog['sage_sidebar'],
+  ruby=theme_catalog['ruby_banner'],
+  steel=theme_catalog['steel_corporate'],
+  mint=theme_catalog['mint_cards'],
+  sunset=theme_catalog['sunset_split'],
+  peacock=theme_catalog['peacock_minimal'],
+  blush=theme_catalog['blush_timeline'],
+  olive=theme_catalog['olive_editorial'],
+  ice=theme_catalog['ice_sidebar'],
+  onyx=theme_catalog['onyx_banner'],
+  mauve=theme_catalog['mauve_corporate'],
+  amber=theme_catalog['amber_cards'],
+  crimson=theme_catalog['crimson_split'],
+  lagoon=theme_catalog['lagoon_minimal'],
+  sandstone=theme_catalog['sandstone_timeline'],
+  orchid=theme_catalog['orchid_editorial'],
+  cobalt=theme_catalog['cobalt_sidebar'],
+  pine=theme_catalog['pine_banner'],
+  pearl=theme_catalog['pearl_corporate']
+) %}
+{% set selected_theme = theme_catalog.get(theme, theme_catalog['cyan']) %}
+{% set layout = selected_theme.layout %}
+{% set is_round_photo = layout in ['sidebar','cards','editorial'] or theme == 'cyan' %}
+{% set mood_fonts = {
+  'Professional': ('Oswald','Inter'),
+  'Traditional': ('Libre Baskerville','Lato'),
+  'Elegant': ('Playfair Display','Lato'),
+  'Premium': ('Cinzel','Lato'),
+  'Modern': ('Montserrat','Inter'),
+  'Creative': ('Playfair Display','Poppins'),
+  'Fresh': ('Montserrat','Nunito Sans'),
+  'Luxury': ('Cormorant Garamond','Nunito Sans'),
+  'Classic': ('Libre Baskerville','Source Sans 3'),
+  'Royal': ('Cinzel','Lato'),
+  'Bold': ('Oswald','Roboto'),
+  'Minimal': ('DM Sans','Inter')
+} %}
+{% set fonts = mood_fonts.get(selected_theme.mood, ('Playfair Display','Lato')) %}
+{% set display_font = fonts[0] %}
+{% set body_font = fonts[1] %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:wght@600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=Lato:wght@400;700;900&family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&family=Oswald:wght@500;600;700&family=Playfair+Display:wght@600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:{{ selected_theme.primary }};--accent:{{ selected_theme.accent }};--paper:{{ selected_theme.paper }};--ink:{{ selected_theme.ink }};--muted:{{ selected_theme.muted }};--track:{{ selected_theme.track }};--title-tint:{{ selected_theme.tint }};--display:'{{ display_font }}',Georgia,serif;--body:'{{ body_font }}',Arial,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:#e9edf2;color:var(--ink);font-family:var(--body);font-size:10pt;line-height:1.45}
+@page{size:A4;margin:0}
+.page{width:210mm;min-height:297mm;margin:0 auto;background:var(--paper);position:relative;padding:13mm 14mm 12mm;overflow:visible}
+.page:before{content:"";position:absolute;inset:5mm;border:1.2px solid var(--accent);pointer-events:none;opacity:.75}
+.page:after{content:"";position:absolute;inset:8mm;border:.45px solid var(--accent);pointer-events:none;opacity:.28}
+.content{position:relative;z-index:1}
+.header{position:relative;text-align:center;padding:5mm 4mm 6mm;border-bottom:1.5px solid var(--accent);min-height:45mm}
+.ornament{color:var(--accent);font-size:15pt;letter-spacing:7px;margin-bottom:2mm}
+.photo{width:34mm;height:40mm;margin:0 auto 3mm;padding:1.2mm;border:2px solid var(--accent);border-radius:{{ '50%' if is_round_photo else '3mm' }};background:var(--paper);box-shadow:0 2mm 5mm #00000018;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;border-radius:{{ '50%' if is_round_photo else '1.5mm' }};display:block}
+.photo-empty{height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:8pt;text-align:center}
+.name{font-family:var(--display);font-size:27pt;line-height:1.12;color:var(--primary);font-weight:800;letter-spacing:.4px;overflow-wrap:anywhere;margin:0}
+.subtitle{margin-top:1.5mm;font-size:8pt;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.contact-line{margin-top:2mm;color:var(--muted);font-size:8.5pt;overflow-wrap:anywhere}
+.resume-body{display:block}.side-column,.main-column{min-width:0}
+.section{margin-top:5mm;break-inside:auto}
+.section-title{display:flex;align-items:center;gap:2mm;margin:0 0 2.5mm;color:var(--primary);font-family:var(--display);font-size:12pt;font-weight:800;letter-spacing:1.1px;text-transform:uppercase}
+.section-title:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--accent),transparent)}
+.section-title .mark{color:var(--accent);font-size:9pt}
+.grid{display:grid;grid-template-columns:38mm 1fr;gap:1.7mm 3mm;padding:0 2mm}
+.label{font-size:8.5pt;color:var(--muted);font-weight:700}
+.value{font-size:9.5pt;color:var(--ink);font-weight:500;white-space:pre-line;overflow-wrap:anywhere}
+.block{padding:0 2mm;white-space:pre-line;text-align:justify;overflow-wrap:anywhere}
+.skill{display:grid;grid-template-columns:38mm 1fr 10mm;gap:3mm;align-items:center;margin:2mm 2mm}
+.skill-name{font-size:9pt;font-weight:700}.track{height:2.2mm;background:var(--track);border-radius:10mm;overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--primary));border-radius:10mm}
+.skill-pct{font-size:8pt;color:var(--muted);text-align:right}
+.footer{margin-top:8mm;padding-top:3mm;border-top:1px solid var(--accent);display:flex;justify-content:space-between;align-items:flex-end;gap:10mm;color:var(--muted);font-size:8.5pt;break-inside:avoid}
+.signature{text-align:center;min-width:42mm}.signature-line{height:10mm;border-bottom:1px solid var(--muted);margin-bottom:1.5mm}
+.signature-label{text-transform:uppercase;letter-spacing:1px;font-weight:700;font-size:8pt}
+
+/* Layout 1: Classic centered (base styles, no override) */
+/* Layout 2: Traditional centered biodata */
+.layout-traditional .header{padding-top:7mm;border-bottom:3px double var(--accent)}.layout-traditional .ornament{font-size:19pt}
+.layout-traditional .name{text-transform:uppercase;letter-spacing:1.3px}
+.layout-traditional .section-title{border-bottom:1px solid var(--accent);padding-bottom:1.5mm}
+/* Layout 3: Coloured left sidebar */
+.layout-sidebar .resume-body{display:grid;grid-template-columns:62mm minmax(0,1fr);gap:7mm;margin-top:5mm}
+.layout-sidebar .side-column{background:var(--primary);color:#fff;padding:5mm 4mm;border-radius:2mm;align-self:start}
+.layout-sidebar .side-column .section{margin-top:5mm}.layout-sidebar .side-column .section-title{color:#fff;font-size:10pt}
+.layout-sidebar .side-column .section-title:after{background:var(--accent)}
+.layout-sidebar .side-column .label,.layout-sidebar .side-column .value,.layout-sidebar .side-column .skill-name,.layout-sidebar .side-column .skill-pct{color:#fff}
+.layout-sidebar .side-column .grid{grid-template-columns:1fr;gap:1mm}
+.layout-sidebar .side-column .track{background:#ffffff55}
+.layout-sidebar .side-column .fill{background:var(--accent)}
+.layout-sidebar .side-column .skill{grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:1mm 2mm}
+.layout-sidebar .side-column .skill-name{grid-column:1 / -1;font-size:8.5pt}
+.layout-sidebar .side-column .track{grid-column:1;height:1.8mm}
+.layout-sidebar .side-column .skill-pct{font-size:7.5pt}
+.layout-sidebar .header{text-align:left;padding-left:5mm;border:0;min-height:40mm}
+.layout-sidebar .header .photo{float:left;margin:0 6mm 2mm 0}
+.layout-sidebar .header .ornament{display:none}.layout-sidebar .header .name{padding-top:5mm}
+/* Layout 4: Full-width banner */
+.layout-banner .header{background:var(--primary);color:white;border:0;border-radius:2mm;padding:8mm 6mm}
+.layout-banner .name{color:white}.layout-banner .subtitle,.layout-banner .contact-line{color:#fff;opacity:.9}
+.layout-banner .ornament{color:var(--accent)}
+.layout-banner .section-title{background:var(--title-tint);padding:2mm 3mm;border-radius:1mm}
+/* Layout 5: Corporate header */
+.layout-corporate .header{text-align:left;padding:5mm 5mm 5mm 7mm;border-left:4mm solid var(--accent);min-height:39mm}
+.layout-corporate .photo{float:right;margin:0 0 2mm 7mm}.layout-corporate .ornament{display:none}
+.layout-corporate .name{padding-top:5mm}.layout-corporate .contact-line{max-width:125mm}
+.layout-corporate .section-title{font-family:var(--body);font-size:11pt;letter-spacing:1.5px;border-bottom:1px solid var(--accent);padding-bottom:1mm}
+/* Layout 6: Floating white cards */
+.layout-cards .section{background:#fff;padding:4mm;border:1px solid var(--track);border-radius:3mm;box-shadow:0 1mm 3mm #0000000b}
+.layout-cards .section-title{margin-bottom:3mm}
+.layout-cards .header{border:0;margin-bottom:3mm;background:linear-gradient(135deg,var(--title-tint),var(--paper));border-radius:4mm}
+.layout-cards .photo{border-radius:50%}
+.page.layout-cards{background:var(--title-tint)}
+/* Layout 7: Bold split panel */
+.layout-split .header{background:var(--primary);color:white;text-align:left;padding:8mm 7mm;border-radius:3mm 3mm 0 0}
+.layout-split .name{color:white}.layout-split .subtitle,.layout-split .contact-line{color:#fff}
+.layout-split .photo{float:right;margin:0 0 2mm 8mm}.layout-split .ornament{display:none}
+.layout-split .section-title{border-bottom:2px solid var(--accent);padding-bottom:1.5mm}
+/* Layout 8: Minimal typography */
+.layout-minimal .page:before,.layout-minimal .page:after{display:none}
+.layout-minimal .header{border-bottom:2px solid var(--primary);text-align:left;padding-left:0}
+.layout-minimal .ornament{display:none}
+.layout-minimal .photo{float:right;margin:0 0 2mm 8mm;border:1px solid var(--accent);box-shadow:none}
+.layout-minimal .name{padding-top:5mm}
+.layout-minimal .section-title{font-family:var(--body);font-size:10pt;letter-spacing:1.8px}
+.layout-minimal .section-title:after{background:var(--primary);opacity:.35}
+/* Layout 9: Timeline accents */
+.layout-timeline .section{border-left:2px solid var(--accent);margin-left:3mm;padding-left:5mm}
+.layout-timeline .section-title{position:relative}
+.layout-timeline .section-title:before{content:"";position:absolute;left:-7.2mm;width:3mm;height:3mm;background:var(--primary);border:1px solid var(--paper);border-radius:50%}
+.layout-timeline .header{border-bottom:3px solid var(--primary)}
+.layout-timeline .ornament{letter-spacing:10px}
+/* Layout 10: Editorial asymmetry */
+.layout-editorial .header{text-align:left;padding:5mm 5mm 7mm;border-bottom:0}
+.layout-editorial .header:after{content:"";position:absolute;left:0;bottom:0;width:45mm;height:3px;background:var(--accent)}
+.layout-editorial .photo{float:right;margin:0 0 2mm 8mm;border-radius:1mm}
+.layout-editorial .ornament{display:none}.layout-editorial .name{font-size:30pt}
+.layout-editorial .section-title{font-family:var(--body);font-size:10pt;letter-spacing:2px}
+.layout-editorial .section{margin-top:7mm}
+
+/* Theme-specific overrides (all use CSS vars - no hardcoded colors) */
+.theme-cyan .header{background:linear-gradient(110deg,var(--primary) 0 48%,var(--accent) 48% 100%);padding:8mm 6mm;border:0;text-align:left}
+.theme-cyan .name,.theme-cyan .subtitle,.theme-cyan .contact-line{color:white}
+.theme-cyan .photo{float:left;margin:0 7mm 2mm 0;border-radius:50%}
+.theme-cyan .ornament{display:none}
+.theme-cyan .section-title{background:var(--primary);color:white;padding:1.5mm 3mm;border-radius:10mm}
+.theme-orange_sidebar .side-column{background:var(--primary)}
+.theme-orange_sidebar .side-column .section-title{color:white}
+.theme-orange_sidebar .header .name{color:var(--primary)}
+.theme-navy_classic .section-title{background:var(--primary);color:white;padding:1.5mm 3mm}
+.theme-blue_corporate .header{background:var(--primary);color:white}
+.theme-blue_corporate .name,.theme-blue_corporate .subtitle,.theme-blue_corporate .contact-line{color:white}
+.theme-blue_corporate .photo{float:left;margin:0 7mm 2mm 0}
+.theme-blue_corporate .ornament{display:none}
+
+@media print{
+ html,body{background:var(--paper)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .page{width:210mm;min-height:0;margin:0;padding:13mm 14mm 12mm;overflow:visible;box-shadow:none}
+ .page:before,.page:after{position:fixed;inset:5mm}.page:after{inset:8mm}
+ .header,.section-title,.grid,.skill,.footer,.photo{break-inside:avoid;page-break-inside:avoid}
+ .section{break-inside:auto;page-break-inside:auto}
+ .section-title{break-after:avoid;page-break-after:avoid}
+ .block,.value{orphans:3;widows:3}
+}
+@media screen{body{padding:12px 0}.page{box-shadow:0 10px 40px #15223822}}
+@media screen and (max-width:700px){
+ .page{width:100%;min-height:100vh;padding:8mm 7mm}
+ .page:before,.page:after{display:none}
+ .layout-sidebar .resume-body{grid-template-columns:1fr;gap:3mm}
+ .layout-sidebar .side-column{padding:4mm}
+ .grid{grid-template-columns:32mm 1fr}
+ .skill{grid-template-columns:32mm 1fr 10mm}
+}
+</style>
+</head>
+<body>
+<div class="page layout-{{ layout }} theme-{{ theme if theme in theme_catalog else 'cyan' }}">
+<main class="content">
+<header class="header">
+ <div class="ornament">✦ ❖ ✦</div>
+ <div class="photo">
+ {% if photo %}
+ <img id="profilePhoto" src="{{ photo }}" alt="Profile photo">
+ <div class="photo-empty" id="photoEmpty" style="display:none">PROFILE PHOTO</div>
+ {% else %}
+ <img id="profilePhoto" alt="Profile photo" style="display:none">
+ <div class="photo-empty" id="photoEmpty">PROFILE PHOTO</div>
+ {% endif %}
+ </div>
+ <h1 class="name">{{ name or 'YOUR NAME' }}</h1>
+ <div class="subtitle">{% if selected_theme.mood == 'Professional' %}Professional Resume{% else %}{{ selected_theme.mood }} Biodata{% endif %}</div>
+ {% if phone or email %}<div class="contact-line">{% if phone %}{{ phone }}{% endif %}{% if phone and email %} &nbsp; • &nbsp; {% endif %}{% if email %}{{ email }}{% endif %}</div>{% endif %}
+</header>
+
+<div class="resume-body">
+<aside class="side-column">
+ {% if phone or email or address %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Contact Details</h2><div class="grid">
+ {% if phone %}<div class="label">Mobile Number</div><div class="value">{{ phone }}</div>{% endif %}
+ {% if email %}<div class="label">Email</div><div class="value">{{ email }}</div>{% endif %}
+ {% if address %}<div class="label">Address</div><div class="value">{{ address }}</div>{% endif %}
+ </div></section>{% endif %}
+ {% if dob or gender or height or weight or religion or caste or blood or marital or gotra or rashi or nakshatra or manglik %}
+ <section class="section"><h2 class="section-title"><span class="mark">✦</span> Personal Details</h2><div class="grid">
+ {% for label, value in [('Date of Birth',dob),('Gender',gender),('Height',height),('Weight',weight),('Blood Group',blood),('Marital Status',marital),('Religion',religion),('Caste / Community',caste),('Gotra',gotra),('Rashi',rashi),('Nakshatra',nakshatra),('Manglik',manglik)] %}{% if value %}<div class="label">{{ label }}</div><div class="value">{{ value }}</div>{% endif %}{% endfor %}
+ </div></section>{% endif %}
+ {% if father or mother or brothers or sisters %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Family Details</h2><div class="grid">
+ {% if father %}<div class="label">Father</div><div class="value">{{ father }}{% if father_job %} — {{ father_job }}{% endif %}</div>{% endif %}
+ {% if mother %}<div class="label">Mother</div><div class="value">{{ mother }}{% if mother_job %} — {{ mother_job }}{% endif %}</div>{% endif %}
+ {% if brothers %}<div class="label">Brothers</div><div class="value">{{ brothers }}</div>{% endif %}
+ {% if sisters %}<div class="label">Sisters</div><div class="value">{{ sisters }}</div>{% endif %}
+ </div></section>{% endif %}
+ {% if skills_list %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Skills</h2>
+ {% for skill in skills_list %}<div class="skill"><div class="skill-name">{{ skill.name }}</div><div class="track"><div class="fill" style="width:{{ skill.level }}%"></div></div><div class="skill-pct">{{ skill.level }}%</div></div>{% endfor %}
+ </section>{% endif %}
+ {% if languages or hobbies %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Additional Details</h2><div class="grid">
+ {% if languages %}<div class="label">Languages</div><div class="value">{{ languages }}</div>{% endif %}
+ {% if hobbies %}<div class="label">Hobbies</div><div class="value">{{ hobbies }}</div>{% endif %}
+ </div></section>{% endif %}
+</aside>
+<div class="main-column">
+ {% if profile %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Profile / Objective</h2><div class="block">{{ profile }}</div></section>{% endif %}
+ {% if education %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Education</h2><div class="block">{{ education }}</div></section>{% endif %}
+ {% if experience %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Work Experience</h2><div class="block">{{ experience }}</div></section>{% endif %}
+ {% if declaration %}<section class="section"><h2 class="section-title"><span class="mark">✦</span> Declaration</h2><div class="block">{{ declaration }}</div></section>{% endif %}
+</div>
+</div>
+<footer class="footer">
+ <div>{% if place %}Place: {{ place }}{% endif %}{% if place and date %}<br>{% endif %}{% if date %}Date: {{ date }}{% endif %}</div>
+ <div class="signature"><div class="signature-line"></div><div class="signature-label">Signature</div></div>
+</footer>
+</main>
+</div>
+</body>
+</html>
