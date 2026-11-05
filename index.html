@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<meta name="description" content="Create beautiful marriage biodata or job resume with 12,000+ unique templates.">
 <title>Biodata Maker Pro</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,8 +56,19 @@ body {
 button, input, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; border: 0; background: none; }
 
-/* Hide specific sections based on mode */
 body.mode-job .marriage-only { display: none !important; }
+
+/* Animations */
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.logo-mark, .btn-pdf, .num-badge, .footer-btn.btn-pdf {
+  background: linear-gradient(270deg, #d4a853, #f59e0b, #d4a853) !important;
+  background-size: 200% 200% !important;
+  animation: gradientMove 4s ease infinite !important;
+}
 
 /* =====================================================
    HEADER
@@ -71,12 +81,11 @@ body.mode-job .marriage-only { display: none !important; }
   padding: 12px 16px;
   display: flex; align-items: center; justify-content: space-between;
 }
-
 body.dark .app-header { background: rgba(17, 26, 46, .9); }
 
 .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; letter-spacing: -.02em; }
 .logo-mark {
-  width: 34px; height: 34px; background: var(--gold-grad); border-radius: 9px;
+  width: 34px; height: 34px; border-radius: 9px;
   display: flex; align-items: center; justify-content: center;
   color: #fff; font-weight: 800; font-size: 16px;
   box-shadow: 0 4px 12px rgba(212, 168, 83, .35);
@@ -115,267 +124,93 @@ body.dark .app-header { background: rgba(17, 26, 46, .9); }
   scrollbar-width: thin;
 }
 
-/* Progress */
-.progress-wrap {
-  margin-bottom: 12px;
-  padding: 12px 14px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--r);
-}
+.progress-wrap { margin-bottom: 12px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
 .progress-row { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
 .progress-track { height: 6px; background: var(--bg); border-radius: 10px; overflow: hidden; }
-.progress-fill {
-  height: 100%;
-  background: var(--gold-grad);
-  border-radius: 10px;
-  transition: width .4s cubic-bezier(.4, 0, .2, 1);
-  width: 0;
-}
+.progress-fill { height: 100%; background: var(--gold-grad); border-radius: 10px; transition: width .4s cubic-bezier(.4, 0, .2, 1); width: 0; }
 
-/* Section cards */
-.sec {
-  border: 1px solid var(--line);
-  border-radius: var(--r);
-  margin-bottom: 10px;
-  background: var(--surface);
-  overflow: hidden;
-  transition: all var(--t);
-}
+.sec { border: 1px solid var(--line); border-radius: var(--r); margin-bottom: 10px; background: var(--surface); overflow: hidden; transition: all var(--t); }
 .sec[open] { border-color: rgba(212, 168, 83, .5); box-shadow: var(--sh); }
-.sec summary {
-  list-style: none;
-  padding: 14px 16px;
-  display: flex; align-items: center; gap: 12px;
-  font-weight: 700; font-size: 13px;
-  cursor: pointer;
-  min-height: 52px;
-}
+.sec summary { list-style: none; padding: 14px 16px; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 13px; cursor: pointer; min-height: 52px; }
 .sec summary::-webkit-details-marker { display: none; }
 .sec summary .arrow { margin-left: auto; transition: transform var(--t); font-size: 12px; color: var(--ink-3); }
 .sec[open] summary .arrow { transform: rotate(90deg); }
 .sec-body { padding: 0 16px 16px; }
 
-.num-badge {
-  width: 24px; height: 24px; border-radius: 8px;
-  background: var(--gold-grad);
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 11px; font-weight: 800;
-  flex-shrink: 0;
-}
+.num-badge { width: 24px; height: 24px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; font-weight: 800; flex-shrink: 0; }
 
-/* Fields */
 .fld { margin-bottom: 12px; }
-.fld label {
-  display: block; font-size: 11px; font-weight: 700; color: var(--ink-2);
-  text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px;
-}
-.fld input, .fld textarea, .fld select {
-  width: 100%;
-  border: 1.5px solid var(--line);
-  border-radius: 10px;
-  padding: 11px 14px;
-  font-size: 15px;
-  background: var(--surface);
-  outline: none;
-  transition: all var(--t);
-  min-height: 46px;
-}
-.fld input:focus, .fld select:focus, .fld textarea:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 4px rgba(212, 168, 83, .15);
-}
+.fld label { display: block; font-size: 11px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.fld input, .fld textarea, .fld select { width: 100%; border: 1.5px solid var(--line); border-radius: 10px; padding: 11px 14px; font-size: 15px; background: var(--surface); outline: none; transition: all var(--t); min-height: 46px; }
+.fld input:focus, .fld select:focus, .fld textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(212, 168, 83, .15); }
 .fld textarea { min-height: 80px; resize: vertical; }
 .fld-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-/* Template engine */
 .tpl-controls { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-.tpl-controls input, .tpl-controls select {
-  flex: 1; min-width: 110px; padding: 8px 12px; font-size: 13px;
-  border-radius: 8px; border: 1px solid var(--line); background: var(--surface);
-}
+.tpl-controls input, .tpl-controls select { flex: 1; min-width: 110px; padding: 8px 12px; font-size: 13px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); }
 .tpl-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
-.tpl-tab {
-  flex: 1; padding: 7px; border-radius: 6px;
-  background: var(--bg); border: 1px solid var(--line);
-  font-size: 11px; font-weight: 700; color: var(--ink-2);
-  transition: all var(--t);
-}
+.tpl-tab { flex: 1; padding: 7px; border-radius: 6px; background: var(--bg); border: 1px solid var(--line); font-size: 11px; font-weight: 700; color: var(--ink-2); transition: all var(--t); }
 .tpl-tab.active { background: var(--gold-grad); color: #fff; border-color: transparent; }
-.tpl-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  max-height: 380px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-.tpl-btn {
-  position: relative;
-  padding: 10px; border: 2px solid var(--line);
-  border-radius: 10px; background: var(--surface);
-  text-align: left; font-size: 11px; font-weight: 700;
-  color: var(--ink-2); min-height: 64px;
-  transition: all var(--t);
-  cursor: pointer;
-}
+.tpl-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-height: 380px; overflow-y: auto; padding-right: 4px; }
+.tpl-btn { position: relative; padding: 10px; border: 2px solid var(--line); border-radius: 10px; background: var(--surface); text-align: left; font-size: 11px; font-weight: 700; color: var(--ink-2); min-height: 64px; transition: all var(--t); cursor: pointer; }
 .tpl-btn:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: var(--sh); }
-.tpl-btn.active {
-  border-color: var(--gold);
-  background: linear-gradient(135deg, #fffdf8, #fdf8ec);
-  color: var(--ink);
-  box-shadow: 0 0 0 4px rgba(212, 168, 83, .12);
-}
+.tpl-btn.active { border-color: var(--gold); background: linear-gradient(135deg, #fffdf8, #fdf8ec); color: var(--ink); box-shadow: 0 0 0 4px rgba(212, 168, 83, .12); }
 body.dark .tpl-btn.active { background: linear-gradient(135deg, #2a2318, #1a1610); }
 .tpl-btn .fav { position: absolute; top: 4px; right: 4px; font-size: 13px; opacity: .6; }
 .tpl-btn .fav.on { opacity: 1; color: #ef4444; }
 .tpl-swatch { width: 100%; height: 22px; border-radius: 4px; margin-bottom: 6px; display: flex; overflow: hidden; }
 .tpl-swatch > div { flex: 1; }
-.load-more-btn {
-  width: 100%; padding: 10px; margin-top: 10px;
-  background: var(--bg); border: 1px solid var(--line);
-  border-radius: 8px; font-weight: 700; color: var(--ink);
-}
+.load-more-btn { width: 100%; padding: 10px; margin-top: 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; font-weight: 700; color: var(--ink); }
 
-/* Photo */
 .photo-row { display: flex; gap: 10px; align-items: center; }
-.photo-prev {
-  width: 70px; height: 84px; border-radius: 8px;
-  border: 1px solid var(--line);
-  background: var(--bg);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden; color: var(--ink-3); font-size: 10px;
-}
+.photo-prev { width: 70px; height: 84px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--ink-3); font-size: 10px; }
 .photo-prev img { width: 100%; height: 100%; object-fit: cover; }
 .photo-actions { display: flex; flex-direction: column; gap: 6px; flex: 1; }
-.btn-sm {
-  padding: 7px 12px; border-radius: 6px;
-  background: var(--bg); border: 1px solid var(--line);
-  font-size: 12px; font-weight: 600;
-}
+.btn-sm { padding: 7px 12px; border-radius: 6px; background: var(--bg); border: 1px solid var(--line); font-size: 12px; font-weight: 600; }
 
-/* Skills editor */
-.skill-row {
-  display: grid; grid-template-columns: 1fr 120px 32px;
-  gap: 6px; margin-bottom: 6px;
-  align-items: center;
-}
+.skill-row { display: grid; grid-template-columns: 1fr 120px 32px; gap: 6px; margin-bottom: 6px; align-items: center; }
 .skill-row .del { color: var(--danger); font-weight: 800; font-size: 18px; }
 
-/* Education rows */
-.edu-row {
-  border: 1px solid var(--line);
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  background: var(--bg);
-}
+.edu-row { border: 1px solid var(--line); padding: 10px; border-radius: 8px; margin-bottom: 10px; background: var(--bg); }
 .edu-row .del { float: right; color: var(--danger); font-size: 16px; font-weight: 800; }
 
-/* Options card */
 .opt-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--line); }
 .opt-row:last-child { border-bottom: 0; }
 .switch { position: relative; width: 40px; height: 22px; }
 .switch input { display: none; }
-.switch span {
-  position: absolute; inset: 0; background: var(--line);
-  border-radius: 22px; cursor: pointer;
-  transition: background var(--t);
-}
-.switch span::after {
-  content: ""; position: absolute;
-  top: 3px; left: 3px;
-  width: 16px; height: 16px;
-  background: #fff; border-radius: 50%;
-  transition: transform var(--t);
-}
+.switch span { position: absolute; inset: 0; background: var(--line); border-radius: 22px; cursor: pointer; transition: background var(--t); }
+.switch span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: transform var(--t); }
 .switch input:checked + span { background: var(--gold); }
 .switch input:checked + span::after { transform: translateX(18px); }
 
-/* Preview */
-.preview-wrap {
-  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-  display: flex; flex-direction: column; overflow: hidden;
-}
+.preview-wrap { background: linear-gradient(135deg, #f8fafc, #e2e8f0); display: flex; flex-direction: column; overflow: hidden; }
 body.dark .preview-wrap { background: linear-gradient(135deg, #0b1220, #1a2436); }
-.preview-bar {
-  padding: 10px 16px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, .6);
-  gap: 12px;
-}
+.preview-bar { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, .6); gap: 12px; }
 body.dark .preview-bar { background: rgba(17, 26, 46, .6); }
 .preview-zoom { display: flex; gap: 4px; align-items: center; }
-.preview-scroll {
-  flex: 1; overflow: auto; padding: 20px;
-  display: flex; justify-content: center; align-items: flex-start;
-}
-.preview-frame-holder {
-  box-shadow: var(--sh-lg);
-  border-radius: 4px; overflow: hidden; background: #fff;
-}
-#previewFrame {
-  width: 794px; height: 1123px; border: 0;
-  display: block; transform-origin: top left;
-}
+.preview-scroll { flex: 1; overflow: auto; padding: 20px; display: flex; justify-content: center; align-items: flex-start; }
+.preview-frame-holder { box-shadow: var(--sh-lg); border-radius: 4px; overflow: hidden; background: #fff; }
+#previewFrame { width: 794px; height: 1123px; border: 0; display: block; transform-origin: top left; }
 
-/* Footer mobile */
-.app-footer {
-  display: none;
-  position: fixed; bottom: 0; left: 0; right: 0;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, .95);
-  border-top: 1px solid var(--line);
-  gap: 8px; z-index: 100;
-}
+.app-footer { display: none; position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: rgba(255, 255, 255, .95); border-top: 1px solid var(--line); gap: 8px; z-index: 100; }
 body.dark .app-footer { background: rgba(17, 26, 46, .95); }
-.footer-btn {
-  flex: 1; min-height: 48px;
-  border-radius: 12px; font-size: 13px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 0 8px;
-}
-.btn-pdf { background: var(--gold-grad); color: #fff; flex: 1.2; }
+.footer-btn { flex: 1; min-height: 48px; border-radius: 12px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 8px; }
+.btn-pdf { color: #fff; flex: 1.2; }
 .btn-save { background: var(--bg); color: var(--ink); border: 1.5px solid var(--line); }
 .btn-preview { background: var(--ink); color: var(--bg); }
 
-/* Toast */
 .toast-host { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
-.toast {
-  background: #0f172a; color: #fff;
-  padding: 10px 18px; border-radius: 10px;
-  font-size: 13px; font-weight: 600;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
-  animation: toastIn .3s ease;
-  max-width: 90vw;
-}
+.toast { background: #0f172a; color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(0, 0, 0, .2); animation: toastIn .3s ease; max-width: 90vw; }
 .toast.error { background: var(--danger); }
 .toast.success { background: var(--success); }
-@keyframes toastIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Modal */
-.modal {
-  position: fixed; inset: 0; z-index: 300;
-  background: rgba(0, 0, 0, .55);
-  display: none; align-items: center; justify-content: center;
-  padding: 20px;
-}
+.modal { position: fixed; inset: 0; z-index: 300; background: rgba(0, 0, 0, .55); display: none; align-items: center; justify-content: center; padding: 20px; }
 .modal.open { display: flex; }
-.modal-box {
-  background: var(--surface); border-radius: 14px;
-  max-width: 480px; width: 100%;
-  max-height: 85vh; overflow-y: auto;
-  padding: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
-}
+.modal-box { background: var(--surface); border-radius: 14px; max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, .3); }
 .modal-box h3 { font-size: 18px; margin-bottom: 8px; }
 .modal-box p { font-size: 13px; color: var(--ink-2); margin-bottom: 16px; }
 
-/* Responsive */
 @media (max-width: 1023px) {
   .app-main { display: block; height: auto; padding-bottom: 90px; }
   .app-footer { display: flex; }
@@ -388,9 +223,6 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
 </head>
 <body class="mode-marriage">
 
-<!-- =====================================================
-     HEADER
-     ===================================================== -->
 <header class="app-header">
   <div class="logo">
     <div class="logo-mark">B</div>
@@ -404,88 +236,72 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
   </div>
 </header>
 
-<!-- =====================================================
-     MAIN
-     ===================================================== -->
 <main class="app-main">
-
-  <!-- EDITOR -->
   <aside class="editor panel active" id="editPanel">
 
     <!-- CATEGORY SELECTOR -->
     <div class="sec" style="padding: 12px; border-color: var(--gold); background: #fffdf8; margin-bottom: 12px;">
-      <div style="font-size: 12px; font-weight: bold; margin-bottom: 10px; color: var(--ink-2); text-align:center;">CHOOSE BIODATA TYPE</div>
+      <div style="font-size: 12px; font-weight: bold; margin-bottom: 10px; color: var(--ink-2); text-align:center;" data-i18n="choose_type">CHOOSE BIODATA TYPE</div>
       <div style="display: flex; gap: 10px;">
-        <button type="button" class="cat-btn active" id="catMarriage" style="flex:1; padding: 10px; border-radius: 8px; border: 2px solid var(--gold); background: var(--gold); color: #fff; font-weight: 700; font-size: 13px;">💍 Marriage</button>
-        <button type="button" class="cat-btn" id="catJob" style="flex:1; padding: 10px; border-radius: 8px; border: 2px solid var(--line); background: var(--bg); color: var(--ink-2); font-weight: 700; font-size: 13px;">💼 Job / Career</button>
+        <button type="button" class="cat-btn active" id="catMarriage" style="flex:1; padding: 10px; border-radius: 8px; border: 2px solid var(--gold); background: var(--gold); color: #fff; font-weight: 700; font-size: 13px;">💍 <span data-i18n="marriage">Marriage</span></button>
+        <button type="button" class="cat-btn" id="catJob" style="flex:1; padding: 10px; border-radius: 8px; border: 2px solid var(--line); background: var(--bg); color: var(--ink-2); font-weight: 700; font-size: 13px;">💼 <span data-i18n="job">Job / Career</span></button>
       </div>
     </div>
 
-    <!-- Progress -->
     <div class="progress-wrap">
       <div class="progress-row">
-        <span>Profile Completion</span>
+        <span data-i18n="completion">Profile Completion</span>
         <span id="progressPct">0%</span>
       </div>
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
     </div>
 
-    <!-- 1. TEMPLATE PICKER -->
     <details class="sec" open>
-      <summary><span class="num-badge">1</span> Choose Design <span style="color:var(--ink-3);font-weight:500;font-size:11px;">(12,000+ available)</span><span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">1</span> <span data-i18n="design">Choose Design</span> <span style="color:var(--ink-3);font-weight:500;font-size:11px;">(15,000+ available)</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="tpl-tabs">
-          <button class="tpl-tab active" data-tab="all">All</button>
-          <button class="tpl-tab" data-tab="fav">⭐ Favourites</button>
-          <button class="tpl-tab" data-tab="recent">🕒 Recent</button>
+          <button class="tpl-tab active" data-tab="all" data-i18n="all">All</button>
+          <button class="tpl-tab" data-tab="fav" data-i18n="fav">⭐ Favourites</button>
+          <button class="tpl-tab" data-tab="recent" data-i18n="recent">🕒 Recent</button>
         </div>
         <div class="tpl-controls">
-          <input type="text" id="searchTpl" placeholder="Search (Royal, Sidebar...)">
+          <input type="text" id="searchTpl" placeholder="Search (Royal, Sidebar...)" data-i18n-ph="search_ph">
           <select id="filterLayout">
-            <option value="all">All Layouts</option>
-            <option value="classic">Classic</option>
-            <option value="sidebar">Sidebar</option>
-            <option value="banner">Banner</option>
-            <option value="corporate">Corporate</option>
-            <option value="cards">Cards</option>
-            <option value="split">Split</option>
-            <option value="minimal">Minimal</option>
-            <option value="timeline">Timeline</option>
-            <option value="editorial">Editorial</option>
-            <option value="traditional">Traditional</option>
-            <option value="magazine">Magazine</option>
-            <option value="executive">Executive</option>
-            <option value="vintage">Vintage</option>
-            <option value="gradient">Gradient</option>
+            <option value="all" data-i18n="all_layouts">All Layouts</option>
+            <option value="classic">Classic</option><option value="sidebar">Sidebar</option>
+            <option value="banner">Banner</option><option value="corporate">Corporate</option>
+            <option value="cards">Cards</option><option value="split">Split</option>
+            <option value="minimal">Minimal</option><option value="timeline">Timeline</option>
+            <option value="editorial">Editorial</option><option value="traditional">Traditional</option>
+            <option value="magazine">Magazine</option><option value="executive">Executive</option>
+            <option value="vintage">Vintage</option><option value="gradient">Gradient</option>
             <option value="geometric">Geometric</option>
           </select>
         </div>
         <div class="tpl-grid" id="templateGrid"></div>
-        <button class="load-more-btn" id="loadMoreBtn">Load More...</button>
+        <button class="load-more-btn" id="loadMoreBtn" data-i18n="load_more">Load More...</button>
       </div>
     </details>
 
-    <!-- 2. PHOTO -->
     <details class="sec" open>
-      <summary><span class="num-badge">2</span> Profile Photo<span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">2</span> <span data-i18n="photo">Profile Photo</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="photo-row">
           <div class="photo-prev" id="photoPrev">No photo</div>
           <div class="photo-actions">
             <input type="file" id="photoFile" accept="image/*" style="display:none">
-            <button class="btn-sm" id="uploadBtn">📷 Upload Photo</button>
-            <button class="btn-sm" id="removePhotoBtn" style="display:none">✕ Remove</button>
+            <button class="btn-sm" id="uploadBtn" data-i18n="upload">📷 Upload Photo</button>
+            <button class="btn-sm" id="removePhotoBtn" style="display:none" data-i18n="remove">✕ Remove</button>
           </div>
         </div>
       </div>
     </details>
 
-    <!-- 3. PERSONAL -->
     <details class="sec" open>
-      <summary><span class="num-badge">3</span> Personal Details<span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">3</span> <span data-i18n="personal">Personal Details</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="fld" style="background:var(--bg); padding:10px; border-radius:10px; border:1px solid var(--line); margin-bottom:14px;">
-          <label>🌐 PDF Output Language</label>
+          <label data-i18n="lang_label">🌐 PDF Output Language</label>
           <select id="language">
             <option value="en">English</option>
             <option value="hi">Hindi (हिंदी)</option>
@@ -502,123 +318,110 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
         </div>
 
         <div class="fld">
-          <label>Full Name * <span style="color:var(--danger)">required</span></label>
+          <label><span data-i18n="full_name">Full Name</span> * <span style="color:var(--danger)" data-i18n="req">required</span></label>
           <input id="name" placeholder="Your Full Name" maxlength="80">
         </div>
         <div class="fld-row">
-          <div class="fld"><label>Date of Birth</label><input id="dob" type="date"></div>
-          <div class="fld"><label>Gender</label>
+          <div class="fld"><label data-i18n="dob">Date of Birth</label><input id="dob" type="date"></div>
+          <div class="fld"><label data-i18n="gender">Gender</label>
             <select id="gender">
               <option value="">Select</option>
-              <option>Male</option><option>Female</option><option>Other</option>
+              <option data-i18n="male">Male</option><option data-i18n="female">Female</option><option data-i18n="other">Other</option>
             </select>
           </div>
         </div>
         <div class="fld-row">
-          <div class="fld"><label>Height</label>
+          <div class="fld"><label data-i18n="height">Height</label>
             <div style="display:flex;gap:6px;">
               <select id="height_ft" style="flex:1;">
-                <option value="">Ft</option>
-                <option>4</option><option>5</option><option>6</option><option>7</option>
+                <option value="">Ft</option><option>4</option><option>5</option><option>6</option><option>7</option>
               </select>
               <select id="height_in" style="flex:1;">
-                <option value="">In</option>
-                <option>0</option><option>1</option><option>2</option><option>3</option>
-                <option>4</option><option>5</option><option>6</option><option>7</option>
-                <option>8</option><option>9</option><option>10</option><option>11</option>
+                <option value="">In</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option>
               </select>
             </div>
           </div>
-          <div class="fld"><label>Weight</label><input id="weight" placeholder="70 kg"></div>
+          <div class="fld"><label data-i18n="weight">Weight</label><input id="weight" placeholder="70 kg"></div>
         </div>
         <div class="fld-row">
-          <div class="fld"><label>Blood Group</label>
+          <div class="fld"><label data-i18n="blood">Blood Group</label>
             <select id="blood">
-              <option value="">Select</option>
-              <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
-              <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+              <option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
             </select>
           </div>
-          <div class="fld"><label>Marital Status</label>
+          <div class="fld"><label data-i18n="marital">Marital Status</label>
             <select id="marital">
               <option value="">Select</option>
-              <option>Never Married</option><option>Divorced</option>
-              <option>Widowed</option><option>Awaiting Divorce</option>
+              <option>Unmarried</option>
+              <option>Never Married</option>
+              <option>Divorced</option>
+              <option>Widowed</option>
+              <option>Awaiting Divorce</option>
             </select>
           </div>
         </div>
         
-        <!-- MARRIAGE ONLY FIELDS -->
         <div class="fld-row marriage-only">
-          <div class="fld"><label>Religion</label>
+          <div class="fld"><label data-i18n="religion">Religion</label>
             <input id="religion" list="religion-list" placeholder="Hindu">
-            <datalist id="religion-list">
-              <option>Hindu</option><option>Muslim</option><option>Christian</option>
-              <option>Sikh</option><option>Buddhist</option><option>Jain</option><option>Parsi</option>
-            </datalist>
+            <datalist id="religion-list"><option>Hindu</option><option>Muslim</option><option>Christian</option><option>Sikh</option><option>Buddhist</option><option>Jain</option><option>Parsi</option></datalist>
           </div>
-          <div class="fld"><label>Caste</label><input id="caste" placeholder="Optional"></div>
+          <div class="fld"><label data-i18n="caste">Caste</label><input id="caste" placeholder="Optional"></div>
         </div>
         <div class="fld-row marriage-only">
-          <div class="fld"><label>Gotra</label><input id="gotra" placeholder="Optional"></div>
-          <div class="fld"><label>Rashi</label><input id="rashi" placeholder="Optional"></div>
+          <div class="fld"><label data-i18n="gotra">Gotra</label><input id="gotra" placeholder="Optional"></div>
+          <div class="fld"><label data-i18n="rashi">Rashi</label><input id="rashi" placeholder="Optional"></div>
         </div>
         <div class="fld-row marriage-only">
-          <div class="fld"><label>Nakshatra</label><input id="nakshatra" placeholder="Optional"></div>
-          <div class="fld"><label>Manglik</label>
-            <select id="manglik">
-              <option value="">Select</option>
-              <option>Yes</option><option>No</option><option>Partial</option>
-            </select>
+          <div class="fld"><label data-i18n="nakshatra">Nakshatra</label><input id="nakshatra" placeholder="Optional"></div>
+          <div class="fld"><label data-i18n="manglik">Manglik</label>
+            <select id="manglik"><option value="">Select</option><option>Yes</option><option>No</option><option>Partial</option></select>
           </div>
         </div>
 
         <div class="fld" style="margin-top:16px;">
           <label style="display:flex; justify-content:space-between; align-items:center;">
-            <span id="profileLabel">Profile / Objective</span>
+            <span id="profileLabel" data-i18n="profile">Profile / Objective</span>
             <button type="button" id="aiGenBtn" style="background:linear-gradient(135deg,#8b5cf6,#3b82f6); color:white; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:700;">✨ AI Generate</button>
           </label>
           <textarea id="profile" placeholder="Short introduction..." maxlength="600"></textarea>
           <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3);margin-top:4px;">
             <span id="profileCount">0 / 600</span>
-            <button type="button" id="voiceBtn" style="color:var(--ink-2);font-weight:600;">🎤 Voice Input</button>
+            <button type="button" id="voiceBtn" style="color:var(--ink-2);font-weight:600;">🎤 <span data-i18n="voice">Voice Input</span></button>
           </div>
         </div>
       </div>
     </details>
 
-    <!-- 4. CONTACT -->
     <details class="sec" open>
-      <summary><span class="num-badge">4</span> Contact Details<span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">4</span> <span data-i18n="contact">Contact Details</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
-        <div class="fld"><label>Mobile Number * <span style="color:var(--danger)">at least one contact required</span></label>
+        <div class="fld"><label><span data-i18n="phone">Mobile Number</span> * <span style="color:var(--danger)" data-i18n="req_contact">at least one required</span></label>
           <input id="phone" placeholder="+91 XXXXX XXXXX" maxlength="20">
         </div>
-        <div class="fld"><label>Email</label><input id="email" type="email" placeholder="name@example.com"></div>
-        <div class="fld"><label>Address</label><textarea id="address" placeholder="Full address..." maxlength="300"></textarea></div>
+        <div class="fld"><label data-i18n="email">Email</label><input id="email" type="email" placeholder="name@example.com"></div>
+        <div class="fld"><label data-i18n="address">Address</label><textarea id="address" placeholder="Full address..." maxlength="300"></textarea></div>
       </div>
     </details>
 
-    <!-- 5. FAMILY (MARRIAGE ONLY) -->
     <details class="sec marriage-only">
-      <summary><span class="num-badge">5</span> Family Details<span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">5</span> <span data-i18n="family">Family Details</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="fld-row">
-          <div class="fld"><label>Father Name</label><input id="father" placeholder="Father name"></div>
-          <div class="fld"><label>Father Occupation</label><input id="father_job" placeholder="Occupation"></div>
+          <div class="fld"><label data-i18n="father">Father Name</label><input id="father" placeholder="Father name"></div>
+          <div class="fld"><label data-i18n="father_job">Father Occupation</label><input id="father_job" placeholder="Occupation"></div>
         </div>
         <div class="fld-row">
-          <div class="fld"><label>Mother Name</label><input id="mother" placeholder="Mother name"></div>
-          <div class="fld"><label>Mother Occupation</label><input id="mother_job" placeholder="Occupation"></div>
+          <div class="fld"><label data-i18n="mother">Mother Name</label><input id="mother" placeholder="Mother name"></div>
+          <div class="fld"><label data-i18n="mother_job">Mother Occupation</label><input id="mother_job" placeholder="Occupation"></div>
         </div>
-        <div class="fld"><label>Brothers (one per line)</label><textarea id="brothers" placeholder="Rahul - Engineer"></textarea></div>
-        <div class="fld"><label>Sisters (one per line)</label><textarea id="sisters" placeholder="Priya - Doctor"></textarea></div>
+        <div class="fld"><label data-i18n="brothers">Brothers</label><textarea id="brothers" placeholder="Rahul - Engineer"></textarea></div>
+        <div class="fld"><label data-i18n="sisters">Sisters</label><textarea id="sisters" placeholder="Priya - Doctor"></textarea></div>
       </div>
     </details>
 
-    <!-- 6. EDUCATION -->
     <details class="sec">
-      <summary><span class="num-badge">6</span> Education<span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">6</span> <span data-i18n="education">Education</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="edu-mode-toggle" style="display:flex; gap:14px; margin-bottom:12px;">
           <label><input type="radio" name="edu_mode" value="detailed" checked> Detailed</label>
@@ -626,40 +429,38 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
         </div>
         <div id="edu-detailed-box">
           <div id="edu-rows-container"></div>
-          <button type="button" class="btn-sm" id="addEduBtn">+ Add Education</button>
+          <button type="button" class="btn-sm" id="addEduBtn" data-i18n="add_edu">+ Add Education</button>
         </div>
         <div id="edu-simple-box" style="display:none;">
-          <div class="fld"><label>Qualifications</label><textarea id="education_simple" placeholder="10th - 85%&#10;12th - 80%"></textarea></div>
+          <div class="fld"><label data-i18n="qualifications">Qualifications</label><textarea id="education_simple" placeholder="10th - 85%&#10;12th - 80%"></textarea></div>
         </div>
       </div>
     </details>
 
-    <!-- 7. WORK & SKILLS -->
     <details class="sec">
-      <summary><span class="num-badge">7</span> Work &amp; Skills<span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">7</span> <span data-i18n="work_skills">Work & Skills</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
-        <div class="fld"><label>Work Experience</label><textarea id="experience" placeholder="2020-2023 - Tech Corp - Software Engineer"></textarea></div>
+        <div class="fld"><label data-i18n="exp">Work Experience</label><textarea id="experience" placeholder="2020-2023 - Tech Corp"></textarea></div>
         <div class="fld">
           <label style="display:flex;justify-content:space-between;align-items:center;">
-            <span>Skills</span>
+            <span data-i18n="skills">Skills</span>
             <button type="button" id="aiSkillsBtn" style="background:linear-gradient(135deg,#8b5cf6,#3b82f6); color:white; padding:5px 10px; border-radius:6px; font-size:11px; font-weight:700;">✨ AI Suggest</button>
           </label>
           <div id="skillsList"></div>
-          <button type="button" class="btn-sm" id="addSkillBtn">+ Add Skill</button>
+          <button type="button" class="btn-sm" id="addSkillBtn" data-i18n="add_skill">+ Add Skill</button>
         </div>
         <div class="fld-row">
-          <div class="fld"><label>Languages Known</label><input id="languages" placeholder="Hindi, English"></div>
-          <div class="fld"><label>Hobbies</label><input id="hobbies" placeholder="Reading, Music"></div>
+          <div class="fld"><label data-i18n="languages">Languages Known</label><input id="languages" placeholder="Hindi, English"></div>
+          <div class="fld"><label data-i18n="hobbies">Hobbies</label><input id="hobbies" placeholder="Reading, Music"></div>
         </div>
       </div>
     </details>
 
-    <!-- 8. DECLARATION -->
     <details class="sec">
-      <summary><span class="num-badge">8</span> Declaration<span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">8</span> <span data-i18n="declaration">Declaration</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="fld">
-          <label>Preset</label>
+          <label data-i18n="preset">Preset</label>
           <select id="declarationPreset">
             <option value="">-- Choose --</option>
             <option value="I hereby declare that the information provided above is true and correct to the best of my knowledge and belief.">Standard 1</option>
@@ -667,49 +468,40 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
             <option value="I confirm that the above details are true and I have not concealed any material facts.">Standard 3</option>
           </select>
         </div>
-        <div class="fld"><label>Declaration Text</label><textarea id="declaration" placeholder="I hereby declare..."></textarea></div>
+        <div class="fld"><label data-i18n="dec_text">Declaration Text</label><textarea id="declaration" placeholder="I hereby declare..."></textarea></div>
         <div class="fld-row">
-          <div class="fld"><label>Place</label><input id="place" placeholder="Mumbai"></div>
-          <div class="fld"><label>Date</label><input id="date" type="date"></div>
+          <div class="fld"><label data-i18n="place">Place</label><input id="place" placeholder="Mumbai"></div>
+          <div class="fld"><label data-i18n="date">Date</label><input id="date" type="date"></div>
         </div>
       </div>
     </details>
 
-    <!-- 9. OPTIONS -->
     <details class="sec">
-      <summary><span class="num-badge">9</span> Options & Tools<span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">9</span> <span data-i18n="options">Options & Tools</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="opt-row">
-          <span style="font-size:13px;font-weight:600;">Watermark on PDF</span>
+          <span style="font-size:13px;font-weight:600;" data-i18n="watermark">Watermark on PDF</span>
           <label class="switch"><input type="checkbox" id="optWatermark"><span></span></label>
         </div>
-        <div class="fld" id="watermarkRow" style="display:none;"><label>Watermark Text</label><input id="watermark_text" placeholder="Biodata" maxlength="30"></div>
+        <div class="fld" id="watermarkRow" style="display:none;"><label data-i18n="wm_text">Watermark Text</label><input id="watermark_text" placeholder="Biodata" maxlength="30"></div>
         <div class="opt-row">
-          <span style="font-size:13px;font-weight:600;">Page numbers</span>
+          <span style="font-size:13px;font-weight:600;" data-i18n="page_num">Page numbers</span>
           <label class="switch"><input type="checkbox" id="optPagenum" checked><span></span></label>
         </div>
 
-        <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line);">
-          <div style="font-size:11px;font-weight:700;color:var(--ink-2);text-transform:uppercase;margin-bottom:8px;">Drafts (max 5)</div>
-          <div id="draftList"></div>
-        </div>
-
         <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line); display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="btn-sm" id="exportBtn">⬇ Export JSON</button>
-          <button class="btn-sm" id="importBtn">⬆ Import JSON</button>
+          <button class="btn-sm" id="exportBtn" data-i18n="export">⬇ Export JSON</button>
+          <button class="btn-sm" id="importBtn" data-i18n="import">⬆ Import JSON</button>
           <input type="file" id="importFile" accept="application/json" style="display:none">
-          <button class="btn-sm" id="shareBtn">🔗 Share URL</button>
-          <button class="btn-sm" id="printBtn">🖨 Print</button>
+          <button class="btn-sm" id="printBtn" data-i18n="print">🖨 Print</button>
         </div>
       </div>
     </details>
-
   </aside>
 
-  <!-- PREVIEW -->
   <section class="preview-wrap panel" id="previewPanel">
     <div class="preview-bar">
-      <span style="font-weight:700;font-size:13px;">Live Preview</span>
+      <span style="font-weight:700;font-size:13px;" data-i18n="live_preview">Live Preview</span>
       <div class="preview-zoom">
         <button class="icon-btn" id="zoomOut">−</button>
         <span style="font-size:12px;font-weight:600;min-width:36px;text-align:center;" id="zoomLabel">100%</span>
@@ -723,40 +515,19 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
       </div>
     </div>
   </section>
-
 </main>
 
-<!-- FOOTER (mobile) -->
 <footer class="app-footer">
-  <button class="footer-btn btn-save" id="saveBtn">💾 Save</button>
-  <button class="footer-btn btn-preview" id="previewToggleBtn">👁️ Preview</button>
-  <button class="footer-btn btn-pdf" id="pdfBtn">📥 PDF</button>
+  <button class="footer-btn btn-save" id="saveBtn" data-i18n="save">💾 Save</button>
+  <button class="footer-btn btn-preview" id="previewToggleBtn" data-i18n="preview">👁️ Preview</button>
+  <button class="footer-btn btn-pdf" id="pdfBtn" data-i18n="pdf">📥 PDF</button>
 </footer>
 
-<!-- Toast host -->
 <div class="toast-host" id="toastHost"></div>
-
-<!-- Modals -->
-<div class="modal" id="shareModal">
-  <div class="modal-box">
-    <h3>🔗 Share Biodata</h3>
-    <p>Anyone with this link can view your biodata (data is encoded in URL).</p>
-    <div class="fld">
-      <input id="shareUrl" readonly style="font-size:12px;">
-    </div>
-    <div style="display:flex; gap:8px; margin-top:16px; justify-content:flex-end;">
-      <button class="btn-sm" id="copyUrlBtn">Copy</button>
-      <button class="btn-sm" onclick="document.getElementById('shareModal').classList.remove('open')">Close</button>
-    </div>
-  </div>
-</div>
 
 <script>
 'use strict';
 
-/* =====================================================
-   UTILITIES
-   ===================================================== */
 const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
 
@@ -768,86 +539,93 @@ function toast(msg, type = 'info') {
   setTimeout(() => el.remove(), 3000);
 }
 
-function safeJSON(o) {
-  try { return JSON.stringify(o); } catch (e) { return '{}'; }
-}
-
-// Limit DOB to today
-$('dob').max = new Date().toISOString().split('T')[0];
+function safeJSON(o) { try { return JSON.stringify(o); } catch (e) { return '{}'; } }
 
 /* =====================================================
-   TEMPLATE ENGINE — 12,000 combinations
+   UI TRANSLATIONS
    ===================================================== */
-const LAYOUTS = [
-  'classic', 'sidebar', 'banner', 'corporate', 'cards',
-  'split', 'minimal', 'timeline', 'editorial', 'traditional',
-  'magazine', 'executive', 'vintage', 'gradient', 'geometric'
-];
+const UI_LANG = {
+  en: {
+    choose_type: "CHOOSE BIODATA TYPE", marriage: "Marriage", job: "Job / Career",
+    completion: "Profile Completion", design: "Choose Design", all: "All", fav: "⭐ Favourites", recent: "🕒 Recent",
+    all_layouts: "All Layouts", load_more: "Load More...", photo: "Profile Photo", upload: "📷 Upload Photo", remove: "✕ Remove",
+    personal: "Personal Details", lang_label: "🌐 PDF Output Language", full_name: "Full Name", req: "required", dob: "Date of Birth",
+    gender: "Gender", male: "Male", female: "Female", other: "Other", height: "Height", weight: "Weight", blood: "Blood Group",
+    marital: "Marital Status", religion: "Religion", caste: "Caste", gotra: "Gotra", rashi: "Rashi", nakshatra: "Nakshatra", manglik: "Manglik",
+    profile: "Profile / Objective", voice: "Voice Input", contact: "Contact Details", phone: "Mobile Number", req_contact: "at least one required",
+    email: "Email", address: "Address", family: "Family Details", father: "Father Name", father_job: "Father Occupation", mother: "Mother Name",
+    mother_job: "Mother Occupation", brothers: "Brothers", sisters: "Sisters", education: "Education", add_edu: "+ Add Education",
+    qualifications: "Qualifications", work_skills: "Work & Skills", exp: "Work Experience", skills: "Skills", add_skill: "+ Add Skill",
+    languages: "Languages Known", hobbies: "Hobbies", declaration: "Declaration", preset: "Preset", dec_text: "Declaration Text",
+    place: "Place", date: "Date", options: "Options & Tools", watermark: "Watermark on PDF", wm_text: "Watermark Text", page_num: "Page numbers",
+    export: "⬇ Export JSON", import: "⬆ Import JSON", print: "🖨 Print", live_preview: "Live Preview", save: "💾 Save", preview: "👁️ Preview", pdf: "📥 PDF"
+  },
+  hi: {
+    choose_type: "बायोडाटा प्रकार चुनें", marriage: "शादी", job: "नौकरी / करियर",
+    completion: "प्रोफ़ाइल पूर्णता", design: "डिज़ाइन चुनें", all: "सभी", fav: "⭐ पसंदीदा", recent: "🕒 हाल के",
+    all_layouts: "सभी लेआउट", load_more: "और लोड करें...", photo: "प्रोफ़ाइल फोटो", upload: "📷 फोटो अपलोड करें", remove: "✕ हटाएं",
+    personal: "व्यक्तिगत विवरण", lang_label: "🌐 पीडीएफ भाषा", full_name: "पूरा नाम", req: "आवश्यक", dob: "जन्म तिथि",
+    gender: "लिंग", male: "पुरुष", female: "महिला", other: "अन्य", height: "ऊंचाई", weight: "वजन", blood: "रक्त समूह",
+    marital: "वैवाहिक स्थिति", religion: "धर्म", caste: "जाति", gotra: "गोत्र", rashi: "राशि", nakshatra: "नक्षत्र", manglik: "मांगलिक",
+    profile: "प्रोफ़ाइल / उद्देश्य", voice: "वॉयस इनपुट", contact: "संपर्क विवरण", phone: "मोबाइल नंबर", req_contact: "कम से कम एक आवश्यक",
+    email: "ईमेल", address: "पता", family: "पारिवारिक विवरण", father: "पिता का नाम", father_job: "पिता का व्यवसाय", mother: "माता का नाम",
+    mother_job: "माता का व्यवसाय", brothers: "भाई", sisters: "बहनें", education: "शिक्षा", add_edu: "+ शिक्षा जोड़ें",
+    qualifications: "योग्यता", work_skills: "काम और कौशल", exp: "कार्य अनुभव", skills: "कौशल", add_skill: "+ कौशल जोड़ें",
+    languages: "ज्ञात भाषाएं", hobbies: "शौक", declaration: "घोषणा", preset: "प्रीसेट", dec_text: "घोषणा पाठ",
+    place: "स्थान", date: "तिथि", options: "विकल्प और उपकरण", watermark: "पीडीएफ पर वॉटरमार्क", wm_text: "वॉटरमार्क टेक्स्ट", page_num: "पेज नंबर",
+    export: "⬇ JSON निर्यात करें", import: "⬆ JSON आयात करें", print: "🖨 प्रिंट करें", live_preview: "लाइव पूर्वावलोकन", save: "💾 सहेजें", preview: "👁️ पूर्वावलोकन", pdf: "📥 पीडीएफ"
+  }
+};
 
+function translateUI(lang) {
+  const dict = UI_LANG[lang] || UI_LANG.en;
+  $$('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) el.innerHTML = dict[key];
+  });
+  const search = $('searchTpl');
+  if (search) search.placeholder = lang === 'hi' ? "खोजें (रॉयल, साइडबार...)" : "Search (Royal, Sidebar...)";
+}
+
+/* =====================================================
+   TEMPLATE ENGINE
+   ===================================================== */
+const LAYOUTS = ['classic', 'sidebar', 'banner', 'corporate', 'cards', 'split', 'minimal', 'timeline', 'editorial', 'traditional', 'magazine', 'executive', 'vintage', 'gradient', 'geometric'];
 const COLORS = [
-  { n: 'Royal Maroon', p: '#6B0F1A', a: '#D4A853', t: '#FAF4E2', k: '#30242A' },
-  { n: 'Navy Gold', p: '#183153', a: '#D9A441', t: '#FAF0DA', k: '#1D2939' },
-  { n: 'Emerald', p: '#064E3B', a: '#D4A853', t: '#F3F8F0', k: '#1E293B' },
-  { n: 'Midnight', p: '#111827', a: '#C6A15B', t: '#F1EADD', k: '#202633' },
-  { n: 'Rose Gold', p: '#8F3D58', a: '#E7A7B8', t: '#FDF0F4', k: '#392832' },
-  { n: 'Sky Blue', p: '#1D4E89', a: '#62B6E8', t: '#F0F8FE', k: '#1E3348' },
-  { n: 'Forest', p: '#244B3A', a: '#B6A36A', t: '#F4F5E9', k: '#26372D' },
-  { n: 'Coral', p: '#A64245', a: '#F2A07B', t: '#FDEEE7', k: '#3B2929' },
-  { n: 'Plum', p: '#54264D', a: '#D6A0C7', t: '#FAEDF6', k: '#382A39' },
-  { n: 'Charcoal', p: '#252525', a: '#D7B56D', t: '#F6F0E4', k: '#292929' },
-  { n: 'Sapphire', p: '#123B70', a: '#75B7E8', t: '#F0F8FE', k: '#1D2D40' },
-  { n: 'Ruby', p: '#8B1E3F', a: '#F08AA5', t: '#FCEAEF', k: '#3D2630' },
-  { n: 'Ocean', p: '#075985', a: '#67C7D8', t: '#EDF9FC', k: '#183746' },
-  { n: 'Amber', p: '#76501D', a: '#E8B85C', t: '#FAF2DE', k: '#3B3021' },
-  { n: 'Indigo', p: '#373078', a: '#A7A0F2', t: '#F3F1FC', k: '#2C2942' },
-  { n: 'Lagoon', p: '#126B70', a: '#70D0C5', t: '#EBFAF7', k: '#1E3939' },
-  { n: 'Orchid', p: '#613C79', a: '#C5A1DE', t: '#F6EFFC', k: '#332A3A' },
-  { n: 'Steel', p: '#35465A', a: '#A9BBCB', t: '#F4F6F8', k: '#263443' },
-  { n: 'Crimson', p: '#8E2028', a: '#E3A0A0', t: '#FBF3F3', k: '#3B292B' },
-  { n: 'Pine', p: '#174638', a: '#A8C9A7', t: '#EEF7EF', k: '#25362D' },
-  { n: 'Muted Elegance', p: '#80766F', a: '#BDADA3', t: '#FFF0E5', k: '#664233' },
-  { n: 'Elegant Teal', p: '#5B8A8A', a: '#C9A962', t: '#F5F0E6', k: '#2C2C2C' },
-  { n: 'Blue Hydrangea', p: '#405380', a: '#6B7EB2', t: '#C8DAF5', k: '#2B2F3A' },
-  { n: 'Moody Emerald', p: '#224834', a: '#A8D5BF', t: '#FDFEF5', k: '#0E260E' },
-  { n: 'Terracotta', p: '#9C4A2F', a: '#E8B87A', t: '#FDF3E7', k: '#3D2A22' },
-  { n: 'Lavender', p: '#5B4B8A', a: '#C3B1E1', t: '#F5F2FC', k: '#2E2A3A' },
-  { n: 'Copper', p: '#7A4A2B', a: '#D9A05B', t: '#FAF0E6', k: '#3B2A1F' },
-  { n: 'Olive', p: '#4B5320', a: '#C4C97A', t: '#F7F8E8', k: '#2A2E1A' },
-  { n: 'Burgundy', p: '#5C1A2E', a: '#D4A0A7', t: '#FCE8EC', k: '#3B1A24' },
-  { n: 'Slate', p: '#2F3E46', a: '#84A98C', t: '#F0F4F2', k: '#1B2A30' },
-  { n: 'Peach', p: '#C75B39', a: '#F5C6A0', t: '#FEF5EF', k: '#4A2C20' },
-  { n: 'Mint', p: '#2A6B5A', a: '#A8E6CF', t: '#F0FAF5', k: '#1E3A32' },
-  { n: 'Mustard', p: '#8B6914', a: '#E8C84A', t: '#FCF8E8', k: '#3B3010' },
-  { n: 'Mulberry', p: '#6B2D5C', a: '#D4A0C0', t: '#FCF0F8', k: '#3B1F32' },
-  { n: 'Denim', p: '#1E3A5F', a: '#6B9BC3', t: '#F0F6FC', k: '#1A2A3A' },
-  { n: 'Blush', p: '#B56576', a: '#F2C6CE', t: '#FDF0F3', k: '#4A2A30' },
-  { n: 'Graphite', p: '#2D2D2D', a: '#B0B0B0', t: '#F5F5F5', k: '#1A1A1A' },
-  { n: 'Aqua', p: '#0E6B7A', a: '#7AD0D8', t: '#EDFAFC', k: '#1A3A40' },
-  { n: 'Saffron', p: '#B5651D', a: '#F0C060', t: '#FEF8ED', k: '#4A2A1A' },
-  { n: 'Pewter', p: '#4A5A6A', a: '#A0B0C0', t: '#F4F6F8', k: '#2A3A4A' }
+  { n: 'Royal Maroon', p: '#6B0F1A', a: '#D4A853', t: '#FAF4E2', k: '#30242A' }, { n: 'Navy Gold', p: '#183153', a: '#D9A441', t: '#FAF0DA', k: '#1D2939' },
+  { n: 'Emerald', p: '#064E3B', a: '#D4A853', t: '#F3F8F0', k: '#1E293B' }, { n: 'Midnight', p: '#111827', a: '#C6A15B', t: '#F1EADD', k: '#202633' },
+  { n: 'Rose Gold', p: '#8F3D58', a: '#E7A7B8', t: '#FDF0F4', k: '#392832' }, { n: 'Sky Blue', p: '#1D4E89', a: '#62B6E8', t: '#F0F8FE', k: '#1E3348' },
+  { n: 'Forest', p: '#244B3A', a: '#B6A36A', t: '#F4F5E9', k: '#26372D' }, { n: 'Coral', p: '#A64245', a: '#F2A07B', t: '#FDEEE7', k: '#3B2929' },
+  { n: 'Plum', p: '#54264D', a: '#D6A0C7', t: '#FAEDF6', k: '#382A39' }, { n: 'Charcoal', p: '#252525', a: '#D7B56D', t: '#F6F0E4', k: '#292929' },
+  { n: 'Sapphire', p: '#123B70', a: '#75B7E8', t: '#F0F8FE', k: '#1D2D40' }, { n: 'Ruby', p: '#8B1E3F', a: '#F08AA5', t: '#FCEAEF', k: '#3D2630' },
+  { n: 'Ocean', p: '#075985', a: '#67C7D8', t: '#EDF9FC', k: '#183746' }, { n: 'Amber', p: '#76501D', a: '#E8B85C', t: '#FAF2DE', k: '#3B3021' },
+  { n: 'Indigo', p: '#373078', a: '#A7A0F2', t: '#F3F1FC', k: '#2C2942' }, { n: 'Lagoon', p: '#126B70', a: '#70D0C5', t: '#EBFAF7', k: '#1E3939' },
+  { n: 'Orchid', p: '#613C79', a: '#C5A1DE', t: '#F6EFFC', k: '#332A3A' }, { n: 'Steel', p: '#35465A', a: '#A9BBCB', t: '#F4F6F8', k: '#263443' },
+  { n: 'Crimson', p: '#8E2028', a: '#E3A0A0', t: '#FBF3F3', k: '#3B292B' }, { n: 'Pine', p: '#174638', a: '#A8C9A7', t: '#EEF7EF', k: '#25362D' },
+  { n: 'Muted Elegance', p: '#80766F', a: '#BDADA3', t: '#FFF0E5', k: '#664233' }, { n: 'Elegant Teal', p: '#5B8A8A', a: '#C9A962', t: '#F5F0E6', k: '#2C2C2C' },
+  { n: 'Blue Hydrangea', p: '#405380', a: '#6B7EB2', t: '#C8DAF5', k: '#2B2F3A' }, { n: 'Moody Emerald', p: '#224834', a: '#A8D5BF', t: '#FDFEF5', k: '#0E260E' },
+  { n: 'Terracotta', p: '#9C4A2F', a: '#E8B87A', t: '#FDF3E7', k: '#3D2A22' }, { n: 'Lavender', p: '#5B4B8A', a: '#C3B1E1', t: '#F5F2FC', k: '#2E2A3A' },
+  { n: 'Copper', p: '#7A4A2B', a: '#D9A05B', t: '#FAF0E6', k: '#3B2A1F' }, { n: 'Olive', p: '#4B5320', a: '#C4C97A', t: '#F7F8E8', k: '#2A2E1A' },
+  { n: 'Burgundy', p: '#5C1A2E', a: '#D4A0A7', t: '#FCE8EC', k: '#3B1A24' }, { n: 'Slate', p: '#2F3E46', a: '#84A98C', t: '#F0F4F2', k: '#1B2A30' },
+  { n: 'Peach', p: '#C75B39', a: '#F5C6A0', t: '#FEF5EF', k: '#4A2C20' }, { n: 'Mint', p: '#2A6B5A', a: '#A8E6CF', t: '#F0FAF5', k: '#1E3A32' },
+  { n: 'Mustard', p: '#8B6914', a: '#E8C84A', t: '#FCF8E8', k: '#3B3010' }, { n: 'Mulberry', p: '#6B2D5C', a: '#D4A0C0', t: '#FCF0F8', k: '#3B1F32' },
+  { n: 'Denim', p: '#1E3A5F', a: '#6B9BC3', t: '#F0F6FC', k: '#1A2A3A' }, { n: 'Blush', p: '#B56576', a: '#F2C6CE', t: '#FDF0F3', k: '#4A2A30' },
+  { n: 'Graphite', p: '#2D2D2D', a: '#B0B0B0', t: '#F5F5F5', k: '#1A1A1A' }, { n: 'Aqua', p: '#0E6B7A', a: '#7AD0D8', t: '#EDFAFC', k: '#1A3A40' },
+  { n: 'Saffron', p: '#B5651D', a: '#F0C060', t: '#FEF8ED', k: '#4A2A1A' }, { n: 'Pewter', p: '#4A5A6A', a: '#A0B0C0', t: '#F4F6F8', k: '#2A3A4A' },
+  { n: 'Rosewood', p: '#5A1A1A', a: '#D49A9A', t: '#FDF5F5', k: '#2E1A1A' }, { n: 'Azure', p: '#007FFF', a: '#A0CFFF', t: '#F0F8FF', k: '#1A2A3A' }
 ];
-
 const FONTS = [
-  { n: 'Modern', d: 'Montserrat', b: 'Inter' },
-  { n: 'Classic', d: 'Playfair Display', b: 'Lato' },
-  { n: 'Executive', d: 'Oswald', b: 'Roboto' },
-  { n: 'Elegant', d: 'Cormorant Garamond', b: 'Nunito Sans' },
-  { n: 'Traditional', d: 'Libre Baskerville', b: 'Source Sans 3' },
-  { n: 'Royal', d: 'Cinzel', b: 'Lato' },
-  { n: 'Dark Premium', d: 'Fraunces', b: 'Outfit' },
-  { n: 'Editorial', d: 'Instrument Serif', b: 'Instrument Sans' },
-  { n: 'Bold Contrast', d: 'Anton', b: 'Martian Mono' },
-  { n: 'Friendly', d: 'Plus Jakarta Sans', b: 'Plus Jakarta Sans' },
-  { n: 'Neobrutalist', d: 'Space Grotesk', b: 'Space Mono' },
-  { n: 'Syne', d: 'Syne', b: 'Inter' },
-  { n: 'Art Deco', d: 'Poiret One', b: 'Josefin Sans' },
-  { n: 'Heritage', d: 'DM Serif Display', b: 'DM Sans' },
-  { n: 'Geometric', d: 'Sora', b: 'Manrope' },
-  { n: 'Editorial 2', d: 'Bodoni Moda', b: 'Figtree' },
-  { n: 'Soft Modern', d: 'Syne', b: 'Manrope' },
-  { n: 'Classic Modern', d: 'Playfair Display', b: 'Inter' },
-  { n: 'Minimal Serif', d: 'DM Serif Display', b: 'DM Sans' },
-  { n: 'Corporate', d: 'Sora', b: 'Inter' }
+  { n: 'Modern', d: 'Montserrat', b: 'Inter' }, { n: 'Classic', d: 'Playfair Display', b: 'Lato' },
+  { n: 'Executive', d: 'Oswald', b: 'Roboto' }, { n: 'Elegant', d: 'Cormorant Garamond', b: 'Nunito Sans' },
+  { n: 'Traditional', d: 'Libre Baskerville', b: 'Source Sans 3' }, { n: 'Royal', d: 'Cinzel', b: 'Lato' },
+  { n: 'Dark Premium', d: 'Fraunces', b: 'Outfit' }, { n: 'Editorial', d: 'Instrument Serif', b: 'Instrument Sans' },
+  { n: 'Bold Contrast', d: 'Anton', b: 'Martian Mono' }, { n: 'Friendly', d: 'Plus Jakarta Sans', b: 'Plus Jakarta Sans' },
+  { n: 'Neobrutalist', d: 'Space Grotesk', b: 'Space Mono' }, { n: 'Syne', d: 'Syne', b: 'Inter' },
+  { n: 'Art Deco', d: 'Poiret One', b: 'Josefin Sans' }, { n: 'Heritage', d: 'DM Serif Display', b: 'DM Sans' },
+  { n: 'Geometric', d: 'Sora', b: 'Manrope' }, { n: 'Editorial 2', d: 'Bodoni Moda', b: 'Figtree' },
+  { n: 'Soft Modern', d: 'Syne', b: 'Manrope' }, { n: 'Classic Modern', d: 'Playfair Display', b: 'Inter' },
+  { n: 'Minimal Serif', d: 'DM Serif Display', b: 'DM Sans' }, { n: 'Corporate', d: 'Sora', b: 'Inter' },
+  { n: 'Vintage Serif', d: 'Bitter', b: 'PT Sans' }, { n: 'Tech Sans', d: 'Rajdhani', b: 'Fira Sans' }
 ];
 
 let allTemplates = [];
@@ -856,14 +634,8 @@ LAYOUTS.forEach(layout => {
     FONTS.forEach(font => {
       allTemplates.push({
         id: `t_${layout}_${color.n.replace(/\s+/g, '')}_${font.n.replace(/\s+/g, '')}`,
-        layout: layout,
-        name: `${color.n} ${font.n}`,
-        primary: color.p,
-        accent: color.a,
-        tint: color.t,
-        ink: color.k,
-        displayFont: font.d,
-        bodyFont: font.b
+        layout: layout, name: `${color.n} ${font.n}`, primary: color.p, accent: color.a, tint: color.t, ink: color.k,
+        displayFont: font.d, bodyFont: font.b
       });
     });
   });
@@ -889,8 +661,7 @@ function renderTemplates(reset = false) {
   if (activeTab === 'recent') source = recent.map(id => allTemplates.find(t => t.id === id)).filter(Boolean);
 
   const filtered = source.filter(t => {
-    const matchText = t.name.toLowerCase().includes(filterText.toLowerCase()) ||
-                      t.layout.includes(filterText.toLowerCase());
+    const matchText = t.name.toLowerCase().includes(filterText.toLowerCase()) || t.layout.includes(filterText.toLowerCase());
     const matchLayout = filterLayout === 'all' || t.layout === filterLayout;
     return matchText && matchLayout;
   });
@@ -902,43 +673,30 @@ function renderTemplates(reset = false) {
     const isFav = favourites.includes(t.id);
     btn.innerHTML = `
       <span class="fav ${isFav ? 'on' : ''}">${isFav ? '♥' : '♡'}</span>
-      <div class="tpl-swatch">
-        <div style="background:${t.primary}"></div>
-        <div style="background:${t.accent}"></div>
-      </div>
+      <div class="tpl-swatch"><div style="background:${t.primary}"></div><div style="background:${t.accent}"></div></div>
       <div style="font-size:11px;line-height:1.2;">${t.name}</div>
       <small style="font-weight:400;color:var(--ink-3);text-transform:capitalize;font-size:10px;">${t.layout}</small>
     `;
     btn.querySelector('.fav').onclick = (e) => {
       e.stopPropagation();
-      if (favourites.includes(t.id)) {
-        favourites = favourites.filter(id => id !== t.id);
-      } else {
-        favourites.push(t.id);
-      }
-      saveFavs();
-      renderTemplates();
+      if (favourites.includes(t.id)) favourites = favourites.filter(id => id !== t.id);
+      else favourites.push(t.id);
+      saveFavs(); renderTemplates();
     };
     btn.onclick = () => {
       currentTheme = t;
       recent = [t.id, ...recent.filter(id => id !== t.id)];
-      saveRecent();
-      renderTemplates();
-      scheduleUpdate();
-      pushHistory();
+      saveRecent(); renderTemplates(); scheduleUpdate(); pushHistory();
     };
     grid.appendChild(btn);
   });
-
   $('loadMoreBtn').style.display = filtered.length > visibleCount ? 'block' : 'none';
 }
 
 $$('.tpl-tab').forEach(tab => {
   tab.onclick = () => {
     $$('.tpl-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    activeTab = tab.dataset.tab;
-    renderTemplates(true);
+    tab.classList.add('active'); activeTab = tab.dataset.tab; renderTemplates(true);
   };
 });
 $('searchTpl').oninput = (e) => { filterText = e.target.value; renderTemplates(true); };
@@ -946,71 +704,34 @@ $('filterLayout').onchange = (e) => { filterLayout = e.target.value; renderTempl
 $('loadMoreBtn').onclick = () => { visibleCount += 20; renderTemplates(); };
 
 /* =====================================================
-   CATEGORY MODE (Marriage / Job)
+   CATEGORY MODE
    ===================================================== */
 let currentMode = 'marriage';
-
 $('catMarriage').onclick = () => {
   currentMode = 'marriage';
-  $('catMarriage').classList.add('active');
-  $('catMarriage').style.background = 'var(--gold)';
-  $('catMarriage').style.color = '#fff';
-  $('catMarriage').style.borderColor = 'var(--gold)';
-  
-  $('catJob').classList.remove('active');
-  $('catJob').style.background = 'var(--bg)';
-  $('catJob').style.color = 'var(--ink-2)';
-  $('catJob').style.borderColor = 'var(--line)';
-  
-  document.body.classList.remove('mode-job');
-  document.body.classList.add('mode-marriage');
-  $('profileLabel').textContent = 'Profile / About Me';
-  $('profile').placeholder = 'Write a short introduction about yourself and your family...';
-  
-  scheduleUpdate();
-  saveDraft();
+  $('catMarriage').classList.add('active'); $('catMarriage').style.background = 'var(--gold)'; $('catMarriage').style.color = '#fff'; $('catMarriage').style.borderColor = 'var(--gold)';
+  $('catJob').classList.remove('active'); $('catJob').style.background = 'var(--bg)'; $('catJob').style.color = 'var(--ink-2)'; $('catJob').style.borderColor = 'var(--line)';
+  document.body.classList.remove('mode-job'); document.body.classList.add('mode-marriage');
+  scheduleUpdate(); saveDraft();
 };
-
 $('catJob').onclick = () => {
   currentMode = 'job';
-  $('catJob').classList.add('active');
-  $('catJob').style.background = 'var(--gold)';
-  $('catJob').style.color = '#fff';
-  $('catJob').style.borderColor = 'var(--gold)';
-  
-  $('catMarriage').classList.remove('active');
-  $('catMarriage').style.background = 'var(--bg)';
-  $('catMarriage').style.color = 'var(--ink-2)';
-  $('catMarriage').style.borderColor = 'var(--line)';
-  
-  document.body.classList.remove('mode-marriage');
-  document.body.classList.add('mode-job');
-  $('profileLabel').textContent = 'Career Objective';
-  $('profile').placeholder = 'Write a brief professional summary or career objective...';
-  
-  scheduleUpdate();
-  saveDraft();
+  $('catJob').classList.add('active'); $('catJob').style.background = 'var(--gold)'; $('catJob').style.color = '#fff'; $('catJob').style.borderColor = 'var(--gold)';
+  $('catMarriage').classList.remove('active'); $('catMarriage').style.background = 'var(--bg)'; $('catMarriage').style.color = 'var(--ink-2)'; $('catMarriage').style.borderColor = 'var(--line)';
+  document.body.classList.remove('mode-marriage'); document.body.classList.add('mode-job');
+  scheduleUpdate(); saveDraft();
 };
 
 /* =====================================================
    FORM FIELDS
    ===================================================== */
-const TEXT_FIELDS = [
-  'name','dob','gender','weight','blood','marital','religion','caste',
-  'gotra','rashi','nakshatra','manglik','profile','phone','email','address',
-  'father','father_job','mother','mother_job','brothers','sisters',
-  'experience','languages','hobbies','declaration','place','date',
-  'education_simple','language','watermark_text'
-];
-
+const TEXT_FIELDS = ['name','dob','gender','weight','blood','marital','religion','caste','gotra','rashi','nakshatra','manglik','profile','phone','email','address','father','father_job','mother','mother_job','brothers','sisters','experience','languages','hobbies','declaration','place','date','education_simple','language','watermark_text'];
 let photoData = '';
 let eduData = [];
 let skillData = [];
+const STORAGE_KEY = 'bd_main_v11';
+const DRAFT_KEY = 'bd_drafts_v11';
 
-const STORAGE_KEY = 'bd_main_v10';
-const DRAFT_KEY = 'bd_drafts_v10';
-
-/* ---- Education ---- */
 function addEduRow(data = {}) {
   const container = $('edu-rows-container');
   const row = document.createElement('div');
@@ -1032,32 +753,25 @@ function addEduRow(data = {}) {
 
 function collectEduData() {
   eduData = Array.from(document.querySelectorAll('.edu-row')).map(r => ({
-    level: r.querySelector('.edu-level').value.trim(),
-    board: r.querySelector('.edu-board').value.trim(),
-    institute: r.querySelector('.edu-institute').value.trim(),
-    year: r.querySelector('.edu-year').value.trim(),
-    score: r.querySelector('.edu-score').value.trim()
+    level: r.querySelector('.edu-level').value.trim(), board: r.querySelector('.edu-board').value.trim(),
+    institute: r.querySelector('.edu-institute').value.trim(), year: r.querySelector('.edu-year').value.trim(), score: r.querySelector('.edu-score').value.trim()
   })).filter(e => e.level || e.institute);
-  scheduleUpdate();
-  saveDraft();
+  scheduleUpdate(); saveDraft();
 }
-
 $('addEduBtn').onclick = () => addEduRow();
 $('edu-rows-container').addEventListener('input', collectEduData);
 $$('input[name="edu_mode"]').forEach(r => r.onchange = (e) => {
   const isDet = e.target.value === 'detailed';
   $('edu-detailed-box').style.display = isDet ? 'block' : 'none';
   $('edu-simple-box').style.display = isDet ? 'none' : 'block';
-  scheduleUpdate();
-  saveDraft();
+  scheduleUpdate(); saveDraft();
 });
 
-/* ---- Skills ---- */
 function addSkillRow(data = { name: '', level: 75 }) {
   const row = document.createElement('div');
   row.className = 'skill-row';
   row.innerHTML = `
-    <input class="skill-name" value="${data.name}" placeholder="Skill name">
+    <input class="skill-name" value="${data.name}" placeholder="Skill">
     <div style="display:flex; align-items:center; gap:6px;">
       <input type="range" class="skill-level" min="0" max="100" value="${data.level}" style="flex:1; padding:0; min-height:auto;">
       <span class="skill-val" style="font-size:11px; font-weight:700; min-width:32px; text-align:right;">${data.level}%</span>
@@ -1069,13 +783,10 @@ function addSkillRow(data = { name: '', level: 75 }) {
 
 function collectSkills() {
   skillData = Array.from(document.querySelectorAll('.skill-row')).map(r => ({
-    name: r.querySelector('.skill-name').value.trim(),
-    level: parseInt(r.querySelector('.skill-level').value) || 75
+    name: r.querySelector('.skill-name').value.trim(), level: parseInt(r.querySelector('.skill-level').value) || 75
   })).filter(s => s.name);
-  scheduleUpdate();
-  saveDraft();
+  scheduleUpdate(); saveDraft();
 }
-
 $('addSkillBtn').onclick = () => addSkillRow();
 $('skillsList').addEventListener('input', (e) => {
   if (e.target.classList.contains('skill-level')) {
@@ -1085,307 +796,142 @@ $('skillsList').addEventListener('input', (e) => {
   collectSkills();
 });
 
-/* =====================================================
-   STATE COLLECT
-   ===================================================== */
 function collectData() {
   const data = { theme: currentTheme };
   TEXT_FIELDS.forEach(id => { data[id] = ($(id)?.value || '').trim(); });
   data.education_mode = document.querySelector('input[name="edu_mode"]:checked').value;
   data.education_list = eduData;
   data.skills = skillData.map(s => `${s.name} | ${s.level}`).join('\n');
-  data.height_ft = $('height_ft').value;
-  data.height_in = $('height_in').value;
-  data.photo = photoData;
-  data.watermark = $('optWatermark').checked;
-  data.show_pagenum = $('optPagenum').checked;
+  data.height_ft = $('height_ft').value; data.height_in = $('height_in').value;
+  data.photo = photoData; data.watermark = $('optWatermark').checked; data.show_pagenum = $('optPagenum').checked;
   return data;
 }
 
-/* =====================================================
-   HISTORY (Undo/Redo)
-   ===================================================== */
-const history = [];
-const future = [];
-let lastSnapshot = '';
-
-function snapshot() {
-  return safeJSON({
-    data: collectData(),
-    eduData,
-    skillData,
-    photoData,
-    mode: currentMode
-  });
-}
-
+const history = []; const future = []; let lastSnapshot = '';
+function snapshot() { return safeJSON({ data: collectData(), eduData, skillData, photoData, mode: currentMode }); }
 function pushHistory() {
   const s = snapshot();
   if (s !== lastSnapshot) {
-    history.push(s);
-    if (history.length > 30) history.shift();
-    future.length = 0;
-    lastSnapshot = s;
+    history.push(s); if (history.length > 30) history.shift(); future.length = 0; lastSnapshot = s;
   }
 }
-
 function applySnapshot(snap) {
   try {
     const s = JSON.parse(snap);
     TEXT_FIELDS.forEach(id => { if ($(id) && s.data[id] !== undefined) $(id).value = s.data[id]; });
-    $('height_ft').value = s.data.height_ft || '';
-    $('height_in').value = s.data.height_in || '';
-    currentTheme = s.data.theme || currentTheme;
-    photoData = s.photoData || '';
-    updatePhotoPreview();
-
-    eduData = s.eduData || [];
-    $('edu-rows-container').innerHTML = '';
-    eduData.forEach(r => addEduRow(r));
-
-    skillData = s.skillData || [];
-    $('skillsList').innerHTML = '';
-    skillData.forEach(r => addSkillRow(r));
-
-    if (s.mode === 'job') $('catJob').click();
-    else $('catMarriage').click();
-
-    renderTemplates();
-    updateProgress();
-    scheduleUpdate();
+    $('height_ft').value = s.data.height_ft || ''; $('height_in').value = s.data.height_in || '';
+    currentTheme = s.data.theme || currentTheme; photoData = s.photoData || ''; updatePhotoPreview();
+    eduData = s.eduData || []; $('edu-rows-container').innerHTML = ''; eduData.forEach(r => addEduRow(r));
+    skillData = s.skillData || []; $('skillsList').innerHTML = ''; skillData.forEach(r => addSkillRow(r));
+    if (s.mode === 'job') $('catJob').click(); else $('catMarriage').click();
+    renderTemplates(); updateProgress(); scheduleUpdate();
   } catch (e) { console.error(e); }
 }
+$('undoBtn').onclick = () => { if (history.length < 2) return toast('Nothing to undo'); future.push(history.pop()); applySnapshot(history[history.length - 1]); };
+$('redoBtn').onclick = () => { if (!future.length) return toast('Nothing to redo'); const s = future.pop(); history.push(s); applySnapshot(s); };
 
-$('undoBtn').onclick = () => {
-  if (history.length < 2) return toast('Nothing to undo', 'info');
-  const cur = history.pop();
-  future.push(cur);
-  applySnapshot(history[history.length - 1]);
-  toast('Undo', 'info');
-};
-
-$('redoBtn').onclick = () => {
-  if (!future.length) return toast('Nothing to redo', 'info');
-  const s = future.pop();
-  history.push(s);
-  applySnapshot(s);
-  toast('Redo', 'info');
-};
-
-/* =====================================================
-   PHOTO
-   ===================================================== */
 $('uploadBtn').onclick = () => $('photoFile').click();
-$('removePhotoBtn').onclick = () => {
-  photoData = '';
-  updatePhotoPreview();
-  scheduleUpdate();
-  saveDraft();
-};
-
+$('removePhotoBtn').onclick = () => { photoData = ''; updatePhotoPreview(); scheduleUpdate(); saveDraft(); };
 $('photoFile').onchange = (e) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
+  const file = e.target.files?.[0]; if (!file) return;
   if (file.size > 5 * 1024 * 1024) return toast('Image must be under 5 MB', 'error');
   const reader = new FileReader();
   reader.onload = (ev) => {
     const img = new Image();
     img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const MAX = 600;
+      const canvas = document.createElement('canvas'); const MAX = 600;
       let w = img.width, h = img.height;
-      if (w > MAX || h > MAX) {
-        const r = Math.min(MAX / w, MAX / h);
-        w = Math.round(w * r); h = Math.round(h * r);
-      }
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      photoData = canvas.toDataURL('image/jpeg', 0.85);
-      updatePhotoPreview();
-      scheduleUpdate();
-      saveDraft();
-      toast('Photo uploaded', 'success');
+      if (w > MAX || h > MAX) { const r = Math.min(MAX / w, MAX / h); w = Math.round(w * r); h = Math.round(h * r); }
+      canvas.width = w; canvas.height = h; canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      photoData = canvas.toDataURL('image/jpeg', 0.85); updatePhotoPreview(); scheduleUpdate(); saveDraft(); toast('Photo uploaded', 'success');
     };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 };
-
 function updatePhotoPreview() {
   const el = $('photoPrev');
-  if (photoData) {
-    el.innerHTML = `<img src="${photoData}" alt="Photo">`;
-    $('removePhotoBtn').style.display = 'block';
-  } else {
-    el.innerHTML = 'No photo';
-    $('removePhotoBtn').style.display = 'none';
-  }
+  if (photoData) { el.innerHTML = `<img src="${photoData}" alt="Photo">`; $('removePhotoBtn').style.display = 'block'; }
+  else { el.innerHTML = 'No photo'; $('removePhotoBtn').style.display = 'none'; }
 }
 
-/* =====================================================
-   VOICE INPUT
-   ===================================================== */
-$('voiceBtn').onclick = () => {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) return toast('Voice input not supported in this browser', 'error');
-  const rec = new SR();
-  rec.lang = $('language').value === 'en' ? 'en-IN' : $('language').value + '-IN';
-  rec.interimResults = false;
-  rec.maxAlternatives = 1;
-  rec.onstart = () => toast('Listening...', 'info');
-  rec.onresult = (e) => {
-    const text = e.results[0][0].transcript;
-    $('profile').value = ($('profile').value + ' ' + text).trim();
-    $('profileCount').textContent = `${$('profile').value.length} / 600`;
-    scheduleUpdate();
-    saveDraft();
-    toast('Transcribed', 'success');
-  };
-  rec.onerror = () => toast('Voice error', 'error');
-  rec.start();
-};
-
-/* =====================================================
-   PROGRESS + VALIDATION
-   ===================================================== */
 function updateProgress() {
-  const checks = [
-    !!$('name').value.trim(),
-    !!$('dob').value,
-    !!$('gender').value,
-    !!$('phone').value.trim() || !!$('email').value.trim(),
-    !!$('address').value.trim(),
-    !!$('father').value.trim(),
-    !!$('mother').value.trim(),
-    eduData.length > 0 || !!$('education_simple').value.trim(),
-    skillData.length > 0,
-    !!$('declaration').value.trim()
-  ];
-  const done = checks.filter(Boolean).length;
-  const pct = Math.round((done / checks.length) * 100);
-  $('progressFill').style.width = pct + '%';
-  $('progressPct').textContent = pct + '%';
-}
-
-function validate() {
-  const errs = [];
-  if (!$('name').value.trim()) errs.push('Name is required');
-  if (!$('phone').value.trim() && !$('email').value.trim()) errs.push('At least one contact required');
-  return errs;
+  const checks = [!!$('name').value.trim(), !!$('dob').value, !!$('gender').value, !!$('phone').value.trim() || !!$('email').value.trim(), !!$('address').value.trim(), !!$('father').value.trim(), !!$('mother').value.trim(), eduData.length > 0 || !!$('education_simple').value.trim(), skillData.length > 0, !!$('declaration').value.trim()];
+  const pct = Math.round((checks.filter(Boolean).length / checks.length) * 100);
+  $('progressFill').style.width = pct + '%'; $('progressPct').textContent = pct + '%';
 }
 
 /* =====================================================
-   PREVIEW
+   PREVIEW (Optimized & Photo Inject Fixed)
    ===================================================== */
 let previewTimer = null;
 function scheduleUpdate() {
   clearTimeout(previewTimer);
-  previewTimer = setTimeout(() => { updatePreview(); updateProgress(); }, 350);
+  previewTimer = setTimeout(() => { updatePreview(); updateProgress(); }, 1200); // 1200ms debounce to prevent freeze
 }
 
 async function updatePreview() {
   try {
     const res = await fetch('/api/preview', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: safeJSON(collectData())
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: safeJSON(collectData())
     });
     if (!res.ok) throw new Error('Preview failed');
     const html = await res.text();
     const frame = $('previewFrame');
-    
     frame.onload = () => {
-      // Inject photo manually since backend strips it for preview
       if (photoData) {
         try {
           const doc = frame.contentDocument;
           const photoBox = doc.getElementById('photoBox');
           const photoImg = doc.getElementById('profilePhoto');
           if (photoBox) photoBox.style.display = 'block';
-          if (photoImg) {
-            photoImg.src = photoData;
-            photoImg.style.display = 'block';
-          }
-        } catch(e) { console.error("Preview photo inject error", e); }
+          if (photoImg) { photoImg.src = photoData; photoImg.style.display = 'block'; }
+        } catch(e) {}
       }
       fitPreview();
     };
     frame.srcdoc = html;
   } catch (e) {
-    $('previewFrame').srcdoc = `
-      <html><body style="font-family:system-ui;padding:40px;text-align:center;color:#64748b;">
-        <h2>⚠ Preview unavailable</h2>
-        <p>Backend server is not reachable. Please ensure app.py is running.</p>
-        <p style="font-size:12px;margin-top:20px;">Error: ${e.message}</p>
-      </body></html>`;
+    $('previewFrame').srcdoc = `<html><body style="font-family:system-ui;padding:40px;text-align:center;color:#64748b;"><h2>⚠ Preview unavailable</h2><p>Ensure server is running.</p></body></html>`;
   }
 }
 
 let zoom = 1;
 function fitPreview() {
-  const scroll = $('previewScroll');
-  const holder = $('previewHolder');
-  const frame = $('previewFrame');
+  const scroll = $('previewScroll'), holder = $('previewHolder'), frame = $('previewFrame');
   if (!scroll || !frame) return;
-  const base = Math.min(1, (scroll.clientWidth - 40) / 794);
-  const scale = base * zoom;
+  const scale = Math.min(1, (scroll.clientWidth - 40) / 794) * zoom;
   frame.style.transform = `scale(${scale})`;
-  holder.style.width = (794 * scale) + 'px';
-  holder.style.height = (1123 * scale) + 'px';
+  holder.style.width = (794 * scale) + 'px'; holder.style.height = (1123 * scale) + 'px';
   $('zoomLabel').textContent = Math.round(zoom * 100) + '%';
 }
-
 $('zoomIn').onclick = () => { zoom = Math.min(2, zoom + 0.1); fitPreview(); };
 $('zoomOut').onclick = () => { zoom = Math.max(0.4, zoom - 0.1); fitPreview(); };
 $('zoomFit').onclick = () => { zoom = 1; fitPreview(); };
 
-/* =====================================================
-   MOBILE PREVIEW TOGGLE
-   ===================================================== */
 const previewToggleBtn = $('previewToggleBtn');
 if (previewToggleBtn) {
   previewToggleBtn.onclick = () => {
-    const editPanel = $('editPanel');
-    const previewPanel = $('previewPanel');
-    
+    const editPanel = $('editPanel'), previewPanel = $('previewPanel');
     if (editPanel.classList.contains('active')) {
-      editPanel.classList.remove('active');
-      previewPanel.classList.add('active');
-      previewToggleBtn.innerHTML = '✏️ Edit';
-      setTimeout(fitPreview, 50); 
+      editPanel.classList.remove('active'); previewPanel.classList.add('active'); previewToggleBtn.innerHTML = '✏️ Edit'; setTimeout(fitPreview, 50); 
     } else {
-      previewPanel.classList.remove('active');
-      editPanel.classList.add('active');
-      previewToggleBtn.innerHTML = '👁️ Preview';
+      previewPanel.classList.remove('active'); editPanel.classList.add('active'); previewToggleBtn.innerHTML = '👁️ Preview';
     }
   };
 }
 
 /* =====================================================
-   SAVE / DRAFTS
+   SAVE / RESTORE
    ===================================================== */
 function saveDraft() {
   try {
-    const draft = {
-      theme: currentTheme,
-      photo: photoData,
-      values: {},
-      mode: currentMode,
-      eduMode: document.querySelector('input[name="edu_mode"]:checked').value,
-      eduData: eduData,
-      skillData: skillData,
-      options: {
-        watermark: $('optWatermark').checked,
-        pagenum: $('optPagenum').checked
-      }
-    };
+    const draft = { theme: currentTheme, photo: photoData, values: {}, mode: currentMode, eduMode: document.querySelector('input[name="edu_mode"]:checked').value, eduData, skillData, options: { watermark: $('optWatermark').checked, pagenum: $('optPagenum').checked } };
     TEXT_FIELDS.forEach(id => { draft.values[id] = $(id)?.value || ''; });
-    draft.values.height_ft = $('height_ft').value;
-    draft.values.height_in = $('height_in').value;
+    draft.values.height_ft = $('height_ft').value; draft.values.height_in = $('height_in').value;
     localStorage.setItem(STORAGE_KEY, safeJSON(draft));
-    $('statusPill').textContent = '✓ Saved';
-    setTimeout(() => $('statusPill').textContent = 'Auto-save', 1500);
-  } catch (e) { /* quota */ }
+    $('statusPill').textContent = '✓ Saved'; setTimeout(() => $('statusPill').textContent = 'Auto-save', 1500);
+  } catch (e) {}
 }
 
 function restoreDraft() {
@@ -1393,358 +939,84 @@ function restoreDraft() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
     const d = JSON.parse(raw);
-    
-    if (d.mode === 'job') $('catJob').click();
-    else $('catMarriage').click();
-
-    if (d.values) {
-      TEXT_FIELDS.forEach(id => { if ($(id)) $(id).value = d.values[id] || ''; });
-      $('height_ft').value = d.values.height_ft || '';
-      $('height_in').value = d.values.height_in || '';
-    }
+    if (d.mode === 'job') $('catJob').click(); else $('catMarriage').click();
+    if (d.values) { TEXT_FIELDS.forEach(id => { if ($(id)) $(id).value = d.values[id] || ''; }); $('height_ft').value = d.values.height_ft || ''; $('height_in').value = d.values.height_in || ''; }
     if (d.eduMode) {
-      const el = document.querySelector(`input[name="edu_mode"][value="${d.eduMode}"]`);
-      if (el) el.checked = true;
-      $('edu-detailed-box').style.display = d.eduMode === 'detailed' ? 'block' : 'none';
-      $('edu-simple-box').style.display = d.eduMode === 'simple' ? 'block' : 'none';
+      const el = document.querySelector(`input[name="edu_mode"][value="${d.eduMode}"]`); if (el) el.checked = true;
+      $('edu-detailed-box').style.display = d.eduMode === 'detailed' ? 'block' : 'none'; $('edu-simple-box').style.display = d.eduMode === 'simple' ? 'block' : 'none';
     }
-    (d.eduData || []).forEach(r => addEduRow(r));
-    (d.skillData || []).forEach(r => addSkillRow(r));
-    if (d.theme) currentTheme = d.theme;
-    if (d.photo) photoData = d.photo;
-    if (d.options) {
-      $('optWatermark').checked = !!d.options.watermark;
-      $('optPagenum').checked = !!d.options.pagenum;
-    }
-    updatePhotoPreview();
-    $('profileCount').textContent = `${$('profile').value.length} / 600`;
-  } catch (e) { console.error(e); }
+    (d.eduData || []).forEach(r => addEduRow(r)); (d.skillData || []).forEach(r => addSkillRow(r));
+    if (d.theme) currentTheme = d.theme; if (d.photo) photoData = d.photo;
+    if (d.options) { $('optWatermark').checked = !!d.options.watermark; $('optPagenum').checked = !!d.options.pagenum; }
+    updatePhotoPreview(); $('profileCount').textContent = `${$('profile').value.length} / 600`;
+  } catch (e) {}
 }
-
 $('saveBtn').onclick = () => { saveDraft(); toast('Draft saved', 'success'); };
 
-/* ---- Multi-draft ---- */
-function getDrafts() {
-  try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || '[]'); } catch (e) { return []; }
-}
-function setDrafts(d) { localStorage.setItem(DRAFT_KEY, safeJSON(d)); }
-
-function renderDrafts() {
-  const drafts = getDrafts();
-  const el = $('draftList');
-  if (!drafts.length) { el.innerHTML = '<p style="font-size:12px;color:var(--ink-3);">No saved drafts yet.</p>'; return; }
-  el.innerHTML = drafts.map((d, i) => `
-    <div class="draft-row">
-      <span style="flex:1;font-weight:700;">${d.name || 'Untitled'}</span>
-      <span style="color:var(--ink-3);font-size:11px;">${d.date || ''}</span>
-      <button onclick="loadDraft(${i})">Load</button>
-      <button onclick="deleteDraft(${i})">✕</button>
-    </div>
-  `).join('');
-}
-
-window.loadDraft = function(i) {
-  const drafts = getDrafts();
-  if (!drafts[i]) return;
-  localStorage.setItem(STORAGE_KEY, safeJSON(drafts[i].data));
-  restoreDraft();
-  updateProgress();
-  scheduleUpdate();
-  toast('Draft loaded', 'success');
-};
-
-window.deleteDraft = function(i) {
-  const drafts = getDrafts();
-  drafts.splice(i, 1);
-  setDrafts(drafts);
-  renderDrafts();
-  toast('Draft deleted', 'info');
-};
-
-window.saveDraftAs = function() {
-  const name = prompt('Draft name:', 'Draft ' + (getDrafts().length + 1));
-  if (!name) return;
-  const drafts = getDrafts();
-  if (drafts.length >= 5) return toast('Max 5 drafts', 'error');
-  drafts.push({
-    name,
-    date: new Date().toLocaleDateString('en-IN'),
-    data: JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
-  });
-  setDrafts(drafts);
-  renderDrafts();
-  toast('Saved as draft', 'success');
-};
-
 /* =====================================================
-   IMPORT / EXPORT / SHARE
+   LANGUAGE CHANGE
    ===================================================== */
-$('exportBtn').onclick = () => {
-  const data = collectData();
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = ($('name').value || 'biodata') + '.json';
-  a.click();
-  toast('Exported', 'success');
+$('language').onchange = (e) => {
+  translateUI(e.target.value);
+  scheduleUpdate(); saveDraft();
 };
-
-$('importBtn').onclick = () => $('importFile').click();
-$('importFile').onchange = (e) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    try {
-      const data = JSON.parse(ev.target.result);
-      TEXT_FIELDS.forEach(id => { if ($(id) && data[id] !== undefined) $(id).value = data[id]; });
-      if (data.theme) currentTheme = data.theme;
-      if (data.photo) photoData = data.photo;
-      eduData = data.education_list || [];
-      $('edu-rows-container').innerHTML = '';
-      eduData.forEach(r => addEduRow(r));
-      skillData = (data.skills || '').split('\n').filter(Boolean).map(line => {
-        const [n, l] = line.split('|');
-        return { name: n.trim(), level: parseInt(l) || 75 };
-      });
-      $('skillsList').innerHTML = '';
-      skillData.forEach(r => addSkillRow(r));
-      updatePhotoPreview();
-      renderTemplates();
-      updateProgress();
-      scheduleUpdate();
-      toast('Imported', 'success');
-    } catch (err) {
-      toast('Invalid file', 'error');
-    }
-  };
-  reader.readAsText(file);
-};
-
-$('shareBtn').onclick = () => {
-  try {
-    const data = collectData();
-    data.photo = ''; // don't include heavy photo
-    const encoded = btoa(encodeURIComponent(JSON.stringify(data)));
-    const url = window.location.origin + window.location.pathname + '#d=' + encoded;
-    if (url.length > 8000) return toast('Data too large to share', 'error');
-    $('shareUrl').value = url;
-    $('shareModal').classList.add('open');
-  } catch (e) {
-    toast('Share failed', 'error');
-  }
-};
-
-$('copyUrlBtn').onclick = () => {
-  $('shareUrl').select();
-  document.execCommand('copy');
-  toast('URL copied', 'success');
-};
-
-function loadShared() {
-  const hash = window.location.hash.slice(3);
-  if (!hash) return;
-  try {
-    const data = JSON.parse(decodeURIComponent(atob(hash)));
-    TEXT_FIELDS.forEach(id => { if ($(id) && data[id] !== undefined) $(id).value = data[id]; });
-    if (data.theme) currentTheme = data.theme;
-    toast('Loaded shared biodata', 'success');
-  } catch (e) { /* ignore */ }
-}
 
 /* =====================================================
-   AI
+   AI & PDF
    ===================================================== */
 $('aiGenBtn').onclick = async () => {
-  const btn = $('aiGenBtn');
-  btn.textContent = '⏳...';
-  btn.disabled = true;
+  const btn = $('aiGenBtn'); btn.textContent = '⏳...'; btn.disabled = true;
   try {
-    const res = await fetch('/api/generate-profile', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: safeJSON({
-        name: $('name').value,
-        education: eduData[0]?.level || $('education_simple').value || 'Graduation',
-        skills: skillData.map(s => s.name).join(', ')
-      })
-    });
+    const res = await fetch('/api/generate-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: safeJSON({ name: $('name').value, education: eduData[0]?.level || 'Graduation', skills: skillData.map(s => s.name).join(', ') }) });
     const json = await res.json();
-    if (json.profile) {
-      $('profile').value = json.profile;
-      $('profileCount').textContent = `${$('profile').value.length} / 600`;
-      scheduleUpdate();
-      saveDraft();
-      toast('AI generated!', 'success');
-    } else {
-      toast(json.error || 'AI failed', 'error');
-    }
-  } catch (e) {
-    toast('AI not available', 'error');
-  } finally {
-    btn.textContent = '✨ AI Generate';
-    btn.disabled = false;
-  }
+    if (json.profile) { $('profile').value = json.profile; $('profileCount').textContent = `${$('profile').value.length} / 600`; scheduleUpdate(); saveDraft(); toast('AI generated!', 'success'); }
+    else toast(json.error || 'AI failed', 'error');
+  } catch (e) { toast('AI not available', 'error'); } finally { btn.textContent = '✨ AI Generate'; btn.disabled = false; }
 };
 
-$('aiSkillsBtn').onclick = async () => {
-  const btn = $('aiSkillsBtn');
-  btn.textContent = '⏳...';
-  btn.disabled = true;
-  try {
-    const res = await fetch('/api/suggest-skills', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: safeJSON({ education: eduData[0]?.level || 'Graduation' })
-    });
-    const json = await res.json();
-    if (json.skills) {
-      json.skills.split('\n').filter(Boolean).forEach(line => {
-        const [n, l] = line.split('|');
-        if (n) addSkillRow({ name: n.trim(), level: parseInt(l) || 75 });
-      });
-      collectSkills();
-      toast('Skills added!', 'success');
-    } else {
-      toast(json.error || 'AI failed', 'error');
-    }
-  } catch (e) {
-    toast('AI not available', 'error');
-  } finally {
-    btn.textContent = '✨ AI Suggest';
-    btn.disabled = false;
-  }
-};
-
-/* =====================================================
-   PDF
-   ===================================================== */
 $('pdfBtn').onclick = async () => {
-  const errs = validate();
-  if (errs.length) return toast(errs[0], 'error');
-
-  const btn = $('pdfBtn');
-  btn.disabled = true;
-  const orig = btn.textContent;
-  btn.textContent = '⏳...';
-
+  if (!$('name').value.trim()) return toast('Name is required', 'error');
+  if (!$('phone').value.trim() && !$('email').value.trim()) return toast('At least one contact required', 'error');
+  const btn = $('pdfBtn'); btn.disabled = true; const orig = btn.textContent; btn.textContent = '⏳...';
   try {
-    const res = await fetch('/api/pdf', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: safeJSON(collectData())
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || 'PDF failed');
-    }
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = ($('name').value || 'Biodata') + '.pdf';
-    a.click();
-    URL.revokeObjectURL(url);
+    const res = await fetch('/api/pdf', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: safeJSON(collectData()) });
+    if (!res.ok) throw new Error('PDF failed');
+    const blob = await res.blob(); const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = ($('name').value || 'Biodata') + '.pdf'; a.click(); URL.revokeObjectURL(url);
     toast('PDF downloaded', 'success');
-  } catch (e) {
-    toast(e.message || 'PDF failed. Try "Print" instead.', 'error');
-  } finally {
-    btn.textContent = orig;
-    btn.disabled = false;
-  }
+  } catch (e) { toast(e.message, 'error'); } finally { btn.textContent = orig; btn.disabled = false; }
 };
 
-$('printBtn').onclick = () => {
-  const f = $('previewFrame');
-  try { f.contentWindow.print(); } catch (e) { toast('Print blocked', 'error'); }
-};
-
-/* =====================================================
-   THEME
-   ===================================================== */
 $('themeBtn').onclick = () => {
   document.body.classList.toggle('dark');
   const isDark = document.body.classList.contains('dark');
-  $('themeBtn').textContent = isDark ? '☀' : '🌙';
-  localStorage.setItem('bd_theme', isDark ? 'dark' : 'light');
+  $('themeBtn').textContent = isDark ? '☀' : '🌙'; localStorage.setItem('bd_theme', isDark ? 'dark' : 'light');
 };
+if (localStorage.getItem('bd_theme') === 'dark') { document.body.classList.add('dark'); $('themeBtn').textContent = '☀'; }
 
-if (localStorage.getItem('bd_theme') === 'dark') {
-  document.body.classList.add('dark');
-  $('themeBtn').textContent = '☀';
-}
-
-/* =====================================================
-   KEYBOARD SHORTCUTS
-   ===================================================== */
-document.addEventListener('keydown', (e) => {
-  const mod = e.ctrlKey || e.metaKey;
-  if (mod && e.key === 's') { e.preventDefault(); saveDraft(); toast('Saved', 'success'); }
-  if (mod && e.key === 'p') { e.preventDefault(); $('pdfBtn').click(); }
-  if (mod && e.key === 'z') { e.preventDefault(); $('undoBtn').click(); }
-  if (mod && e.key === 'y') { e.preventDefault(); $('redoBtn').click(); }
-});
-
-/* =====================================================
-   EVENT WIRING
-   ===================================================== */
 TEXT_FIELDS.forEach(id => {
   const el = $(id);
-  if (el) {
-    el.addEventListener(
-      el.tagName === 'SELECT' || el.type === 'date' ? 'change' : 'input',
-      () => { scheduleUpdate(); saveDraft(); pushHistory(); }
-    );
-  }
+  if (el) el.addEventListener(el.tagName === 'SELECT' || el.type === 'date' ? 'change' : 'input', () => { scheduleUpdate(); saveDraft(); pushHistory(); });
 });
-
 $('height_ft').onchange = $('height_in').onchange = () => { scheduleUpdate(); saveDraft(); };
 $('profile').oninput = () => $('profileCount').textContent = `${$('profile').value.length} / 600`;
-$('optWatermark').onchange = () => {
-  $('watermarkRow').style.display = $('optWatermark').checked ? 'block' : 'none';
-  scheduleUpdate(); saveDraft();
-};
+$('optWatermark').onchange = () => { $('watermarkRow').style.display = $('optWatermark').checked ? 'block' : 'none'; scheduleUpdate(); saveDraft(); };
 $('optPagenum').onchange = () => { scheduleUpdate(); saveDraft(); };
-$('declarationPreset').onchange = (e) => {
-  if (e.target.value) {
-    $('declaration').value = e.target.value;
-    scheduleUpdate(); saveDraft();
-  }
-};
+$('declarationPreset').onchange = (e) => { if (e.target.value) { $('declaration').value = e.target.value; scheduleUpdate(); saveDraft(); } };
 
 window.addEventListener('resize', () => {
-  if (window.innerWidth >= 1024) {
-    $('editPanel').classList.add('active');
-    $('previewPanel').classList.add('active');
-    fitPreview();
-  } else {
-    const isEdit = $('editPanel').classList.contains('active');
-    if (!isEdit) setTimeout(fitPreview, 50);
-  }
+  if (window.innerWidth >= 1024) { $('editPanel').classList.add('active'); $('previewPanel').classList.add('active'); fitPreview(); }
+  else { if (!$('editPanel').classList.contains('active')) setTimeout(fitPreview, 50); }
 });
 
-/* =====================================================
-   BOOT
-   ===================================================== */
 restoreDraft();
-loadShared();
 if (document.querySelectorAll('.edu-row').length === 0) addEduRow();
-if (document.querySelectorAll('.skill-row').length === 0) {
-  addSkillRow({ name: 'Communication', level: 85 });
-  addSkillRow({ name: 'Problem Solving', level: 80 });
-}
+if (document.querySelectorAll('.skill-row').length === 0) { addSkillRow({ name: 'Communication', level: 85 }); addSkillRow({ name: 'Problem Solving', level: 80 }); }
 renderTemplates();
-renderDrafts();
 updateProgress();
 updatePreview();
+translateUI($('language').value);
 pushHistory();
-
-if (window.innerWidth < 1024) {
-  if ($('previewPanel').classList.contains('active')) {
-    $('previewToggleBtn').innerHTML = '✏️ Edit';
-    setTimeout(fitPreview, 100);
-  }
-}
 </script>
 </body>
 </html>
