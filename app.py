@@ -1,7 +1,7 @@
 from flask import Flask, send_from_directory, request, jsonify, send_file
 from io import BytesIO
 from pathlib import Path
-import os, re, traceback
+import os, re, traceback, datetime
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -20,9 +20,8 @@ except Exception as exc:
     WEASYPRINT_AVAILABLE = False
     print(f"WeasyPrint unavailable; client PDF fallback will be used: {exc}")
 
-# All 56 base template names + 40 short aliases (96 total).
 VALID_THEMES = {
-    # ── 56 base themes ──
+    # 56 base themes
     "cyan", "orange_sidebar", "navy_classic", "teal_header", "blue_corporate",
     "emerald_sidebar", "rose_card", "midnight_split", "lavender_minimal",
     "forest_timeline", "terracotta_editorial", "plum_sidebar", "sky_banner",
@@ -37,7 +36,7 @@ VALID_THEMES = {
     "arctic_sidebar", "royal_banner", "graphite_corporate", "peach_cards",
     "denim_split", "lilac_minimal", "bronze_timeline", "jade_editorial",
     "maroon_sidebar", "turquoise_banner", "smoke_corporate", "ivory_cards",
-    # ── 40 short aliases (backward compatibility with older drafts) ──
+    # 40 backward-compatible aliases
     "royal", "professional", "emerald", "midnight", "rose", "lavender",
     "teal", "charcoal", "minimal", "sky", "forest", "terracotta", "plum",
     "classic", "coral", "sapphire", "champagne", "burgundy", "indigo",
@@ -45,6 +44,18 @@ VALID_THEMES = {
     "peacock", "blush", "olive", "ice", "onyx", "mauve", "amber",
     "crimson", "lagoon", "sandstone", "orchid", "cobalt", "pine", "pearl",
 }
+
+def _format_date(value):
+    """Accept ISO (YYYY-MM-DD) or legacy DD/MM/YYYY and return DD/MM/YYYY."""
+    s = str(value or "").strip()
+    if not s:
+        return ""
+    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y", "%Y/%m/%d"):
+        try:
+            return datetime.datetime.strptime(s, fmt).strftime("%d/%m/%Y")
+        except ValueError:
+            continue
+    return s  # unrecognised → leave untouched
 
 def preprocess(payload):
     data = dict(payload or {})
@@ -77,6 +88,11 @@ def preprocess(payload):
         "experience", "languages", "hobbies", "declaration", "place", "date"
     ):
         data[key] = str(data.get(key) or "").strip()
+
+    # Normalise dates so "01- 01- 2082" style values never appear in the PDF
+    data["dob"] = _format_date(data.get("dob"))
+    data["date"] = _format_date(data.get("date"))
+
     data["photo"] = str(data.get("photo") or "")
     return data
 
