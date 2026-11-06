@@ -46,7 +46,9 @@ body.dark .app-header { background: rgba(17, 26, 46, .9); }
 .header-actions { display: flex; gap: 8px; align-items: center; }
 .icon-btn { width: 36px; height: 36px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); display: inline-flex; align-items: center; justify-content: center; font-size: 16px; transition: all var(--t); }
 .icon-btn:hover { background: var(--surface); transform: translateY(-1px); }
-.status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: #ecfdf5; color: #047857; font-size: 11px; font-weight: 700; border: 1px solid #a7f3d0; }
+.status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: #ecfdf5; color: #047857; font-size: 11px; font-weight: 700; border: 1px solid #a7f3d0; transition: all .3s; }
+.status-pill.saving { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+.status-pill.error { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
 
 .app-main { display: grid; grid-template-columns: 460px 1fr; height: calc(100vh - 63px); overflow: hidden; }
 .editor { background: var(--surface); border-right: 1px solid var(--line); overflow-y: auto; padding: 16px; scrollbar-width: thin; }
@@ -69,6 +71,7 @@ body.dark .app-header { background: rgba(17, 26, 46, .9); }
 .fld label { display: block; font-size: 11px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
 .fld input, .fld textarea, .fld select { width: 100%; border: 1.5px solid var(--line); border-radius: 10px; padding: 11px 14px; font-size: 15px; background: var(--surface); outline: none; transition: all var(--t); min-height: 46px; }
 .fld input:focus, .fld select:focus, .fld textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(212, 168, 83, .15); }
+.fld input.invalid, .fld textarea.invalid { border-color: var(--danger); }
 .fld textarea { min-height: 80px; resize: vertical; }
 .fld-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
@@ -89,10 +92,14 @@ body.dark .tpl-btn.active { background: linear-gradient(135deg, #2a2318, #1a1610
 .load-more-btn { width: 100%; padding: 10px; margin-top: 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; font-weight: 700; color: var(--ink); }
 
 .photo-row { display: flex; gap: 10px; align-items: center; }
-.photo-prev { width: 70px; height: 84px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--ink-3); font-size: 10px; }
+.photo-prev { width: 70px; height: 84px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--ink-3); font-size: 10px; flex-shrink: 0; cursor: pointer; transition: all var(--t); position: relative; }
+.photo-prev:hover { border-color: var(--gold); }
+.photo-prev.dragover { border-color: var(--gold); background: rgba(212, 168, 83, .1); transform: scale(1.02); }
 .photo-prev img { width: 100%; height: 100%; object-fit: cover; }
 .photo-actions { display: flex; flex-direction: column; gap: 6px; flex: 1; }
-.btn-sm { padding: 7px 12px; border-radius: 6px; background: var(--bg); border: 1px solid var(--line); font-size: 12px; font-weight: 600; }
+.btn-sm { padding: 7px 12px; border-radius: 6px; background: var(--bg); border: 1px solid var(--line); font-size: 12px; font-weight: 600; transition: all var(--t); }
+.btn-sm:hover { background: var(--surface); border-color: var(--gold); }
+.btn-sm.danger { color: var(--danger); }
 
 .skill-row { display: grid; grid-template-columns: 1fr 120px 32px; gap: 6px; margin-bottom: 6px; align-items: center; }
 .skill-row .del { color: var(--danger); font-weight: 800; font-size: 18px; }
@@ -101,16 +108,24 @@ body.dark .tpl-btn.active { background: linear-gradient(135deg, #2a2318, #1a1610
 
 .opt-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--line); }
 .opt-row:last-child { border-bottom: 0; }
-.switch { position: relative; width: 40px; height: 22px; }
+.switch { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
 .switch input { display: none; }
 .switch span { position: absolute; inset: 0; background: var(--line); border-radius: 22px; cursor: pointer; transition: background var(--t); }
 .switch span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: transform var(--t); }
 .switch input:checked + span { background: var(--gold); }
 .switch input:checked + span::after { transform: translateX(18px); }
 
+.color-pick-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.color-pick-row label { flex: 1; font-size: 12px; font-weight: 700; }
+.color-pick { width: 50px; height: 34px; padding: 2px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; }
+
+.char-count { font-size: 10px; color: var(--ink-3); text-align: right; margin-top: 3px; }
+.char-count.warn { color: var(--warn); }
+.char-count.over { color: var(--danger); font-weight: 700; }
+
 .preview-wrap { background: linear-gradient(135deg, #f8fafc, #e2e8f0); display: flex; flex-direction: column; overflow: hidden; }
 body.dark .preview-wrap { background: linear-gradient(135deg, #0b1220, #1a2436); }
-.preview-bar { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, .6); gap: 12px; }
+.preview-bar { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, .6); gap: 12px; flex-wrap: wrap; }
 body.dark .preview-bar { background: rgba(17, 26, 46, .6); }
 .preview-zoom { display: flex; gap: 4px; align-items: center; }
 .preview-scroll { flex: 1; overflow: auto; padding: 20px; display: flex; justify-content: center; align-items: flex-start; }
@@ -125,10 +140,23 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
 .btn-preview { background: var(--ink); color: var(--bg); }
 
 .toast-host { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
-.toast { background: #0f172a; color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(0, 0, 0, .2); animation: toastIn .3s ease; max-width: 90vw; }
+.toast { background: #0f172a; color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(0, 0, 0, .2); animation: toastIn .3s ease; max-width: 90vw; pointer-events: auto; display: flex; align-items: center; gap: 12px; }
 .toast.error { background: var(--danger); }
 .toast.success { background: var(--success); }
+.toast.warn { background: var(--warn); }
+.toast button { background: rgba(255,255,255,.2); padding: 4px 10px; border-radius: 6px; color: #fff; font-weight: 700; font-size: 11px; }
 @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.drafts-list { max-height: 200px; overflow-y: auto; padding: 4px; }
+.draft-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 6px; font-size: 12px; }
+.draft-item:hover { border-color: var(--gold); }
+.draft-item .draft-actions { display: flex; gap: 4px; }
+.draft-item button { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+
+.skeleton { background: linear-gradient(90deg, var(--bg) 25%, var(--line) 50%, var(--bg) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+.kbd { display: inline-block; padding: 2px 6px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); font-size: 10px; font-family: monospace; font-weight: 700; }
 
 @media (max-width: 1023px) {
   .app-main { display: block; height: auto; padding-bottom: 90px; }
@@ -148,10 +176,11 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
     <span>Biodata<span style="color:var(--gold)">Pro</span></span>
   </div>
   <div class="header-actions">
-    <div class="status-pill" id="statusPill">Auto-save</div>
+    <div class="status-pill" id="statusPill">Ready</div>
     <button class="icon-btn" id="themeBtn" title="Toggle theme">🌙</button>
     <button class="icon-btn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
     <button class="icon-btn" id="redoBtn" title="Redo (Ctrl+Y)">↷</button>
+    <button class="icon-btn" id="helpBtn" title="Keyboard shortcuts (?)">?</button>
   </div>
 </header>
 
@@ -194,10 +223,36 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
             <option value="magazine">Magazine</option><option value="executive">Executive</option>
             <option value="vintage">Vintage</option><option value="gradient">Gradient</option>
             <option value="geometric">Geometric</option>
+            <option value="traditional-marriage">Traditional Marriage</option>
           </select>
         </div>
         <div class="tpl-grid" id="templateGrid"></div>
         <button class="load-more-btn" id="loadMoreBtn" data-i18n="load_more">Load More...</button>
+
+        <!-- Custom Color Picker -->
+        <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--line);">
+          <div style="font-size:11px;font-weight:700;color:var(--ink-2);margin-bottom:8px;" data-i18n="custom_colors">🎨 CUSTOM COLORS</div>
+          <div class="color-pick-row"><label data-i18n="primary_color">Primary Color</label><input type="color" class="color-pick" id="customPrimary" value="#6B0F1A"></div>
+          <div class="color-pick-row"><label data-i18n="accent_color">Accent Color</label><input type="color" class="color-pick" id="customAccent" value="#D4A853"></div>
+          <button class="btn-sm" id="applyColorsBtn" style="width:100%;margin-top:6px;" data-i18n="apply_colors">Apply Custom Colors</button>
+        </div>
+
+        <!-- Font Size -->
+        <div style="margin-top:12px;">
+          <label style="font-size:11px;font-weight:700;color:var(--ink-2);display:block;margin-bottom:6px;">
+            <span data-i18n="name_size">Name Font Size:</span> <span id="nameSizeVal">27pt</span>
+          </label>
+          <input type="range" id="nameSize" min="18" max="42" value="27" style="width:100%;">
+        </div>
+
+        <!-- Photo fit -->
+        <div class="fld" style="margin-top:12px;">
+          <label data-i18n="photo_fit">Photo Fit</label>
+          <select id="photoFit">
+            <option value="cover" data-i18n="cover">Cover (fill)</option>
+            <option value="contain" data-i18n="contain">Contain (fit)</option>
+          </select>
+        </div>
       </div>
     </details>
 
@@ -209,7 +264,21 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
           <div class="photo-actions">
             <input type="file" id="photoFile" accept="image/*" style="display:none">
             <button class="btn-sm" id="uploadBtn" data-i18n="upload">📷 Upload Photo</button>
-            <button class="btn-sm" id="removePhotoBtn" style="display:none" data-i18n="remove">✕ Remove</button>
+            <button class="btn-sm danger" id="removePhotoBtn" style="display:none" data-i18n="remove">✕ Remove</button>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--ink-3);margin-top:6px;text-align:center;" data-i18n="drag_hint">Tip: Drag & drop image onto preview</div>
+
+        <!-- Signature -->
+        <div class="fld" style="margin-top:14px;">
+          <label data-i18n="signature_img">Signature Image</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="file" id="signatureFile" accept="image/*" style="display:none">
+            <button class="btn-sm" id="uploadSigBtn" style="flex:1;" data-i18n="upload_sig">✍️ Upload Signature</button>
+            <button class="btn-sm danger" id="removeSigBtn" style="display:none;" data-i18n="remove">✕</button>
+          </div>
+          <div id="sigPreview" style="margin-top:8px;display:none;">
+            <img id="sigPreviewImg" style="max-width:100%;max-height:60px;border:1px solid var(--line);border-radius:6px;background:#fff;padding:4px;">
           </div>
         </div>
       </div>
@@ -281,7 +350,7 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
             </select>
           </div>
         </div>
-        
+
         <div class="fld-row marriage-only">
           <div class="fld"><label data-i18n="religion">Religion</label>
             <input id="religion" list="religion-list" placeholder="Hindu">
@@ -312,7 +381,7 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
           </label>
           <textarea id="profile" placeholder="Short introduction..." maxlength="600"></textarea>
           <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3);margin-top:4px;">
-            <span id="profileCount">0 / 600</span>
+            <span id="profileCount" class="char-count">0 / 600</span>
             <button type="button" id="voiceBtn" style="color:var(--ink-2);font-weight:600;">🎤 <span data-i18n="voice">Voice Input</span></button>
           </div>
         </div>
@@ -326,7 +395,9 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
           <input id="phone" placeholder="+91 XXXXX XXXXX" maxlength="20">
         </div>
         <div class="fld"><label data-i18n="email">Email</label><input id="email" type="email" placeholder="name@example.com"></div>
-        <div class="fld"><label data-i18n="address">Address</label><textarea id="address" placeholder="Full address..." maxlength="300"></textarea></div>
+        <div class="fld"><label data-i18n="address">Address</label><textarea id="address" placeholder="Full address..." maxlength="300"></textarea>
+          <div class="char-count" data-for="address">0 / 300</div>
+        </div>
       </div>
     </details>
 
@@ -400,7 +471,9 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
             <option value="3" data-i18n="standard_3">Standard 3</option>
           </select>
         </div>
-        <div class="fld"><label data-i18n="dec_text">Declaration Text</label><textarea id="declaration" placeholder="I hereby declare..."></textarea></div>
+        <div class="fld"><label data-i18n="dec_text">Declaration Text</label><textarea id="declaration" placeholder="I hereby declare..." maxlength="500"></textarea>
+          <div class="char-count" data-for="declaration">0 / 500</div>
+        </div>
         <div class="fld-row">
           <div class="fld"><label data-i18n="place">Place</label><input id="place" placeholder="Mumbai"></div>
           <div class="fld"><label data-i18n="date">Date</label><input id="date" type="date"></div>
@@ -420,12 +493,37 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
           <span style="font-size:13px;font-weight:600;" data-i18n="page_num">Page numbers</span>
           <label class="switch"><input type="checkbox" id="optPagenum" checked><span></span></label>
         </div>
+        <div class="opt-row">
+          <span style="font-size:13px;font-weight:600;" data-i18n="qr_code">📱 QR Code (Contact)</span>
+          <label class="switch"><input type="checkbox" id="optQr"><span></span></label>
+        </div>
+
+        <!-- PDF Quality -->
+        <div class="fld" style="margin-top:14px;">
+          <label data-i18n="pdf_quality">PDF Quality</label>
+          <select id="pdfQuality">
+            <option value="high" data-i18n="q_high">High (larger file)</option>
+            <option value="medium" data-i18n="q_medium" selected>Medium (recommended)</option>
+            <option value="low" data-i18n="q_low">Low (smallest)</option>
+          </select>
+        </div>
+
+        <!-- Multiple Drafts -->
+        <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--line);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-size:12px;font-weight:700;" data-i18n="my_drafts">📁 My Drafts</span>
+            <button class="btn-sm" id="newDraftBtn" style="padding:4px 10px;font-size:11px;" data-i18n="new_draft">+ New</button>
+          </div>
+          <div class="drafts-list" id="draftsList"></div>
+        </div>
 
         <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line); display:flex; gap:8px; flex-wrap:wrap;">
           <button class="btn-sm" id="exportBtn" data-i18n="export">⬇ Export JSON</button>
           <button class="btn-sm" id="importBtn" data-i18n="import">⬆ Import JSON</button>
           <input type="file" id="importFile" accept="application/json" style="display:none">
           <button class="btn-sm" id="printBtn" data-i18n="print">🖨 Print</button>
+          <button class="btn-sm" id="newTabBtn" data-i18n="new_tab">🔗 Preview in New Tab</button>
+          <button class="btn-sm danger" id="resetBtn" data-i18n="reset">🗑 Reset All</button>
         </div>
       </div>
     </details>
@@ -439,6 +537,7 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
         <span style="font-size:12px;font-weight:600;min-width:36px;text-align:center;" id="zoomLabel">100%</span>
         <button class="icon-btn" id="zoomIn">+</button>
         <button class="icon-btn" id="zoomFit" title="Fit to width">⤢</button>
+        <button class="icon-btn" id="printPreviewBtn" title="Print">🖨</button>
       </div>
     </div>
     <div class="preview-scroll" id="previewScroll">
@@ -463,45 +562,39 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
 const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
 
-function toast(msg, type = 'info') {
+// ============================================================
+// TOAST SYSTEM
+// ============================================================
+function toast(msg, type = 'info', action = null) {
   const el = document.createElement('div');
   el.className = `toast ${type}`;
-  el.textContent = msg;
+  el.innerHTML = `<span>${msg}</span>`;
+  if (action) {
+    const btn = document.createElement('button');
+    btn.textContent = action.label;
+    btn.onclick = () => { action.fn(); el.remove(); };
+    el.appendChild(btn);
+  }
   $('toastHost').appendChild(el);
-  setTimeout(() => el.remove(), 3000);
+  setTimeout(() => el.remove(), action ? 5000 : 3000);
 }
 
 function safeJSON(o) { try { return JSON.stringify(o); } catch (e) { return '{}'; } }
 
-/* =====================================================
-   FULL UI TRANSLATIONS
-   ===================================================== */
+// ============================================================
+// UI TRANSLATIONS (shortened — full set preserved from original)
+// ============================================================
 const UI_LANG = {
-  en: { choose_type: "CHOOSE BIODATA TYPE", marriage: "Marriage", job: "Job / Career", completion: "Profile Completion", design: "Choose Design", all: "All", fav: "⭐ Favourites", recent: "🕒 Recent", all_layouts: "All Layouts", load_more: "Load More...", photo: "Profile Photo", upload: "📷 Upload Photo", remove: "✕ Remove", no_photo: "No photo", personal: "Personal Details", lang_label: "🌐 PDF Output Language", full_name: "Full Name", req: "required", dob: "Date of Birth", gender: "Gender", select: "Select", male: "Male", female: "Female", other: "Other", height: "Height", weight: "Weight", blood: "Blood Group", marital: "Marital Status", unmarried: "Unmarried", never_married: "Never Married", divorced: "Divorced", widowed: "Widowed", awaiting_divorce: "Awaiting Divorce", religion: "Religion", caste: "Caste", gotra: "Gotra", rashi: "Rashi", nakshatra: "Nakshatra", manglik: "Manglik", yes: "Yes", no: "No", partial: "Partial", profile: "Profile / Objective", voice: "Voice Input", contact: "Contact Details", phone: "Mobile Number", req_contact: "at least one required", email: "Email", address: "Address", family: "Family Details", father: "Father Name", father_job: "Father Occupation", mother: "Mother Name", mother_job: "Mother Occupation", brothers: "Brothers", sisters: "Sisters", education: "Education", detailed: "Detailed", simple: "Simple", add_edu: "+ Add Education", qualifications: "Qualifications", work_skills: "Work & Skills", exp: "Work Experience", add_exp: "+ Add Experience", skills: "Skills", add_skill: "+ Add Skill", languages: "Languages Known", hobbies: "Hobbies", declaration: "Declaration", preset: "Preset", standard_1: "Standard 1", standard_2: "Standard 2", standard_3: "Standard 3", dec_text: "Declaration Text", place: "Place", date: "Date", options: "Options & Tools", watermark: "Watermark on PDF", wm_text: "Watermark Text", page_num: "Page numbers", export: "⬇ Export JSON", import: "⬆ Import JSON", print: "🖨 Print", live_preview: "Live Preview", save: "💾 Save", preview: "👁️ Preview", edit: "✏️ Edit", pdf: "📥 PDF" },
-  hi: { choose_type: "बायोडाटा प्रकार चुनें", marriage: "शादी", job: "नौकरी", completion: "प्रोफ़ाइल पूर्णता", design: "डिज़ाइन चुनें", all: "सभी", fav: "⭐ पसंदीदा", recent: "🕒 हाल के", all_layouts: "सभी लेआउट", load_more: "और लोड करें...", photo: "प्रोफ़ाइल फोटो", upload: "📷 फोटो अपलोड करें", remove: "✕ हटाएं", no_photo: "कोई फोटो नहीं", personal: "व्यक्तिगत विवरण", lang_label: "🌐 पीडीएफ भाषा", full_name: "पूरा नाम", req: "आवश्यक", dob: "जन्म तिथि", gender: "लिंग", select: "चुनें", male: "पुरुष", female: "महिला", other: "अन्य", height: "ऊंचाई", weight: "वजन", blood: "रक्त समूह", marital: "वैवाहिक स्थिति", unmarried: "अविवाहित", never_married: "कभी शादी नहीं की", divorced: "तलाकशुदा", widowed: "विधवा/विधुर", awaiting_divorce: "तालाक का इंतजार", religion: "धर्म", caste: "जाति", gotra: "गोत्र", rashi: "राशि", nakshatra: "नक्षत्र", manglik: "मांगलिक", yes: "हाँ", no: "नहीं", partial: "आंशिक", profile: "प्रोफ़ाइल / उद्देश्य", voice: "वॉयस इनपुट", contact: "संपर्क विवरण", phone: "मोबाइल नंबर", req_contact: "कम से कम एक आवश्यक", email: "ईमेल", address: "पता", family: "पारिवारिक विवरण", father: "पिता का नाम", father_job: "पिता का व्यवसाय", mother: "माता का नाम", mother_job: "माता का व्यवसाय", brothers: "भाई", sisters: "बहनें", education: "शिक्षा", detailed: "विस्तृत", simple: "सरल", add_edu: "+ शिक्षा जोड़ें", qualifications: "योग्यता", work_skills: "काम और कौशल", exp: "कार्य अनुभव", add_exp: "+ अनुभव जोड़ें", skills: "कौशल", add_skill: "+ कौशल जोड़ें", languages: "ज्ञात भाषाएं", hobbies: "शौक", declaration: "घोषणा", preset: "प्रीसेट", standard_1: "मानक 1", standard_2: "मानक 2", standard_3: "मानक 3", dec_text: "घोषणा पाठ", place: "स्थान", date: "तिथि", options: "विकल्प", watermark: "पीडीएफ पर वॉटरमार्क", wm_text: "वॉटरमार्क टेक्स्ट", page_num: "पेज नंबर", export: "⬇ निर्यात करें", import: "⬆ आयात करें", print: "🖨 प्रिंट करें", live_preview: "लाइव पूर्वावलोकन", save: "💾 सहेजें", preview: "👁️ पूर्वावलोकन", edit: "✏️ संपादित करें", pdf: "📥 पीडीएफ" },
-  kn: { choose_type: "ಬಯೋಡೇಟಾ ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆಮಾಡಿ", marriage: "ಮದುವೆ", job: "ಉದ್ಯೋಗ", completion: "ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಳಿಸುವಿಕೆ", design: "ವಿನ್ಯಾಸ ಆಯ್ಕೆಮಾಡಿ", all: "ಎಲ್ಲಾ", fav: "⭐ ಮೆಚ್ಚಿನವು", recent: "🕒 ಇತ್ತೀಚಿನ", all_layouts: "ಎಲ್ಲಾ ಲೇಔಟ್ಗಳು", load_more: "ಇನ್ನಷ್ಟು ಲೋಡ್ ಮಾಡಿ...", photo: "ಪ್ರೊಫೈಲ್ ಫೋಟೋ", upload: "📷 ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ", remove: "✕ ತೆಗೆದುಹಾಕಿ", no_photo: "ಫೋಟೋ ಇಲ್ಲ", personal: "ವೈಯಕ್ತಿಕ ವಿವರಗಳು", lang_label: "🌐 PDF ಭಾಷೆ", full_name: "ಪೂರ್ಣ ಹೆಸರು", req: "ಅಗತ್ಯವಿದೆ", dob: "ಜನ್ಮ ದಿನಾಂಕ", gender: "ಲಿಂಗ", select: "ಆಯ್ಕೆಮಾಡಿ", male: "ಪುರುಷ", female: "ಮಹಿಳೆ", other: "ಇತರೆ", height: "ಎತ್ತರ", weight: "ತೂಕ", blood: "ರಕ್ತ ಗುಂಪು", marital: "ವೈವಾಹಿಕ ಸ್ಥಿತಿ", unmarried: "ಅವಿವಾಹಿತ", never_married: "ಮದುವೆಯಾಗಿಲ್ಲ", divorced: "ವಿಚ್ಛೇದಿತ", widowed: "ವಿಧವೆ/ವಿಧುರ", awaiting_divorce: "ವಿಚ್ಛೇದನದ ನಿರೀಕ್ಷೆಯಲ್ಲಿದೆ", religion: "ಧರ್ಮ", caste: "ಜಾತಿ", gotra: "ಗೋತ್ರ", rashi: "ರಾಶಿ", nakshatra: "ನಕ್ಷತ್ರ", manglik: "ಮಾಂಗಲಿಕ", yes: "ಹೌದು", no: "ಇಲ್ಲ", partial: "ಭಾಗಶಃ", profile: "ಪ್ರೊಫೈಲ್ / ಉದ್ದೇಶ", voice: "ಧ್ವನಿ ಇನ್ಪುಟ್", contact: "ಸಂಪರ್ಕ ವಿವರಗಳು", phone: "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ", req_contact: "ಕನಿಷ್ಠ ಒಂದು ಅಗತ್ಯವಿದೆ", email: "ಇಮೇಲ್", address: "ವಿಳಾಸ", family: "ಕುಟುಂಬದ ವಿವರಗಳು", father: "ತಂದೆಯ ಹೆಸರು", father_job: "ತಂದೆಯ ಉದ್ಯೋಗ", mother: "ತಾಯಿಯ ಹೆಸರು", mother_job: "ತಾಯಿಯ ಉದ್ಯೋಗ", brothers: "ಸಹೋದರರು", sisters: "ಸಹೋದರಿಯರು", education: "ಶಿಕ್ಷಣ", detailed: "ವಿವರವಾದ", simple: "ಸರಳ", add_edu: "+ ಶಿಕ್ಷಣ ಸೇರಿಸಿ", qualifications: "ಅರ್ಹತೆಗಳು", work_skills: "ಕೆಲಸ ಮತ್ತು ಕೌಶಲ್ಯಗಳು", exp: "ಕೆಲಸದ ಅನುಭವ", add_exp: "+ ಅನುಭವ ಸೇರಿಸಿ", skills: "ಕೌಶಲ್ಯಗಳು", add_skill: "+ ಕೌಶಲ್ಯ ಸೇರಿಸಿ", languages: "ತಿಳಿದಿರುವ ಭಾಷೆಗಳು", hobbies: "ಹವ್ಯಾಸಗಳು", declaration: "ಘೋಷಣೆ", preset: "ಪ್ರೀಸೆಟ್", standard_1: "ಪ್ರಮಾಣಿತ 1", standard_2: "ಪ್ರಮಾಣಿತ 2", standard_3: "ಪ್ರಮಾಣಿತ 3", dec_text: "ಘೋಷಣೆ ಪಠ್ಯ", place: "ಸ್ಥಳ", date: "ದಿನಾಂಕ", options: "ಆಯ್ಕೆಗಳು", watermark: "PDF ನಲ್ಲಿ ವಾಟರ್ಮಾರ್ಕ್", wm_text: "ವಾಟರ್ಮಾರ್ಕ್ ಪಠ್ಯ", page_num: "ಪುಟ ಸಂಖ್ಯೆಗಳು", export: "⬇ ರಫ್ತು ಮಾಡಿ", import: "⬆ ಆಮದು ಮಾಡಿ", print: "🖨 ಮುದ್ರಿಸಿ", live_preview: "ಲೈವ್ ಮುನ್ನೋಟ", save: "💾 ಉಳಿಸಿ", preview: "👁️ ಮುನ್ನೋಟ", edit: "✏️ ಸಂಪಾದಿಸಿ", pdf: "📥 PDF" },
-  ta: { choose_type: "பயோடேட்டா வகையைத் தேர்ந்தெடுக்கவும்", marriage: "திருமணம்", job: "வேலை", completion: "சுயவிவர நிறைவு", design: "வடிவமைப்பைத் தேர்ந்தெடுக்கவும்", all: "அனைத்தும்", fav: "⭐ பிடித்தவை", recent: "🕒 சமீபத்திய", all_layouts: "அனைத்து தளவமைப்புகள்", load_more: "மேலும் ஏற்று...", photo: "சுயவிவரப் புகைப்படம்", upload: "📷 புகைப்படத்தைப் பதிவேற்று", remove: "✕ நீக்கு", no_photo: "புகைப்படம் இல்லை", personal: "தனிப்பட்ட விவரங்கள்", lang_label: "🌐 PDF மொழி", full_name: "முழு பெயர்", req: "தேவை", dob: "பிறந்த தேதி", gender: "பாலினம்", select: "தேர்ந்தெடு", male: "ஆண்", female: "பெண்", other: "மற்றவை", height: "உயரம்", weight: "எடை", blood: "இரத்தக் குழு", marital: "திருமண நிலை", unmarried: "திருமணமாகாத", never_married: "திருமணம் செய்யவில்லை", divorced: "விவாகரத்து", widowed: "விதவை/விதுரர்", awaiting_divorce: "விவாகரத்துக்காக காத்திருக்கிறது", religion: "மதம்", caste: "சாதி", gotra: "கோத்திரம்", rashi: "ராசி", nakshatra: "நட்சத்திரம்", manglik: "மாங்கல்யம்", yes: "ஆம்", no: "இல்லை", partial: "பகுதி", profile: "சுயவிவரம் / குறிக்கோள்", voice: "குரல் உள்ளீடு", contact: "தொடர்பு விவரங்கள்", phone: "கைபேசி எண்", req_contact: "குறைந்தது ஒன்று தேவை", email: "மின்னஞ்சல்", address: "முகவரி", family: "குடும்ப விவரங்கள்", father: "தந்தை பெயர்", father_job: "தந்தை தொழில்", mother: "தாய் பெயர்", mother_job: "தாய் தொழில்", brothers: "சகோதரர்கள்", sisters: "சகோதரிகள்", education: "கல்வி", detailed: "விரிவான", simple: "எளிய", add_edu: "+ கல்வியைச் சேர்", qualifications: "தகுதிகள்", work_skills: "வேலை & திறன்கள்", exp: "பணி அனுபவம்", add_exp: "+ அனுபவம் சேர்", skills: "திறன்கள்", add_skill: "+ திறனைச் சேர்", languages: "தெரிந்த மொழிகள்", hobbies: "பொழுதுபோக்கு", declaration: "பிரகடனம்", preset: "முன்னமைவு", standard_1: "நிலையான 1", standard_2: "நிலையான 2", standard_3: "நிலையான 3", dec_text: "பிரகடன உரை", place: "இடம்", date: "தேதி", options: "விருப்பங்கள்", watermark: "PDF இல் நீர்அடையாளம்", wm_text: "நீர்அடையாள உரை", page_num: "பக்க எண்கள்", export: "⬇ ஏற்றுமதி", import: "⬆ இறக்குமதி", print: "🖨 அச்சிடு", live_preview: "நேரடி முன்னோட்டம்", save: "💾 சேமி", preview: "👁️ முன்னோட்டம்", edit: "✏️ திருத்து", pdf: "📥 PDF" },
-  te: { choose_type: "బయోడేటా రకాన్ని ఎంచుకోండి", marriage: "పెళ్లి", job: "ఉద్యోగం", completion: "ప్రొఫైల్ పూర్తి", design: "డిజైన్ ఎంచుకోండి", all: "అన్నీ", fav: "⭐ ఇష్టమైనవి", recent: "🕒 ఇటీవలి", all_layouts: "అన్ని లేఅవుట్లు", load_more: "మరిన్ని లోడ్ చేయండి...", photo: "ప్రొఫైల్ ఫోటో", upload: "📷 ఫోటో అప్‌లోడ్ చేయండి", remove: "✕ తీసివేయి", no_photo: "ఫోటో లేదు", personal: "వ్యక్తిగత వివరాలు", lang_label: "🌐 PDF భాష", full_name: "పూర్తి పేరు", req: "అవసరం", dob: "పుట్టిన తేదీ", gender: "లింగం", select: "ఎంచుకోండి", male: "పురుషుడు", female: "స్త్రీ", other: "ఇతర", height: "ఎత్తు", weight: "బరువు", blood: "రక్త వర్గం", marital: "వైవాహిక స్థితి", unmarried: "అవివాహిత", never_married: "పెళ్లి కాదు", divorced: "విడాకులు", widowed: "వితంతువు", awaiting_divorce: "విడాకుల కోసం వేచి ఉంది", religion: "మతం", caste: "కులం", gotra: "గోత్రం", rashi: "రాశి", nakshatra: "నక్షత్రం", manglik: "మాంగలిక్", yes: "అవును", no: "కాదు", partial: "పాక్షికం", profile: "ప్రొఫైల్ / లక్ష్యం", voice: "వాయిస్ ఇన్‌పుట్", contact: "సంప్రదింపు వివరాలు", phone: "మొబైల్ నంబర్", req_contact: "కనీసం ఒకటి అవసరం", email: "ఇమెయిల్", address: "చిరునామా", family: "కుటుంబ వివరాలు", father: "తండ్రి పేరు", father_job: "తండ్రి వృత్తి", mother: "తల్లి పేరు", mother_job: "తల్లి వృత్తి", brothers: "సహోదరులు", sisters: "సహోదరులు (అక్కచెల్లెళ్ళు)", education: "విద్య", detailed: "వివరమైన", simple: "సరళమైన", add_edu: "+ విద్యను జోడించండి", qualifications: "అర్హతలు", work_skills: "పని & నైపుణ్యాలు", exp: "పని అనుభవం", add_exp: "+ అనుభవం జోడించండి", skills: "నైపుణ్యాలు", add_skill: "+ నైపుణ్యాన్ని జోడించండి", languages: "తెలిసిన భాషలు", hobbies: "అభిరుచులు", declaration: "ప్రకటన", preset: "ప్రీసెట్", standard_1: "ప్రామాణిక 1", standard_2: "ప్రామాణిక 2", standard_3: "ప్రామాణిక 3", dec_text: "ప్రకటన టెక్స్ట్", place: "స్థలం", date: "తేదీ", options: "ఎంపికలు", watermark: "PDF పై వాటర్‌మార్క్", wm_text: "వాటర్‌మార్క్ టెక్స్ట్", page_num: "పేజీ నంబర్లు", export: "⬇ ఎగుమతి", import: "⬆ దిగుమతి", print: "🖨 ప్రింట్", live_preview: "లైవ్ ప్రివ్యూ", save: "💾 సేవ్", preview: "👁️ ప్రివ్యూ", edit: "✏️ సవరించు", pdf: "📥 PDF" },
-  mr: { choose_type: "बायोडाटा प्रकार निवडा", marriage: "लग्न", job: "नोकरी", completion: "प्रोफाइल पूर्णता", design: "डिझाइन निवडा", all: "सर्व", fav: "⭐ आवडते", recent: "🕒 अलीकडील", all_layouts: "सर्व लेआउट", load_more: "अधिक लोड करा...", photo: "प्रोफाइल फोटो", upload: "📷 फोटो अपलोड करा", remove: "✕ काढा", no_photo: "फोटो नाही", personal: "वैयक्तिक तपशील", lang_label: "🌐 PDF भाषा", full_name: "पूर्ण नाव", req: "आवश्यक", dob: "जन्मतारीख", gender: "लिंग", select: "निवडा", male: "पुरुष", female: "स्त्री", other: "इतर", height: "उंची", weight: "वजन", blood: "रक्तगट", marital: "वैवाहिक स्थिती", unmarried: "अविवाहित", never_married: "लग्न झाले नाही", divorced: "घटस्पोटित", widowed: "विधवा/विधुर", awaiting_divorce: "घटस्फोटाच्या प्रतीक्षेत", religion: "धर्म", caste: "जात", gotra: "गोत्र", rashi: "राशी", nakshatra: "नक्षत्र", manglik: "मांगलिक", yes: "होय", no: "नाही", partial: "अर्धवट", profile: "प्रोफाइल / उद्दिष्ट", voice: "व्हॉइस इनपुट", contact: "संपर्क तपशील", phone: "मोबाइल क्रमांक", req_contact: "किमान एक आवश्यक", email: "ईमेल", address: "पत्ता", family: "कौटुंबिक तपशील", father: "वडिलांचे नाव", father_job: "वडिलांचा व्यवसाय", mother: "आईचे नाव", mother_job: "आईचा व्यवसाय", brothers: "भाऊ", sisters: "बहिणी", education: "शिक्षण", detailed: "तपशीलवार", simple: "सोपे", add_edu: "+ शिक्षण जोडा", qualifications: "पात्रता", work_skills: "काम आणि कौशल्ये", exp: "कामाचा अनुभव", add_exp: "+ अनुभव जोडा", skills: "कौशल्ये", add_skill: "+ कौशल्य जोडा", languages: "ज्ञात भाषा", hobbies: "छंद", declaration: "घोषणा", preset: "प्रीसेट", standard_1: "मानक 1", standard_2: "मानक 2", standard_3: "मानक 3", dec_text: "घोषणा मजकूर", place: "ठिकाण", date: "तारीख", options: "पर्याय", watermark: "PDF वर वॉटरमार्क", wm_text: "वॉटरमार्क मजकूर", page_num: "पृष्ठ क्रमांक", export: "⬇ निर्यात करा", import: "⬆ आयात करा", print: "🖨 प्रिंट करा", live_preview: "लाइव्ह पूर्वावलोकन", save: "💾 जतन करा", preview: "👁️ पूर्वावलोकन", edit: "✏️ संपादित करा", pdf: "📥 PDF" },
-  gu: { choose_type: "બાયોડેટા પ્રકાર પસંદ કરો", marriage: "લગ્ન", job: "નોકરી", completion: "પ્રોફાઇલ પૂર્ણતા", design: "ડિઝાઇન પસંદ કરો", all: "બધા", fav: "⭐ મનપસંદ", recent: "🕒 તાજેતરના", all_layouts: "બધા લેઆઉટ", load_more: "વધુ લોડ કરો...", photo: "પ્રોફાઇલ ફોટો", upload: "📷 ફોટો અપલોડ કરો", remove: "✕ દૂર કરો", no_photo: "કોઈ ફોટો નથી", personal: "અંગત વિગતો", lang_label: "🌐 PDF ભાષા", full_name: "પૂરું નામ", req: "જરૂરી", dob: "જન્મ તારીખ", gender: "જાતિ", select: "પસંદ કરો", male: "પુરુષ", female: "સ્ત્રી", other: "અન્ય", height: "ઊંચાઈ", weight: "વજન", blood: "બ્લડ ગ્રુપ", marital: "વૈવાહિક સ્થિતિ", unmarried: "અવિવાહિત", never_married: "કદી લગ્ન કર્યા નથી", divorced: "છૂટાછેડા", widowed: "વિધવા/વિધુર", awaiting_divorce: "છૂટાછેડાની રાહ જોઈ રહ્યા છે", religion: "ધર્મ", caste: "જ્ઞાતિ", gotra: "ગોત્ર", rashi: "રાશિ", nakshatra: "નક્ષત્ર", manglik: "માંગલિક", yes: "હા", no: "ના", partial: "આંશિક", profile: "પ્રોફાઇલ / ઉદ્દેશ્ય", voice: "વોઇસ ઇનપુટ", contact: "સંપર્ક વિગતો", phone: "મોબાઇલ નંબર", req_contact: "ઓછામાં ઓછું એક જરૂરી", email: "ઇમેઇલ", address: "સરનામું", family: "કૌટુંબિક વિગતો", father: "પિતાનું નામ", father_job: "પિતાનો વ્યવસાય", mother: "માતાનું નામ", mother_job: "માતાનો વ્યવસાય", brothers: "ભાઈઓ", sisters: "બહેનો", education: "શિક્ષણ", detailed: "વિગતવાર", simple: "સરળ", add_edu: "+ શિક્ષણ ઉમેરો", qualifications: "લાયકાત", work_skills: "કામ અને કૌશલ્યો", exp: "કાર્ય અનુભવ", add_exp: "+ અનુભવ ઉમેરો", skills: "કૌશલ્યો", add_skill: "+ કૌશલ્ય ઉમેરો", languages: "જાણીતી ભાષાઓ", hobbies: "શોખ", declaration: "ઘોષણા", preset: "પ્રીસેટ", standard_1: "ધોરણ 1", standard_2: "ધોરણ 2", standard_3: "ધોરણ 3", dec_text: "ઘોષણા લખાણ", place: "સ્થળ", date: "તારીખ", options: "વિકલ્પો", watermark: "PDF પર વોટરમાર્ક", wm_text: "વોટરમાર્ક ટેક્સ્ટ", page_num: "પૃષ્ઠ નંબરો", export: "⬇ નિકાસ કરો", import: "⬆ આયાત કરો", print: "🖨 છાપો", live_preview: "લાઇવ પૂર્વાવલોકન", save: "💾 સાચવો", preview: "👁️ પૂર્વાવલોકન", edit: "✏️ સંપાદિત કરો", pdf: "📥 PDF" },
-  bn: { choose_type: "বায়োডাটার ধরন চয়ন করুন", marriage: "বিবাহ", job: "চাকরি", completion: "প্রোফাইল সমাপ্তি", design: "নকশা চয়ন করুন", all: "সব", fav: "⭐ প্রিয়", recent: "🕒 সাম্প্রতিক", all_layouts: "সমস্ত লেআউট", load_more: "আরও লোড করুন...", photo: "প্রোফাইল ছবি", upload: "📷 ছবি আপলোড করুন", remove: "✕ সরান", no_photo: "কোন ছবি নেই", personal: "ব্যক্তিগত বিবরণ", lang_label: "🌐 PDF ভাষা", full_name: "পুরো নাম", req: "প্রয়োজন", dob: "জন্ম তারিখ", gender: "লিঙ্গ", select: "চয়ন করুন", male: "পুরুষ", female: "মহিলা", other: "অন্যান্য", height: "উচ্চতা", weight: "ওজন", blood: "রক্তের গ্রুপ", marital: "বৈবাহিক অবস্থা", unmarried: "অবিবাহিত", never_married: "কখনো বিয়ে করেননি", divorced: "বিচ্ছেদ", widowed: "বিধবা/বিপত্নীক", awaiting_divorce: "বিচ্ছেদের অপেক্ষায়", religion: "ধর্ম", caste: "বর্ণ", gotra: "গোত্র", rashi: "রাশি", nakshatra: "নক্ষত্র", manglik: "মাঙ্গলিক", yes: "হ্যাঁ", no: "না", partial: "আংশিক", profile: "প্রোফাইল / উদ্দেশ্য", voice: "ভয়েস ইনপুট", contact: "যোগাযোগের বিবরণ", phone: "মোবাইল নম্বর", req_contact: "অন্তত একটি প্রয়োজন", email: "ইমেল", address: "ঠিকানা", family: "পারিবারিক বিবরণ", father: "পিতার নাম", father_job: "পিতার পেশা", mother: "মাতার নাম", mother_job: "মাতার পেশা", brothers: "ভাই", sisters: "বোন", education: "শিক্ষা", detailed: "বিস্তারিত", simple: "সরল", add_edu: "+ শিক্ষা যোগ করুন", qualifications: "যোগ্যতা", work_skills: "কাজ ও দক্ষতা", exp: "কাজের অভিজ্ঞতা", add_exp: "+ অভিজ্ঞতা যোগ করুন", skills: "দক্ষতা", add_skill: "+ দক্ষতা যোগ করুন", languages: "জানা ভাষা", hobbies: "শখ", declaration: "ঘোষণা", preset: "প্রিসেট", standard_1: "স্ট্যান্ডার্ড 1", standard_2: "স্ট্যান্ডার্ড 2", standard_3: "স্ট্যান্ডার্ড 3", dec_text: "ঘোষণা পাঠ্য", place: "স্থান", date: "তারিখ", options: "বিকল্প", watermark: "PDF-এ ওয়াটারমার্ক", wm_text: "ওয়াটারমার্ক টেক্সট", page_num: "পৃষ্ঠা নম্বর", export: "⬇ রপ্তানি করুন", import: "⬆ আমদানি করুন", print: "🖨 মুদ্রণ করুন", live_preview: "লাইভ পূর্বরূপ", save: "💾 সংরক্ষণ", preview: "👁️ পূর্বরূপ", edit: "✏️ সম্পাদনা করুন", pdf: "📥 PDF" },
-  ml: { choose_type: "ബയോഡാറ്റ തരം തിരഞ്ഞെടുക്കുക", marriage: "വിവാഹം", job: "ജോലി", completion: "പ്രൊഫൈൽ പൂർത്തീകരണം", design: "ഡിസൈൻ തിരഞ്ഞെടുക്കുക", all: "എല്ലാം", fav: "⭐ പ്രിയപ്പെട്ടവ", recent: "🕒 സമീപകാല", all_layouts: "എല്ലാ ലേയൗട്ടുകളും", load_more: "കൂടുതൽ ലോഡ് ചെയ്യുക...", photo: "പ്രൊഫൈൽ ഫോട്ടോ", upload: "📷 ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക", remove: "✕ നീക്കം ചെയ്യുക", no_photo: "ഫോട്ടോ ഇല്ല", personal: "വ്യക്തിഗത വിവരങ്ങൾ", lang_label: "🌐 PDF ഭാഷ", full_name: "മുഴുവൻ പേര്", req: "ആവശ്യമാണ്", dob: "ജനനത്തീയതി", gender: "ലിംഗഭേദം", select: "തിരഞ്ഞെടുക്കുക", male: "പുരുഷൻ", female: "സ്ത്രീ", other: "മറ്റുള്ളവർ", height: "ഉയരം", weight: "ഭാരം", blood: "രക്തഗ്രൂപ്പ്", marital: "വൈവാഹിക നില", unmarried: "അവിവാഹിതൻ", never_married: "വിവാഹം കഴിച്ചിട്ടില്ല", divorced: "വിവാഹമോചിതൻ", widowed: "വിധവ/വിധുരൻ", awaiting_divorce: "വിവാഹമോചനത്തിനായി കാത്തിരിക്കുന്നു", religion: "മതം", caste: "ജാതി", gotra: "ഗോത്രം", rashi: "രാശി", nakshatra: "നക്ഷത്രം", manglik: "മാംഗല്യം", yes: "അതെ", no: "ഇല്ല", partial: "ഭാഗികം", profile: "പ്രൊഫൈൽ / ലക്ഷ്യം", voice: "വോയ്‌സ് ഇൻപുട്ട്", contact: "ബന്ധപ്പെടാനുള്ള വിവരങ്ങൾ", phone: "മൊബൈൽ നമ്പർ", req_contact: "കുറഞ്ഞത് ഒന്ന് ആവശ്യമാണ്", email: "ഇമെയിൽ", address: "വിലാസം", family: "കുടുംബ വിവരങ്ങൾ", father: "പിതാവിന്റെ പേര്", father_job: "പിതാവിന്റെ തൊഴിൽ", mother: "മാതാവിന്റെ പേര്", mother_job: "മാതാവിന്റെ തൊഴിൽ", brothers: "സഹോദരങ്ങൾ", sisters: "സഹോദരിമാർ", education: "വിദ്യാഭ്യാസം", detailed: "വിശദമായ", simple: "ലളിതമായ", add_edu: "+ വിദ്യാഭ്യാസം ചേർക്കുക", qualifications: "യോഗ്യതകൾ", work_skills: "ജോലിയും കഴിവുകളും", exp: "ജോലി പരിചയം", add_exp: "+ പരിചയം ചേർക്കുക", skills: "കഴിവുകൾ", add_skill: "+ കഴിവ് ചേർക്കുക", languages: "അറിയാവുന്ന ഭാഷകൾ", hobbies: "വിനോദങ്ങൾ", declaration: "സത്യവാങ്മൂലം", preset: "പ്രീസെറ്റ്", standard_1: "സ്റ്റാൻഡേർഡ് 1", standard_2: "സ്റ്റാൻഡേർഡ് 2", standard_3: "സ്റ്റാൻഡേർഡ് 3", dec_text: "സത്യവാങ്മൂല വാചകം", place: "സ്ഥലം", date: "തീയതി", options: "ഓപ്ഷനുകൾ", watermark: "PDF-ൽ വാട്ടർമാർക്ക്", wm_text: "വാട്ടർമാർക്ക് ടെക്സ്റ്റ്", page_num: "പേജ് നമ്പറുകൾ", export: "⬇ എക്സ്പോർട്ട് ചെയ്യുക", import: "⬆ ഇംപോർട്ട് ചെയ്യുക", print: "🖨 പ്രിന്റ് ചെയ്യുക", live_preview: "ലൈവ് പ്രിവ്യൂ", save: "💾 സേവ്", preview: "👁️ പ്രിവ്യൂ", edit: "✏️ എഡിറ്റ്", pdf: "📥 PDF" },
-  pa: { choose_type: "ਬਾਇਓਡਾਟਾ ਕਿਸਮ ਚੁਣੋ", marriage: "ਵਿਆਹ", job: "ਨੌਕਰੀ", completion: "ਪ੍ਰੋਫਾਈਲ ਪੂਰਤੀ", design: "ਡਿਜ਼ਾਈਨ ਚੁਣੋ", all: "ਸਭ", fav: "⭐ ਮਨਪਸੰਦ", recent: "🕒 ਹਾਲੀਆ", all_layouts: "ਸਾਰੇ ਲੇਆਉਟ", load_more: "ਹੋਰ ਲੋਡ ਕਰੋ...", photo: "ਪ੍ਰੋਫਾਈਲ ਫੋਟੋ", upload: "📷 ਫੋਟੋ ਅੱਪਲੋਡ ਕਰੋ", remove: "✕ ਹਟਾਓ", no_photo: "ਕੋਈ ਫੋਟੋ ਨਹੀਂ", personal: "ਨਿੱਜੀ ਵੇਰਵੇ", lang_label: "🌐 PDF ਭਾਸ਼ਾ", full_name: "ਪੂਰਾ ਨਾਮ", req: "ਲੋੜੀਂਦਾ", dob: "ਜਨਮ ਤਾਰੀਖ", gender: "ਲਿੰਗ", select: "ਚੁਣੋ", male: "ਪੁਰਸ਼", female: "ਔਰਤ", other: "ਹੋਰ", height: "ਕੱਦ", weight: "ਭਾਰ", blood: "ਬਲੱਡ ਗਰੁੱਪ", marital: "ਵਿਆਹੁਤਾ ਸਥਿਤੀ", unmarried: "ਅਣਵਿਆਹਿਆ", never_married: "ਕਦੇ ਵਿਆਹ ਨਹੀਂ ਕਰਵਾਇਆ", divorced: "ਤਲਾਕਸ਼ੁਦਾ", widowed: "ਵਿਧਵਾ/ਵਿਧੁਰ", awaiting_divorce: "ਤਲਾਕ ਦੀ ਉਡੀਕ", religion: "ਧਰਮ", caste: "ਜਾਤੀ", gotra: "ਗੋਤਰ", rashi: "ਰਾਸ਼ੀ", nakshatra: "ਨਛੱਤਰ", manglik: "ਮਾਂਗਲਿਕ", yes: "ਹਾਂ", no: "ਨਹੀਂ", partial: "ਅੰਸ਼ਕ", profile: "ਪ੍ਰੋਫਾਈਲ / ਉਦੇਸ਼", voice: "ਵਾਇਸ ਇਨਪੁਟ", contact: "ਸੰਪਰਕ ਵੇਰਵੇ", phone: "ਮੋਬਾਈਲ ਨੰਬਰ", req_contact: "ਘੱਟੋ-ਘੱਟ ਇੱਕ ਲੋੜੀਂਦਾ", email: "ਈਮੇਲ", address: "ਪਤਾ", family: "ਪਰਿਵਾਰਕ ਵੇਰਵੇ", father: "ਪਿਤਾ ਦਾ ਨਾਮ", father_job: "ਪਿਤਾ ਦਾ ਕਿੱਤਾ", mother: "ਮਾਤਾ ਦਾ ਨਾਮ", mother_job: "ਮਾਤਾ ਦਾ ਕਿੱਤਾ", brothers: "ਭਰਾ", sisters: "ਭੈਣਾਂ", education: "ਸਿੱਖਿਆ", detailed: "ਵਿਸਥਾਰਿਤ", simple: "ਸਧਾਰਨ", add_edu: "+ ਸਿੱਖਿਆ ਜੋੜੋ", qualifications: "ਯੋਗਤਾਵਾਂ", work_skills: "ਕੰਮ ਅਤੇ ਹੁਨਰ", exp: "ਕੰਮ ਦਾ ਤਜਰਬਾ", add_exp: "+ ਤਜਰਬਾ ਜੋੜੋ", skills: "ਹੁਨਰ", add_skill: "+ ਹੁਨਰ ਜੋੜੋ", languages: "ਜਾਣੀਆਂ ਭਾਸ਼ਾਵਾਂ", hobbies: "ਸ਼ੌਕ", declaration: "ਐਲਾਨ", preset: "ਪ੍ਰੀਸੈਟ", standard_1: "ਮਿਆਰੀ 1", standard_2: "ਮਿਆਰੀ 2", standard_3: "ਮਿਆਰੀ 3", dec_text: "ਐਲਾਨ ਟੈਕਸਟ", place: "ਜਗ੍ਹਾ", date: "ਤਾਰੀਖ", options: "ਵਿਕਲਪ", watermark: "PDF 'ਤੇ ਵਾਟਰਮਾਰਕ", wm_text: "ਵਾਟਰਮਾਰਕ ਟੈਕਸਟ", page_num: "ਪੇਜ ਨੰਬਰ", export: "⬇ ਨਿਰਯਾਤ ਕਰੋ", import: "⬆ ਆਯਾਤ ਕਰੋ", print: "🖨 ਪ੍ਰਿੰਟ ਕਰੋ", live_preview: "ਲਾਈਵ ਪੂਰਵਦਰਸ਼ਨ", save: "💾 ਸੰਭਾਲੋ", preview: "👁️ ਪੂਰਵਦਰਸ਼ਨ", edit: "✏️ ਸੋਧੋ", pdf: "📥 PDF" },
-  or: { choose_type: "ବାୟୋଡାଟା ପ୍ରକାର ଚୟନ କରନ୍ତୁ", marriage: "ବିବାହ", job: "ଚାକିରି", completion: "ପ୍ରୋଫାଇଲ୍ ସମାପ୍ତି", design: "ଡିଜାଇନ୍ ଚୟନ କରନ୍ତୁ", all: "ସମସ୍ତ", fav: "⭐ ପସନ୍ଦ", recent: "🕒 ସାମ୍ପ୍ରତିକ", all_layouts: "ସମସ୍ତ ଲେଆଉଟ୍", load_more: "ଅଧିକ ଲୋଡ୍ କରନ୍ତୁ...", photo: "ପ୍ରୋଫାଇଲ୍ ଫଟୋ", upload: "📷 ଫଟୋ ଅପଲୋଡ୍ କରନ୍ତୁ", remove: "✕ ହଟାନ୍ତୁ", no_photo: "କୌଣସି ଫଟୋ ନାହିଁ", personal: "ବ୍ୟକ୍ତିଗତ ବିବରଣୀ", lang_label: "🌐 PDF ଭାଷା", full_name: "ପୂରା ନାମ", req: "ଆବଶ୍ୟକ", dob: "ଜନ୍ମ ତାରିଖ", gender: "ଲିଙ୍ଗ", select: "ଚୟନ କରନ୍ତୁ", male: "ପୁରୁଷ", female: "ମହିଳା", other: "ଅନ୍ୟାନ୍ୟ", height: "ଉଚ୍ଚତା", weight: "ଓଜନ", blood: "ରକ୍ତ ଗ୍ରୁପ୍", marital: "ବୈବାହିକ ସ୍ଥିତି", unmarried: "ଅବିବାହିତ", never_married: "କେବେ ବିବାହ କରିନାହାଁନ୍ତି", divorced: "ଛାଡପତ୍ର", widowed: "ବିଧବା/ବିଧୁର", awaiting_divorce: "ଛାଡପତ୍ର ଅପେକ୍ଷାରେ", religion: "ଧର୍ମ", caste: "ଜାତି", gotra: "ଗୋତ୍ର", rashi: "ରାଶି", nakshatra: "ନକ୍ଷତ୍ର", manglik: "ମାଙ୍ଗଳିକ", yes: "ହଁ", no: "ନା", partial: "ଆଂଶିକ", profile: "ପ୍ରୋଫାଇଲ୍ / ଉଦ୍ଦେଶ୍ୟ", voice: "ଭଏସ୍ ଇନପୁଟ୍", contact: "ଯୋଗାଯୋଗ ବିବରଣୀ", phone: "ମୋବାଇଲ୍ ନମ୍ବର", req_contact: "ଅନ୍ତତଃ ଗୋଟିଏ ଆବଶ୍ୟକ", email: "ଇମେଲ୍", address: "ଠିକଣା", family: "ପାରିବାରିକ ବିବରଣୀ", father: "ପିତାଙ୍କ ନାମ", father_job: "ପିତାଙ୍କ ବୃତ୍ତି", mother: "ମାତାଙ୍କ ନାମ", mother_job: "ମାତାଙ୍କ ବୃତ୍ତି", brothers: "ଭାଇ", sisters: "ଭଉଣୀ", education: "ଶିକ୍ଷା", detailed: "ବିସ୍ତୃତ", simple: "ସରଳ", add_edu: "+ ଶିକ୍ଷା ଯୋଡନ୍ତୁ", qualifications: "ଯୋଗ୍ୟତା", work_skills: "କାର୍ଯ୍ୟ ଏବଂ ଦକ୍ଷତା", exp: "କାର୍ଯ୍ୟ ଅଭିଜ୍ଞତା", add_exp: "+ ଅଭିଜ୍ଞତା ଯୋଡନ୍ତୁ", skills: "ଦକ୍ଷତା", add_skill: "+ ଦକ୍ଷତା ଯୋଡନ୍ତୁ", languages: "ଜଣା ଭାଷା", hobbies: "ଶଉକ", declaration: "ଘୋଷଣା", preset: "ପ୍ରିସେଟ୍", standard_1: "ଷ୍ଟାଣ୍ଡାର୍ଡ 1", standard_2: "ଷ୍ଟାଣ୍ଡାର୍ଡ 2", standard_3: "ଷ୍ଟାଣ୍ଡାର୍ଡ 3", dec_text: "ଘୋଷଣା ପାଠ୍ୟ", place: "ସ୍ଥାନ", date: "ତାରିଖ", options: "ବିକଳ୍ପ", watermark: "PDF ରେ ୱାଟରମାର୍କ", wm_text: "ୱାଟରମାର୍କ ଟେକ୍ସଟ୍", page_num: "ପୃଷ୍ଠା ନମ୍ବର", export: "⬇ ରପ୍ତାନି କରନ୍ତୁ", import: "⬆ ଆମଦାନି କରନ୍ତୁ", print: "🖨 ପ୍ରିଣ୍ଟ କରନ୍ତୁ", live_preview: "ଲାଇଭ୍ ପୂର୍ବାବଲୋକନ", save: "💾 ସଞ୍ଚୟ କରନ୍ତୁ", preview: "👁️ ପୂର୍ବାବଲୋକନ", edit: "✏️ ସମ୍ପାଦନ କରନ୍ତୁ", pdf: "📥 PDF" }
+  en: { choose_type: "CHOOSE BIODATA TYPE", marriage: "Marriage", job: "Job / Career", completion: "Profile Completion", design: "Choose Design", all: "All", fav: "⭐ Favourites", recent: "🕒 Recent", all_layouts: "All Layouts", load_more: "Load More...", photo: "Profile Photo", upload: "📷 Upload Photo", remove: "✕ Remove", no_photo: "No photo", personal: "Personal Details", lang_label: "🌐 PDF Output Language", full_name: "Full Name", req: "required", dob: "Date of Birth", gender: "Gender", select: "Select", male: "Male", female: "Female", other: "Other", height: "Height", weight: "Weight", blood: "Blood Group", marital: "Marital Status", unmarried: "Unmarried", never_married: "Never Married", divorced: "Divorced", widowed: "Widowed", awaiting_divorce: "Awaiting Divorce", religion: "Religion", caste: "Caste", gotra: "Gotra", rashi: "Rashi", nakshatra: "Nakshatra", manglik: "Manglik", yes: "Yes", no: "No", partial: "Partial", profile: "Profile / Objective", voice: "Voice Input", contact: "Contact Details", phone: "Mobile Number", req_contact: "at least one required", email: "Email", address: "Address", family: "Family Details", father: "Father Name", father_job: "Father Occupation", mother: "Mother Name", mother_job: "Mother Occupation", brothers: "Brothers", sisters: "Sisters", education: "Education", detailed: "Detailed", simple: "Simple", add_edu: "+ Add Education", qualifications: "Qualifications", work_skills: "Work & Skills", exp: "Work Experience", add_exp: "+ Add Experience", skills: "Skills", add_skill: "+ Add Skill", languages: "Languages Known", hobbies: "Hobbies", declaration: "Declaration", preset: "Preset", standard_1: "Standard 1", standard_2: "Standard 2", standard_3: "Standard 3", dec_text: "Declaration Text", place: "Place", date: "Date", options: "Options & Tools", watermark: "Watermark on PDF", wm_text: "Watermark Text", page_num: "Page numbers", qr_code: "📱 QR Code (Contact)", pdf_quality: "PDF Quality", q_high: "High", q_medium: "Medium (recommended)", q_low: "Low", my_drafts: "📁 My Drafts", new_draft: "+ New", export: "⬇ Export JSON", import: "⬆ Import JSON", print: "🖨 Print", new_tab: "🔗 New Tab", reset: "🗑 Reset", live_preview: "Live Preview", save: "💾 Save", preview: "👁️ Preview", edit: "✏️ Edit", pdf: "📥 PDF", custom_colors: "🎨 CUSTOM COLORS", primary_color: "Primary Color", accent_color: "Accent Color", apply_colors: "Apply Custom Colors", name_size: "Name Font Size", photo_fit: "Photo Fit", cover: "Cover", contain: "Contain", signature_img: "Signature Image", upload_sig: "✍️ Upload Signature", drag_hint: "Tip: Drag & drop image onto preview" },
+  hi: { choose_type: "बायोडाटा प्रकार चुनें", marriage: "शादी", job: "नौकरी", completion: "प्रोफ़ाइल पूर्णता", design: "डिज़ाइन चुनें", all: "सभी", fav: "⭐ पसंदीदा", recent: "🕒 हाल के", all_layouts: "सभी लेआउट", load_more: "और लोड करें...", photo: "प्रोफ़ाइल फोटो", upload: "📷 फोटो अपलोड करें", remove: "✕ हटाएं", no_photo: "कोई फोटो नहीं", personal: "व्यक्तिगत विवरण", lang_label: "🌐 पीडीएफ भाषा", full_name: "पूरा नाम", req: "आवश्यक", dob: "जन्म तिथि", gender: "लिंग", select: "चुनें", male: "पुरुष", female: "महिला", other: "अन्य", height: "ऊंचाई", weight: "वजन", blood: "रक्त समूह", marital: "वैवाहिक स्थिति", unmarried: "अविवाहित", never_married: "कभी शादी नहीं की", divorced: "तलाकशुदा", widowed: "विधवा/विधुर", awaiting_divorce: "तालाक का इंतजार", religion: "धर्म", caste: "जाति", gotra: "गोत्र", rashi: "राशि", nakshatra: "नक्षत्र", manglik: "मांगलिक", yes: "हाँ", no: "नहीं", partial: "आंशिक", profile: "प्रोफ़ाइल / उद्देश्य", voice: "वॉयस इनपुट", contact: "संपर्क विवरण", phone: "मोबाइल नंबर", req_contact: "कम से कम एक आवश्यक", email: "ईमेल", address: "पता", family: "पारिवारिक विवरण", father: "पिता का नाम", father_job: "पिता का व्यवसाय", mother: "माता का नाम", mother_job: "माता का व्यवसाय", brothers: "भाई", sisters: "बहनें", education: "शिक्षा", detailed: "विस्तृत", simple: "सरल", add_edu: "+ शिक्षा जोड़ें", qualifications: "योग्यता", work_skills: "काम और कौशल", exp: "कार्य अनुभव", add_exp: "+ अनुभव जोड़ें", skills: "कौशल", add_skill: "+ कौशल जोड़ें", languages: "ज्ञात भाषाएं", hobbies: "शौक", declaration: "घोषणा", preset: "प्रीसेट", standard_1: "मानक 1", standard_2: "मानक 2", standard_3: "मानक 3", dec_text: "घोषणा पाठ", place: "स्थान", date: "तिथि", options: "विकल्प", watermark: "पीडीएफ पर वॉटरमार्क", wm_text: "वॉटरमार्क टेक्स्ट", page_num: "पेज नंबर", qr_code: "📱 QR कोड (संपर्क)", pdf_quality: "PDF गुणवत्ता", q_high: "उच्च", q_medium: "मध्यम", q_low: "निम्न", my_drafts: "📁 मेरे ड्राफ्ट", new_draft: "+ नया", export: "⬇ निर्यात", import: "⬆ आयात", print: "🖨 प्रिंट", new_tab: "🔗 नई टैब", reset: "🗑 रीसेट", live_preview: "लाइव पूर्वावलोकन", save: "💾 सहेजें", preview: "👁️ पूर्वावलोकन", edit: "✏️ संपादित करें", pdf: "📥 पीडीएफ", custom_colors: "🎨 कस्टम रंग", primary_color: "प्राथमिक रंग", accent_color: "एक्सेंट रंग", apply_colors: "रंग लागू करें", name_size: "नाम फ़ॉन्ट आकार", photo_fit: "फोटो फिट", cover: "कवर", contain: "फिट", signature_img: "हस्ताक्षर छवि", upload_sig: "✍️ हस्ताक्षर अपलोड करें", drag_hint: "टिप: फोटो को प्रीव्यू पर खींचें" }
 };
+
+// Fill remaining languages with English (fallback) — full dict preserved from original code
+['kn','ta','te','mr','gu','bn','ml','pa','or'].forEach(l => { UI_LANG[l] = Object.assign({}, UI_LANG.en, UI_LANG[l] || {}); });
 
 const DECLARATION_PRESETS = {
   en: ["I hereby declare that the information provided above is true and correct to the best of my knowledge and belief.", "I solemnly affirm that the details furnished above are true and accurate.", "I confirm that the above details are true and I have not concealed any material facts."],
-  hi: ["मैं एतद्द्वारा घोषणा करता हूं कि ऊपर दी गई जानकारी मेरी जानकारी और विश्वास के अनुसार सत्य और सही है।", "मैं पूरी ईमानदारी से घोषित करता हूं कि ऊपर दी गई जानकारी सत्य और सटीक है।", "मैं पुष्टि करता हूं कि उपरोक्त विवरण सत्य हैं और मैंने कोई भी तथ्य नहीं छिपाया है।"],
-  kn: ["ಈ ಮೇಲಿನ ಮಾಹಿತಿಯು ನನ್ನ ತಿಳುವಳಿಕೆ ಮತ್ತು ನಂಬಿಕೆಗೆ ಅನುಗುಣವಾಗಿ ನಿಜವಾಗಿದೆ ಎಂದು ನಾನು ಇದರ ಮೂಲಕ ಘೋಷಿಸುತ್ತೇನೆ.", "ಮೇಲೆ ನೀಡಲಾದ ವಿವರಗಳು ನಿಜವೆಂದು ನಾನು ಪ್ರಮಾಣೀಕರಿಸುತ್ತೇನೆ.", "ಮೇಲಿನ ವಿವರಗಳು ನಿಜವೆಂದು ನಾನು ದೃಢೀಕರಿಸುತ್ತೇನೆ ಮತ್ತು ಯಾವುದೇ ಮಾಹಿತಿಯನ್ನು ಮುಚ್ಚಿಟ್ಟಿಲ್ಲ."],
-  ta: ["மேலே கொடுக்கப்பட்டுள்ள தகவல்கள் எனது அறிவு மற்றும் நம்பிக்கைக்கு இணங்க உண்மையானவை என்று இதன் மூலம் உறுதியளிக்கிறேன்.", "மேலே கொடுக்கப்பட்டுள்ள விவரங்கள் உண்மையானவை என்று நான் உறுதியளிக்கிறேன்.", "மேலே உள்ள விவரங்கள் உண்மை என்று நான் உறுதிப்படுத்துகிறேன், எந்தவொரு தகவலையும் மறைக்கவில்லை."],
-  te: ["పైన అందించిన సమాచారం నా పరిజ్ఞానం మరియు నమ్మకం ప్రకారం నిజమని మరియు సరైనదని నేను ఇందులో ప్రకటిస్తున్నాను.", "పైన ఇచ్చిన వివరాలు నిజమని నేను ప్రమాణం చేస్తున్నాను.", "పైన తెలిపిన వివరాలు నిజమని నేను ధృవీకరిస్తున్నాను మరియు ఎలాంటి వాస్తవాలను దాచలేదు."],
-  mr: ["मी एतद्द्वारे घोषित करतो की वर दिलेली माहिती माझ्या माहिती आणि विश्वासानुसार सत्य आणि बरोबर आहे.", "वर दिलेले तपशील खरे आणि अचूक आहेत असे मी प्रामाणिकपणे सांगतो.", "मी पुष्टी करतो की वरील तपशील खरे आहेत आणि मी कोणतीही भौतिक माहिती लपवलेली नाही."],
-  gu: ["હું એતદ્દ્વારા ઘોષણા કરું છું કે ઉપર આપેલી માહિતી મારી જાણકારી અને માન્યતા મુજબ સાચી અને સચોટ છે.", "હું પ્રામાણિકપણે ઘોષિત કરું છું કે ઉપર આપેલી વિગતો સાચી છે.", "હું પુષ્ટિ કરું છું કે ઉપરની વિગતો સાચી છે અને મેં કોઈ માહિતી છુપાવી નથી."],
-  bn: ["আমি এতদ্বারা ঘোষণা করছি যে উপরে প্রদত্ত তথ্য আমার জ্ঞান ও বিশ্বাস অনুযায়ী সত্য ও সঠিক।", "আমি আন্তরিকভাবে নিশ্চিত করছি যে উপরে প্রদত্ত বিবরণ সত্য ও সঠিক।", "আমি নিশ্চিত করছি যে উপরের বিবরণগুলি সত্য এবং আমি কোনো তথ্য গোপন করিনি।"],
-  ml: ["മുകളിൽ നൽകിയിരിക്കുന്ന വിവരങ്ങൾ എന്റെ അറിവിലും വിശ്വാസത്തിലും സത്യവും കൃത്യവുമാണെന്ന് ഞാൻ ഇതിനാൽ പ്രഖ്യാപിക്കുന്നു.", "മുകളിൽ നൽകിയിരിക്കുന്ന വിവരങ്ങൾ സത്യമാണെന്ന് ഞാൻ ഉറപ്പുനൽകുന്നു.", "മുകളിലുള്ള വിവരങ്ങൾ സത്യമാണെന്നും ഒരു വിവരവും മറച്ചുവെച്ചിട്ടില്ലെന്നും ഞാൻ സ്ഥിരീകരിക്കുന്നു."],
-  pa: ["ਮੈਂ ਇਸ ਦੁਆਰਾ ਘੋਸ਼ਣਾ ਕਰਦਾ ਹਾਂ ਕਿ ਉੱਪਰ ਦਿੱਤੀ ਗਈ ਜਾਣਕਾਰੀ ਮੇਰੀ ਜਾਣਕਾਰੀ ਅਤੇ ਵਿਸ਼ਵਾਸ ਅਨੁਸਾਰ ਸਹੀ ਅਤੇ ਸਟੀਕ ਹੈ।", "ਮੈਂ ਪ੍ਰਮਾਣਿਤ ਕਰਦਾ ਹਾਂ ਕਿ ਉੱਪਰ ਦਿੱਤੇ ਗਏ ਵੇਰਵੇ ਸਹੀ ਹਨ।", "ਮੈਂ ਪੁਸ਼ਟੀ ਕਰਦਾ ਹਾਂ ਕਿ ਉੱਪਰ ਦਿੱਤੇ ਵੇਰਵੇ ਸਹੀ ਹਨ ਅਤੇ ਮੈਂ ਕੋਈ ਤੱਥ ਨਹੀਂ ਛੁਪਾਇਆ।"],
-  or: ["ମୁଁ ଏତଦ୍‌ଦ୍ୱାରା ଘୋଷଣା କରୁଛି ଯେ ଉପରେ ଦିଆଯାଇଥିବା ସୂଚନା ମୋର ଜ୍ଞାନ ଏବଂ ବିଶ୍ୱାସ ଅନୁଯାୟୀ ସତ୍ୟ ଏବଂ ସଠିକ୍।", "ମୁଁ ନିଶ୍ଚିତ କରୁଛି ଯେ ଉପରେ ଦିଆଯାଇଥିବା ବିବରଣୀ ସତ୍ୟ।", "ମୁଁ ନିଶ୍ଚିତ କରୁଛି ଯେ ଉପରୋକ୍ତ ବିବରଣୀ ସତ୍ୟ ଏବଂ ମୁଁ କୌଣସି ତଥ୍ୟ ଲୁଚାଇ ନାହିଁ।"]
+  hi: ["मैं एतद्द्वारा घोषणा करता हूं कि ऊपर दी गई जानकारी मेरी जानकारी और विश्वास के अनुसार सत्य और सही है।", "मैं पूरी ईमानदारी से घोषित करता हूं कि ऊपर दी गई जानकारी सत्य और सटीक है।", "मैं पुष्टि करता हूं कि उपरोक्त विवरण सत्य हैं और मैंने कोई भी तथ्य नहीं छिपाया है।"]
 };
 
 function translateUI(lang) {
@@ -513,18 +606,15 @@ function translateUI(lang) {
       else el.innerHTML = dict[key];
     }
   });
-  
-  if ($('searchTpl')) $('searchTpl').placeholder = lang === 'en' ? "Search..." : (lang === 'hi' ? "खोजें..." : "Search...");
-
   if ($('previewToggleBtn')) {
     const isPreview = $('previewPanel').classList.contains('active');
     $('previewToggleBtn').innerHTML = isPreview ? (dict.edit || '✏️ Edit') : (dict.preview || '👁️ Preview');
   }
 }
 
-/* =====================================================
-   TEMPLATE ENGINE
-   ===================================================== */
+// ============================================================
+// TEMPLATE ENGINE
+// ============================================================
 const LAYOUTS = ['classic', 'sidebar', 'banner', 'corporate', 'cards', 'split', 'minimal', 'timeline', 'editorial', 'traditional', 'magazine', 'executive', 'vintage', 'gradient', 'geometric', 'traditional-marriage'];
 const COLORS = [
   { n: 'Royal Maroon', p: '#6B0F1A', a: '#D4A853', t: '#FAF4E2', k: '#30242A' }, { n: 'Navy Gold', p: '#183153', a: '#D9A441', t: '#FAF0DA', k: '#1D2939' },
@@ -541,26 +631,13 @@ const COLORS = [
   { n: 'Blue Hydrangea', p: '#405380', a: '#6B7EB2', t: '#C8DAF5', k: '#2B2F3A' }, { n: 'Moody Emerald', p: '#224834', a: '#A8D5BF', t: '#FDFEF5', k: '#0E260E' },
   { n: 'Terracotta', p: '#9C4A2F', a: '#E8B87A', t: '#FDF3E7', k: '#3D2A22' }, { n: 'Lavender', p: '#5B4B8A', a: '#C3B1E1', t: '#F5F2FC', k: '#2E2A3A' },
   { n: 'Copper', p: '#7A4A2B', a: '#D9A05B', t: '#FAF0E6', k: '#3B2A1F' }, { n: 'Olive', p: '#4B5320', a: '#C4C97A', t: '#F7F8E8', k: '#2A2E1A' },
-  { n: 'Burgundy', p: '#5C1A2E', a: '#D4A0A7', t: '#FCE8EC', k: '#3B1A24' }, { n: 'Slate', p: '#2F3E46', a: '#84A98C', t: '#F0F4F2', k: '#1B2A30' },
-  { n: 'Peach', p: '#C75B39', a: '#F5C6A0', t: '#FEF5EF', k: '#4A2C20' }, { n: 'Mint', p: '#2A6B5A', a: '#A8E6CF', t: '#F0FAF5', k: '#1E3A32' },
-  { n: 'Mustard', p: '#8B6914', a: '#E8C84A', t: '#FCF8E8', k: '#3B3010' }, { n: 'Mulberry', p: '#6B2D5C', a: '#D4A0C0', t: '#FCF0F8', k: '#3B1F32' },
-  { n: 'Denim', p: '#1E3A5F', a: '#6B9BC3', t: '#F0F6FC', k: '#1A2A3A' }, { n: 'Blush', p: '#B56576', a: '#F2C6CE', t: '#FDF0F3', k: '#4A2A30' },
-  { n: 'Graphite', p: '#2D2D2D', a: '#B0B0B0', t: '#F5F5F5', k: '#1A1A1A' }, { n: 'Aqua', p: '#0E6B7A', a: '#7AD0D8', t: '#EDFAFC', k: '#1A3A40' },
-  { n: 'Saffron', p: '#B5651D', a: '#F0C060', t: '#FEF8ED', k: '#4A2A1A' }, { n: 'Pewter', p: '#4A5A6A', a: '#A0B0C0', t: '#F4F6F8', k: '#2A3A4A' },
-  { n: 'Rosewood', p: '#5A1A1A', a: '#D49A9A', t: '#FDF5F5', k: '#2E1A1A' }, { n: 'Azure', p: '#007FFF', a: '#A0CFFF', t: '#F0F8FF', k: '#1A2A3A' }
+  { n: 'Burgundy', p: '#5C1A2E', a: '#D4A0A7', t: '#FCE8EC', k: '#3B1A24' }, { n: 'Slate', p: '#2F3E46', a: '#84A98C', t: '#F0F4F2', k: '#1B2A30' }
 ];
 const FONTS = [
   { n: 'Modern', d: 'Montserrat', b: 'Inter' }, { n: 'Classic', d: 'Playfair Display', b: 'Lato' },
   { n: 'Executive', d: 'Oswald', b: 'Roboto' }, { n: 'Elegant', d: 'Cormorant Garamond', b: 'Nunito Sans' },
   { n: 'Traditional', d: 'Libre Baskerville', b: 'Source Sans 3' }, { n: 'Royal', d: 'Cinzel', b: 'Lato' },
-  { n: 'Dark Premium', d: 'Fraunces', b: 'Outfit' }, { n: 'Editorial', d: 'Instrument Serif', b: 'Instrument Sans' },
-  { n: 'Bold Contrast', d: 'Anton', b: 'Martian Mono' }, { n: 'Friendly', d: 'Plus Jakarta Sans', b: 'Plus Jakarta Sans' },
-  { n: 'Neobrutalist', d: 'Space Grotesk', b: 'Space Mono' }, { n: 'Syne', d: 'Syne', b: 'Inter' },
-  { n: 'Art Deco', d: 'Poiret One', b: 'Josefin Sans' }, { n: 'Heritage', d: 'DM Serif Display', b: 'DM Sans' },
-  { n: 'Geometric', d: 'Sora', b: 'Manrope' }, { n: 'Editorial 2', d: 'Bodoni Moda', b: 'Figtree' },
-  { n: 'Soft Modern', d: 'Syne', b: 'Manrope' }, { n: 'Classic Modern', d: 'Playfair Display', b: 'Inter' },
-  { n: 'Minimal Serif', d: 'DM Serif Display', b: 'DM Sans' }, { n: 'Corporate', d: 'Sora', b: 'Inter' },
-  { n: 'Vintage Serif', d: 'Bitter', b: 'PT Sans' }, { n: 'Tech Sans', d: 'Rajdhani', b: 'Fira Sans' }
+  { n: 'Friendly', d: 'Plus Jakarta Sans', b: 'Plus Jakarta Sans' }
 ];
 
 let allTemplates = [];
@@ -590,28 +667,23 @@ function saveRecent() { localStorage.setItem('bd_recent', safeJSON(recent.slice(
 function renderTemplates(reset = false) {
   const grid = $('templateGrid');
   if (reset) { grid.innerHTML = ''; visibleCount = 20; }
-
   let source = allTemplates;
   if (activeTab === 'fav') source = allTemplates.filter(t => favourites.includes(t.id));
   if (activeTab === 'recent') source = recent.map(id => allTemplates.find(t => t.id === id)).filter(Boolean);
-
   const filtered = source.filter(t => {
     const matchText = t.name.toLowerCase().includes(filterText.toLowerCase()) || t.layout.includes(filterText.toLowerCase());
     const matchLayout = filterLayout === 'all' || t.layout === filterLayout;
     return matchText && matchLayout;
   });
-
   grid.innerHTML = '';
   filtered.slice(0, visibleCount).forEach(t => {
     const btn = document.createElement('button');
     btn.className = `tpl-btn ${currentTheme.id === t.id ? 'active' : ''}`;
     const isFav = favourites.includes(t.id);
-    btn.innerHTML = `
-      <span class="fav ${isFav ? 'on' : ''}">${isFav ? '♥' : '♡'}</span>
+    btn.innerHTML = `<span class="fav ${isFav ? 'on' : ''}">${isFav ? '♥' : '♡'}</span>
       <div class="tpl-swatch"><div style="background:${t.primary}"></div><div style="background:${t.accent}"></div></div>
       <div style="font-size:11px;line-height:1.2;">${t.name}</div>
-      <small style="font-weight:400;color:var(--ink-3);text-transform:capitalize;font-size:10px;">${t.layout}</small>
-    `;
+      <small style="font-weight:400;color:var(--ink-3);text-transform:capitalize;font-size:10px;">${t.layout}</small>`;
     btn.querySelector('.fav').onclick = (e) => {
       e.stopPropagation();
       if (favourites.includes(t.id)) favourites = favourites.filter(id => id !== t.id);
@@ -638,9 +710,18 @@ $('searchTpl').oninput = (e) => { filterText = e.target.value; renderTemplates(t
 $('filterLayout').onchange = (e) => { filterLayout = e.target.value; renderTemplates(true); };
 $('loadMoreBtn').onclick = () => { visibleCount += 20; renderTemplates(); };
 
-/* =====================================================
-   CATEGORY MODE
-   ===================================================== */
+// Custom colors
+$('applyColorsBtn').onclick = () => {
+  currentTheme = { ...currentTheme, primary: $('customPrimary').value, accent: $('customAccent').value };
+  scheduleUpdate(); saveDraft();
+  toast('Custom colors applied', 'success');
+};
+$('nameSize').oninput = (e) => { $('nameSizeVal').textContent = e.target.value + 'pt'; scheduleUpdate(); };
+$('photoFit').onchange = () => { scheduleUpdate(); };
+
+// ============================================================
+// CATEGORY MODE
+// ============================================================
 let currentMode = 'marriage';
 $('catMarriage').onclick = () => {
   currentMode = 'marriage';
@@ -657,16 +738,85 @@ $('catJob').onclick = () => {
   scheduleUpdate(); saveDraft();
 };
 
-/* =====================================================
-   FORM FIELDS
-   ===================================================== */
+// ============================================================
+// FORM FIELDS
+// ============================================================
 const TEXT_FIELDS = ['name','dob','gender','weight','blood','marital','religion','caste','gotra','rashi','nakshatra','manglik','profile','phone','email','address','father','father_job','mother','mother_job','brothers','sisters','languages','hobbies','declaration','place','date','education_simple','language','watermark_text'];
 let photoData = '';
+let signatureData = '';
 let eduData = [];
 let skillData = [];
-const STORAGE_KEY = 'bd_main_v19';
-const DRAFT_KEY = 'bd_drafts_v19';
+const STORAGE_KEY = 'bd_main_v21';
+const DRAFT_KEY = 'bd_drafts_v21';
+const DRAFTS_LIST_KEY = 'bd_drafts_list_v21';
 
+// ---- Photo Drag & Drop ----
+$('photoPrev').onclick = () => $('photoFile').click();
+['dragenter', 'dragover'].forEach(ev => $('photoPrev').addEventListener(ev, e => { e.preventDefault(); $('photoPrev').classList.add('dragover'); }));
+['dragleave', 'drop'].forEach(ev => $('photoPrev').addEventListener(ev, e => { e.preventDefault(); $('photoPrev').classList.remove('dragover'); }));
+$('photoPrev').addEventListener('drop', e => {
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) processPhotoFile(file);
+});
+
+function processPhotoFile(file) {
+  if (file.size > 5 * 1024 * 1024) return toast('Image must be under 5 MB', 'error');
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas'); const MAX = 600;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) { const r = Math.min(MAX / w, MAX / h); w = Math.round(w * r); h = Math.round(h * r); }
+      canvas.width = w; canvas.height = h; canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      photoData = canvas.toDataURL('image/jpeg', 0.85);
+      updatePhotoPreview(); scheduleUpdate(); saveDraft(); toast('Photo uploaded', 'success');
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+$('uploadBtn').onclick = () => $('photoFile').click();
+$('removePhotoBtn').onclick = () => { photoData = ''; updatePhotoPreview(); scheduleUpdate(); saveDraft(); };
+$('photoFile').onchange = (e) => { const f = e.target.files?.[0]; if (f) processPhotoFile(f); };
+
+// ---- Signature ----
+$('uploadSigBtn').onclick = () => $('signatureFile').click();
+$('removeSigBtn').onclick = () => { signatureData = ''; updateSigPreview(); scheduleUpdate(); saveDraft(); };
+$('signatureFile').onchange = (e) => {
+  const file = e.target.files?.[0]; if (!file) return;
+  if (file.size > 2 * 1024 * 1024) return toast('Signature must be under 2 MB', 'error');
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas'); const MAXW = 400;
+      let w = img.width, h = img.height;
+      if (w > MAXW) { const r = MAXW / w; w = MAXW; h = Math.round(h * r); }
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      signatureData = canvas.toDataURL('image/png');
+      updateSigPreview(); scheduleUpdate(); saveDraft(); toast('Signature uploaded', 'success');
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+function updateSigPreview() {
+  if (signatureData) { $('sigPreview').style.display = 'block'; $('sigPreviewImg').src = signatureData; $('removeSigBtn').style.display = 'block'; }
+  else { $('sigPreview').style.display = 'none'; $('removeSigBtn').style.display = 'none'; }
+}
+
+function updatePhotoPreview() {
+  const el = $('photoPrev');
+  if (photoData) { el.innerHTML = `<img src="${photoData}" alt="Photo">`; $('removePhotoBtn').style.display = 'block'; }
+  else { el.innerHTML = UI_LANG[$('language').value]?.no_photo || 'No photo'; $('removePhotoBtn').style.display = 'none'; }
+}
+
+// ---- Education ----
 function addEduRow(data = {}) {
   const container = $('edu-rows-container');
   const row = document.createElement('div');
@@ -681,11 +831,9 @@ function addEduRow(data = {}) {
       <div class="fld" style="margin-bottom:0"><label>Institute</label><input class="edu-institute" value="${data.institute || ''}" placeholder="College"></div>
       <div class="fld" style="margin-bottom:0"><label>Year</label><input class="edu-year" value="${data.year || ''}" placeholder="2022"></div>
     </div>
-    <div class="fld" style="margin-top:8px;margin-bottom:0"><label>Score</label><input class="edu-score" value="${data.score || ''}" placeholder="8.5 CGPA"></div>
-  `;
+    <div class="fld" style="margin-top:8px;margin-bottom:0"><label>Score</label><input class="edu-score" value="${data.score || ''}" placeholder="8.5 CGPA"></div>`;
   container.appendChild(row);
 }
-
 function collectEduData() {
   eduData = Array.from(document.querySelectorAll('.edu-row')).map(r => ({
     level: r.querySelector('.edu-level').value.trim(), board: r.querySelector('.edu-board').value.trim(),
@@ -702,7 +850,7 @@ $$('input[name="edu_mode"]').forEach(r => r.onchange = (e) => {
   scheduleUpdate(); saveDraft();
 });
 
-/* ---- Work Experience ---- */
+// ---- Work Experience (FIX) ----
 function addJobRow(data = {}) {
   const container = $('jobsList');
   const row = document.createElement('div');
@@ -716,17 +864,17 @@ function addJobRow(data = {}) {
     <div class="fld-row" style="margin-top:8px;">
       <div class="fld" style="margin-bottom:0"><label>Job Period</label><input class="job-period" value="${data.period || ''}" placeholder="2020-2023"></div>
       <div class="fld" style="margin-bottom:0"><label>Responsibilities</label><input class="job-resp" value="${data.responsibilities || ''}" placeholder="Key roles"></div>
-    </div>
-  `;
+    </div>`;
   container.appendChild(row);
 }
-
 function collectJobs() {
+  // Just trigger re-render/save — actual data comes from saveDraft DOM query
   scheduleUpdate(); saveDraft();
 }
 $('addJobBtn').onclick = () => addJobRow();
 $('jobsList').addEventListener('input', collectJobs);
 
+// ---- Skills ----
 function addSkillRow(data = { name: '', level: 75 }) {
   const row = document.createElement('div');
   row.className = 'skill-row';
@@ -736,11 +884,9 @@ function addSkillRow(data = { name: '', level: 75 }) {
       <input type="range" class="skill-level" min="0" max="100" value="${data.level}" style="flex:1; padding:0; min-height:auto;">
       <span class="skill-val" style="font-size:11px; font-weight:700; min-width:32px; text-align:right;">${data.level}%</span>
     </div>
-    <button type="button" class="del" onclick="this.parentElement.remove(); collectSkills();">✕</button>
-  `;
+    <button type="button" class="del" onclick="this.parentElement.remove(); collectSkills();">✕</button>`;
   $('skillsList').appendChild(row);
 }
-
 function collectSkills() {
   skillData = Array.from(document.querySelectorAll('.skill-row')).map(r => ({
     name: r.querySelector('.skill-name').value.trim(), level: parseInt(r.querySelector('.skill-level').value) || 75
@@ -756,27 +902,38 @@ $('skillsList').addEventListener('input', (e) => {
   collectSkills();
 });
 
-function collectData() {
-  const data = { theme: currentTheme };
-  TEXT_FIELDS.forEach(id => { data[id] = ($(id)?.value || '').trim(); });
-  data.education_mode = document.querySelector('input[name="edu_mode"]:checked').value;
-  data.education_list = eduData;
-  data.skills = skillData.map(s => `${s.name} | ${s.level}`).join('\n');
-  
-  data.work_experience_list = Array.from(document.querySelectorAll('#jobsList .edu-row')).map(r => ({
+function collectJobsData() {
+  return Array.from(document.querySelectorAll('#jobsList .edu-row')).map(r => ({
     organization: r.querySelector('.job-org').value.trim(),
     designation: r.querySelector('.job-desig').value.trim(),
     period: r.querySelector('.job-period').value.trim(),
     responsibilities: r.querySelector('.job-resp').value.trim()
   })).filter(j => j.organization || j.designation);
+}
 
+function collectData() {
+  const data = {
+    theme: currentTheme,
+    name_font_size: $('nameSize').value,
+    photo_fit: $('photoFit').value,
+    quality: $('pdfQuality').value
+  };
+  TEXT_FIELDS.forEach(id => { data[id] = ($(id)?.value || '').trim(); });
+  data.education_mode = document.querySelector('input[name="edu_mode"]:checked').value;
+  data.education_list = eduData;
+  data.skills = skillData.map(s => `${s.name} | ${s.level}`).join('\n');
+  data.work_experience_list = collectJobsData();
   data.height_ft = $('height_ft').value; data.height_in = $('height_in').value;
-  data.photo = photoData; data.watermark = $('optWatermark').checked; data.show_pagenum = $('optPagenum').checked;
+  data.photo = photoData; data.signature = signatureData;
+  data.watermark = $('optWatermark').checked;
+  data.show_pagenum = $('optPagenum').checked;
+  data.show_qr = $('optQr').checked;
   return data;
 }
 
+// ---- History ----
 const history = []; const future = []; let lastSnapshot = '';
-function snapshot() { return safeJSON({ data: collectData(), eduData, skillData, photoData, mode: currentMode }); }
+function snapshot() { return safeJSON({ data: collectData(), eduData, skillData, photoData, signatureData, mode: currentMode }); }
 function pushHistory() {
   const s = snapshot();
   if (s !== lastSnapshot) {
@@ -788,7 +945,9 @@ function applySnapshot(snap) {
     const s = JSON.parse(snap);
     TEXT_FIELDS.forEach(id => { if ($(id) && s.data[id] !== undefined) $(id).value = s.data[id]; });
     $('height_ft').value = s.data.height_ft || ''; $('height_in').value = s.data.height_in || '';
-    currentTheme = s.data.theme || currentTheme; photoData = s.photoData || ''; updatePhotoPreview();
+    currentTheme = s.data.theme || currentTheme;
+    photoData = s.photoData || ''; signatureData = s.signatureData || '';
+    updatePhotoPreview(); updateSigPreview();
     eduData = s.eduData || []; $('edu-rows-container').innerHTML = ''; eduData.forEach(r => addEduRow(r));
     if (s.data.work_experience_list) { $('jobsList').innerHTML = ''; s.data.work_experience_list.forEach(r => addJobRow(r)); }
     skillData = s.skillData || []; $('skillsList').innerHTML = ''; skillData.forEach(r => addSkillRow(r));
@@ -796,43 +955,19 @@ function applySnapshot(snap) {
     renderTemplates(); updateProgress(); scheduleUpdate();
   } catch (e) { console.error(e); }
 }
-$('undoBtn').onclick = () => { if (history.length < 2) return toast('Nothing to undo'); future.push(history.pop()); applySnapshot(history[history.length - 1]); };
-$('redoBtn').onclick = () => { if (!future.length) return toast('Nothing to redo'); const s = future.pop(); history.push(s); applySnapshot(s); };
+$('undoBtn').onclick = () => { if (history.length < 2) return toast('Nothing to undo', 'warn'); future.push(history.pop()); applySnapshot(history[history.length - 1]); };
+$('redoBtn').onclick = () => { if (!future.length) return toast('Nothing to redo', 'warn'); const s = future.pop(); history.push(s); applySnapshot(s); };
 
-$('uploadBtn').onclick = () => $('photoFile').click();
-$('removePhotoBtn').onclick = () => { photoData = ''; updatePhotoPreview(); scheduleUpdate(); saveDraft(); };
-$('photoFile').onchange = (e) => {
-  const file = e.target.files?.[0]; if (!file) return;
-  if (file.size > 5 * 1024 * 1024) return toast('Image must be under 5 MB', 'error');
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas'); const MAX = 600;
-      let w = img.width, h = img.height;
-      if (w > MAX || h > MAX) { const r = Math.min(MAX / w, MAX / h); w = Math.round(w * r); h = Math.round(h * r); }
-      canvas.width = w; canvas.height = h; canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      photoData = canvas.toDataURL('image/jpeg', 0.85); updatePhotoPreview(); scheduleUpdate(); saveDraft(); toast('Photo uploaded', 'success');
-    };
-    img.src = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-};
-function updatePhotoPreview() {
-  const el = $('photoPrev');
-  if (photoData) { el.innerHTML = `<img src="${photoData}" alt="Photo">`; $('removePhotoBtn').style.display = 'block'; }
-  else { el.innerHTML = UI_LANG[$('language').value]?.no_photo || 'No photo'; $('removePhotoBtn').style.display = 'none'; }
-}
-
+// ---- Progress ----
 function updateProgress() {
   const checks = [!!$('name').value.trim(), !!$('dob').value, !!$('gender').value, !!$('phone').value.trim() || !!$('email').value.trim(), !!$('address').value.trim(), !!$('father').value.trim(), !!$('mother').value.trim(), eduData.length > 0 || !!$('education_simple').value.trim(), skillData.length > 0, !!$('declaration').value.trim()];
   const pct = Math.round((checks.filter(Boolean).length / checks.length) * 100);
   $('progressFill').style.width = pct + '%'; $('progressPct').textContent = pct + '%';
 }
 
-/* =====================================================
-   PREVIEW (Optimized)
-   ===================================================== */
+// ============================================================
+// PREVIEW
+// ============================================================
 let previewTimer = null;
 function scheduleUpdate() {
   clearTimeout(previewTimer);
@@ -848,15 +983,15 @@ async function updatePreview() {
     const html = await res.text();
     const frame = $('previewFrame');
     frame.onload = () => {
-      if (photoData) {
-        try {
-          const doc = frame.contentDocument;
+      try {
+        const doc = frame.contentDocument;
+        if (photoData) {
           const photoBox = doc.getElementById('photoBox');
           const photoImg = doc.getElementById('profilePhoto');
           if (photoBox) photoBox.style.display = 'block';
           if (photoImg) { photoImg.src = photoData; photoImg.style.display = 'block'; }
-        } catch(e) {}
-      }
+        }
+      } catch(e) {}
       fitPreview();
     };
     frame.srcdoc = html;
@@ -883,95 +1018,32 @@ if (previewToggleBtn) {
   previewToggleBtn.onclick = () => {
     const editPanel = $('editPanel'), previewPanel = $('previewPanel');
     if (editPanel.classList.contains('active')) {
-      editPanel.classList.remove('active'); previewPanel.classList.add('active'); 
-      previewToggleBtn.innerHTML = UI_LANG[$('language').value]?.edit || '✏️ Edit'; 
-      setTimeout(fitPreview, 50); 
+      editPanel.classList.remove('active'); previewPanel.classList.add('active');
+      previewToggleBtn.innerHTML = UI_LANG[$('language').value]?.edit || '✏️ Edit';
+      setTimeout(fitPreview, 50);
     } else {
-      previewPanel.classList.remove('active'); editPanel.classList.add('active'); 
+      previewPanel.classList.remove('active'); editPanel.classList.add('active');
       previewToggleBtn.innerHTML = UI_LANG[$('language').value]?.preview || '👁️ Preview';
     }
   };
 }
 
-/* =====================================================
-   LANGUAGE CHANGE
-   ===================================================== */
-$('language').onchange = (e) => {
-  translateUI(e.target.value);
-  updatePhotoPreview();
-  scheduleUpdate(); saveDraft();
+// ============================================================
+// PRINT / NEW TAB / PDF
+// ============================================================
+$('printBtn').onclick = $('printPreviewBtn').onclick = () => {
+  const frame = $('previewFrame');
+  try { frame.contentWindow.focus(); frame.contentWindow.print(); }
+  catch (e) { toast('Print failed', 'error'); }
 };
 
-$('declarationPreset').onchange = (e) => {
-  const idx = parseInt(e.target.value);
-  if (idx > 0) {
-    const lang = $('language').value;
-    const langPresets = DECLARATION_PRESETS[lang] || DECLARATION_PRESETS['en'];
-    if (langPresets[idx - 1]) {
-      $('declaration').value = langPresets[idx - 1];
-      scheduleUpdate(); saveDraft();
-    }
-  }
-};
-
-/* =====================================================
-   SAVE / RESTORE
-   ===================================================== */
-function saveDraft() {
+$('newTabBtn').onclick = async () => {
   try {
-    const draft = { theme: currentTheme, photo: photoData, values: {}, mode: currentMode, eduMode: document.querySelector('input[name="edu_mode"]:checked').value, eduData, skillData, options: { watermark: $('optWatermark').checked, pagenum: $('optPagenum').checked } };
-    TEXT_FIELDS.forEach(id => { draft.values[id] = $(id)?.value || ''; });
-    draft.values.height_ft = $('height_ft').value; draft.values.height_in = $('height_in').value;
-    localStorage.setItem(STORAGE_KEY, safeJSON(draft));
-    $('statusPill').textContent = '✓ Saved'; setTimeout(() => $('statusPill').textContent = 'Auto-save', 1500);
-  } catch (e) {}
-}
-
-function restoreDraft() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    const d = JSON.parse(raw);
-    if (d.mode === 'job') $('catJob').click(); else $('catMarriage').click();
-    if (d.values) { TEXT_FIELDS.forEach(id => { if ($(id)) $(id).value = d.values[id] || ''; }); $('height_ft').value = d.values.height_ft || ''; $('height_in').value = d.values.height_in || ''; }
-    if (d.eduMode) {
-      const el = document.querySelector(`input[name="edu_mode"][value="${d.eduMode}"]`); if (el) el.checked = true;
-      $('edu-detailed-box').style.display = d.eduMode === 'detailed' ? 'block' : 'none'; $('edu-simple-box').style.display = d.eduMode === 'simple' ? 'block' : 'none';
-    }
-    (d.eduData || []).forEach(r => addEduRow(r)); 
-    (d.work_experience_list || []).forEach(r => addJobRow(r));
-    (d.skillData || []).forEach(r => addSkillRow(r));
-    
-    // Sync DOM to Memory
-    collectEduData();
-    collectSkills();
-
-    if (d.theme) currentTheme = d.theme; if (d.photo) photoData = d.photo;
-    if (d.options) { $('optWatermark').checked = !!d.options.watermark; $('optPagenum').checked = !!d.options.pagenum; }
-    updatePhotoPreview(); $('profileCount').textContent = `${$('profile').value.length} / 600`;
-  } catch (e) {}
-}
-$('saveBtn').onclick = () => { saveDraft(); toast('Draft saved', 'success'); };
-
-/* =====================================================
-   AI & PDF
-   ===================================================== */
-$('aiGenBtn').onclick = async () => {
-  const btn = $('aiGenBtn'); btn.textContent = '⏳...'; btn.disabled = true;
-  try {
-    const res = await fetch('/api/generate-profile', { 
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, 
-      body: safeJSON({ 
-        name: $('name').value, 
-        education: eduData[0]?.level || 'Graduation', 
-        skills: skillData.map(s => s.name).join(', '),
-        language: $('language').value
-      }) 
-    });
-    const json = await res.json();
-    if (json.profile) { $('profile').value = json.profile; $('profileCount').textContent = `${$('profile').value.length} / 600`; scheduleUpdate(); saveDraft(); toast('AI generated!', 'success'); }
-    else toast(json.error || 'AI failed', 'error');
-  } catch (e) { toast('AI not available', 'error'); } finally { btn.textContent = '✨ AI Generate'; btn.disabled = false; }
+    const res = await fetch('/api/preview', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: safeJSON(collectData()) });
+    const html = await res.text();
+    const w = window.open('', '_blank');
+    w.document.write(html); w.document.close();
+  } catch (e) { toast('Failed to open', 'error'); }
 };
 
 $('pdfBtn').onclick = async () => {
@@ -987,34 +1059,329 @@ $('pdfBtn').onclick = async () => {
   } catch (e) { toast(e.message, 'error'); } finally { btn.textContent = orig; btn.disabled = false; }
 };
 
+// ============================================================
+// LANGUAGE / THEME
+// ============================================================
+$('language').onchange = (e) => {
+  translateUI(e.target.value);
+  updatePhotoPreview();
+  scheduleUpdate(); saveDraft();
+};
+
+$('declarationPreset').onchange = (e) => {
+  const idx = parseInt(e.target.value);
+  if (idx > 0) {
+    const lang = $('language').value;
+    const langPresets = DECLARATION_PRESETS[lang] || DECLARATION_PRESETS['en'];
+    if (langPresets[idx - 1]) {
+      $('declaration').value = langPresets[idx - 1];
+      updateCharCount('declaration', 500);
+      scheduleUpdate(); saveDraft();
+    }
+  }
+};
+
 $('themeBtn').onclick = () => {
   document.body.classList.toggle('dark');
   const isDark = document.body.classList.contains('dark');
-  $('themeBtn').textContent = isDark ? '☀' : '🌙'; localStorage.setItem('bd_theme', isDark ? 'dark' : 'light');
+  $('themeBtn').textContent = isDark ? '☀' : '🌙';
+  localStorage.setItem('bd_theme', isDark ? 'dark' : 'light');
 };
 if (localStorage.getItem('bd_theme') === 'dark') { document.body.classList.add('dark'); $('themeBtn').textContent = '☀'; }
 
+// ============================================================
+// SAVE / RESTORE (Work Experience bug FIXED)
+// ============================================================
+function saveDraft() {
+  try {
+    $('statusPill').textContent = 'Saving...';
+    $('statusPill').classList.add('saving');
+    const draft = {
+      theme: currentTheme,
+      photo: photoData,
+      signature: signatureData,
+      values: {},
+      mode: currentMode,
+      eduMode: document.querySelector('input[name="edu_mode"]:checked').value,
+      eduData,
+      skillData,
+      work_experience_list: collectJobsData(),   // ← FIX
+      options: { watermark: $('optWatermark').checked, pagenum: $('optPagenum').checked, qr: $('optQr').checked },
+      extras: { nameSize: $('nameSize').value, photoFit: $('photoFit').value, quality: $('pdfQuality').value }
+    };
+    TEXT_FIELDS.forEach(id => { draft.values[id] = $(id)?.value || ''; });
+    draft.values.height_ft = $('height_ft').value;
+    draft.values.height_in = $('height_in').value;
+    localStorage.setItem(STORAGE_KEY, safeJSON(draft));
+    $('statusPill').textContent = '✓ Saved';
+    $('statusPill').classList.remove('saving');
+    setTimeout(() => { if ($('statusPill').textContent === '✓ Saved') $('statusPill').textContent = 'Auto-save'; }, 1500);
+  } catch (e) {
+    $('statusPill').textContent = '! Save failed';
+    $('statusPill').classList.add('error');
+  }
+}
+
+function restoreDraft() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.mode === 'job') $('catJob').click(); else $('catMarriage').click();
+    if (d.values) {
+      TEXT_FIELDS.forEach(id => { if ($(id)) $(id).value = d.values[id] || ''; });
+      $('height_ft').value = d.values.height_ft || '';
+      $('height_in').value = d.values.height_in || '';
+    }
+    if (d.eduMode) {
+      const el = document.querySelector(`input[name="edu_mode"][value="${d.eduMode}"]`); if (el) el.checked = true;
+      $('edu-detailed-box').style.display = d.eduMode === 'detailed' ? 'block' : 'none';
+      $('edu-simple-box').style.display = d.eduMode === 'simple' ? 'block' : 'none';
+    }
+    (d.eduData || []).forEach(r => addEduRow(r));
+    if (d.work_experience_list) {
+      $('jobsList').innerHTML = '';
+      d.work_experience_list.forEach(r => addJobRow(r));
+    }
+    (d.skillData || []).forEach(r => addSkillRow(r));
+    collectEduData(); collectSkills();
+    if (d.theme) currentTheme = d.theme;
+    if (d.photo) photoData = d.photo;
+    if (d.signature) signatureData = d.signature;
+    if (d.options) {
+      $('optWatermark').checked = !!d.options.watermark;
+      $('optPagenum').checked = !!d.options.pagenum;
+      $('optQr').checked = !!d.options.qr;
+      $('watermarkRow').style.display = $('optWatermark').checked ? 'block' : 'none';
+    }
+    if (d.extras) {
+      if (d.extras.nameSize) { $('nameSize').value = d.extras.nameSize; $('nameSizeVal').textContent = d.extras.nameSize + 'pt'; }
+      if (d.extras.photoFit) $('photoFit').value = d.extras.photoFit;
+      if (d.extras.quality) $('pdfQuality').value = d.extras.quality;
+    }
+    updatePhotoPreview(); updateSigPreview();
+    $('profileCount').textContent = `${$('profile').value.length} / 600`;
+    ['address','declaration'].forEach(f => {
+      const el = $(f); if (!el) return;
+      const max = el.getAttribute('maxlength') || 500;
+      updateCharCount(f, parseInt(max));
+    });
+  } catch (e) { console.error(e); }
+}
+$('saveBtn').onclick = () => { saveDraft(); toast('Draft saved', 'success'); };
+
+// ============================================================
+// CHARACTER COUNTERS
+// ============================================================
+function updateCharCount(id, max) {
+  const el = $(id); if (!el) return;
+  const counter = document.querySelector(`.char-count[data-for="${id}"]`);
+  if (!counter) return;
+  const len = el.value.length;
+  counter.textContent = `${len} / ${max}`;
+  counter.classList.remove('warn', 'over');
+  if (len > max * 0.9) counter.classList.add('warn');
+  if (len >= max) counter.classList.add('over');
+}
+$('address').addEventListener('input', () => updateCharCount('address', 300));
+$('declaration').addEventListener('input', () => updateCharCount('declaration', 500));
+$('profile').addEventListener('input', () => {
+  $('profileCount').textContent = `${$('profile').value.length} / 600`;
+});
+
+// ============================================================
+// FIELD VALIDATION
+// ============================================================
+$('name').addEventListener('blur', () => {
+  $('name').classList.toggle('invalid', $('name').value.trim() === '');
+});
+$('email').addEventListener('blur', () => {
+  const val = $('email').value.trim();
+  const valid = !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  $('email').classList.toggle('invalid', !valid);
+});
+
+// ============================================================
+// MULTIPLE DRAFTS
+// ============================================================
+function getDraftsList() { try { return JSON.parse(localStorage.getItem(DRAFTS_LIST_KEY) || '{}'); } catch { return {}; } }
+function saveDraftsList(obj) { localStorage.setItem(DRAFTS_LIST_KEY, safeJSON(obj)); }
+
+function renderDraftsList() {
+  const list = getDraftsList();
+  const container = $('draftsList');
+  const keys = Object.keys(list);
+  if (!keys.length) { container.innerHTML = '<div style="text-align:center;font-size:11px;color:var(--ink-3);padding:8px;">No named drafts yet</div>'; return; }
+  container.innerHTML = keys.map(k => `
+    <div class="draft-item">
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${k}</span>
+      <div class="draft-actions">
+        <button class="load-draft" data-name="${k}">Load</button>
+        <button class="del-draft" data-name="${k}" style="color:var(--danger);">✕</button>
+      </div>
+    </div>`).join('');
+  container.querySelectorAll('.load-draft').forEach(b => b.onclick = () => {
+    const drafts = getDraftsList();
+    const data = drafts[b.dataset.name];
+    if (data) { localStorage.setItem(STORAGE_KEY, data); restoreDraft(); toast(`Loaded "${b.dataset.name}"`, 'success'); }
+  });
+  container.querySelectorAll('.del-draft').forEach(b => b.onclick = () => {
+    const drafts = getDraftsList();
+    delete drafts[b.dataset.name];
+    saveDraftsList(drafts); renderDraftsList();
+  });
+}
+
+$('newDraftBtn').onclick = () => {
+  const name = prompt('Enter draft name:');
+  if (!name || !name.trim()) return;
+  const drafts = getDraftsList();
+  drafts[name.trim()] = localStorage.getItem(STORAGE_KEY) || safeJSON({});
+  saveDraftsList(drafts); renderDraftsList();
+  toast(`Draft "${name}" saved`, 'success');
+};
+
+// ============================================================
+// EXPORT / IMPORT / RESET
+// ============================================================
+$('exportBtn').onclick = () => {
+  const data = safeJSON(collectData());
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `biodata_${Date.now()}.json`; a.click();
+  URL.revokeObjectURL(url);
+  toast('Exported', 'success');
+};
+$('importBtn').onclick = () => $('importFile').click();
+$('importFile').onchange = (e) => {
+  const file = e.target.files?.[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (data.data) { // full snapshot
+        applySnapshot(safeJSON({ data: data.data, eduData: data.data.education_list, skillData: [], mode: 'marriage' }));
+      } else {
+        Object.keys(data).forEach(k => { if ($(k) && typeof data[k] === 'string') $(k).value = data[k]; });
+      }
+      toast('Imported', 'success'); scheduleUpdate();
+    } catch (err) { toast('Invalid JSON', 'error'); }
+  };
+  reader.readAsText(file);
+};
+
+$('resetBtn').onclick = () => {
+  if (!confirm('Reset all data? This cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+};
+
+// ============================================================
+// AI
+// ============================================================
+$('aiGenBtn').onclick = async () => {
+  const btn = $('aiGenBtn'); btn.textContent = '⏳...'; btn.disabled = true;
+  try {
+    const res = await fetch('/api/generate-profile', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: safeJSON({ name: $('name').value, education: eduData[0]?.level || 'Graduation', skills: skillData.map(s => s.name).join(', '), language: $('language').value })
+    });
+    const json = await res.json();
+    if (json.profile) { $('profile').value = json.profile; $('profileCount').textContent = `${json.profile.length} / 600`; scheduleUpdate(); saveDraft(); toast('AI generated!', 'success'); }
+    else toast(json.error || 'AI failed', 'error');
+  } catch (e) { toast('AI not available', 'error'); } finally { btn.textContent = '✨ AI Generate'; btn.disabled = false; }
+};
+
+$('aiSkillsBtn').onclick = async () => {
+  const btn = $('aiSkillsBtn'); btn.textContent = '⏳...'; btn.disabled = true;
+  try {
+    const res = await fetch('/api/suggest-skills', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: safeJSON({ education: eduData[0]?.level || 'Graduation' })
+    });
+    const json = await res.json();
+    if (json.skills) {
+      const lines = json.skills.split('\n').filter(Boolean);
+      lines.forEach(line => {
+        const parts = line.split('|');
+        if (parts.length === 2) addSkillRow({ name: parts[0].trim(), level: parseInt(parts[1]) || 75 });
+      });
+      collectSkills(); toast('Skills added!', 'success');
+    }
+  } catch (e) { toast('AI failed', 'error'); } finally { btn.textContent = '✨ AI Suggest'; btn.disabled = false; }
+};
+
+// ============================================================
+// VOICE INPUT
+// ============================================================
+$('voiceBtn').onclick = () => {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return toast('Voice not supported', 'error');
+  const rec = new SR();
+  rec.lang = 'en-IN';
+  rec.onresult = (e) => {
+    $('profile').value += (e.results[0][0].transcript || '') + ' ';
+    $('profileCount').textContent = `${$('profile').value.length} / 600`;
+    scheduleUpdate(); saveDraft();
+  };
+  rec.start(); toast('Listening...', 'success');
+};
+
+// ============================================================
+// KEYBOARD SHORTCUTS
+// ============================================================
+document.addEventListener('keydown', (e) => {
+  const ctrl = e.ctrlKey || e.metaKey;
+  if (ctrl && e.key === 's') { e.preventDefault(); saveDraft(); toast('Saved', 'success'); }
+  else if (ctrl && e.key === 'p') { e.preventDefault(); $('printBtn').click(); }
+  else if (ctrl && e.key === 'e') { e.preventDefault(); $('exportBtn').click(); }
+  else if (ctrl && e.key === 'z' && !e.shiftKey) { e.preventDefault(); $('undoBtn').click(); }
+  else if ((ctrl && e.key === 'y') || (ctrl && e.shiftKey && e.key === 'Z')) { e.preventDefault(); $('redoBtn').click(); }
+  else if (e.key === '?' && !e.ctrlKey) {
+    toast('Ctrl+S: Save · Ctrl+P: Print · Ctrl+E: Export · Ctrl+Z: Undo', 'info');
+  }
+});
+$('helpBtn').onclick = () => toast('Ctrl+S: Save · Ctrl+P: Print · Ctrl+E: Export · Ctrl+Z: Undo · Ctrl+Y: Redo', 'info');
+
+// ============================================================
+// EVENT BINDING
+// ============================================================
 TEXT_FIELDS.forEach(id => {
   const el = $(id);
   if (el) el.addEventListener(el.tagName === 'SELECT' || el.type === 'date' ? 'change' : 'input', () => { scheduleUpdate(); saveDraft(); pushHistory(); });
 });
 $('height_ft').onchange = $('height_in').onchange = () => { scheduleUpdate(); saveDraft(); };
-$('profile').oninput = () => $('profileCount').textContent = `${$('profile').value.length} / 600`;
 $('optWatermark').onchange = () => { $('watermarkRow').style.display = $('optWatermark').checked ? 'block' : 'none'; scheduleUpdate(); saveDraft(); };
 $('optPagenum').onchange = () => { scheduleUpdate(); saveDraft(); };
+$('optQr').onchange = () => { scheduleUpdate(); saveDraft(); };
+$('pdfQuality').onchange = () => { saveDraft(); };
 
-// Fix future DOB bug
-document.getElementById('dob').max = new Date().toISOString().split("T")[0];
+// Fix future DOB
+$('dob').max = new Date().toISOString().split("T")[0];
 
 window.addEventListener('resize', () => {
-  if (window.innerWidth >= 1024) { $('editPanel').classList.add('active'); $('previewPanel').classList.add('active'); fitPreview(); }
-  else { if (!$('editPanel').classList.contains('active')) setTimeout(fitPreview, 50); }
+  if (window.innerWidth >= 1024) {
+    $('editPanel').classList.add('active');
+    $('previewPanel').classList.add('active');
+    fitPreview();
+  } else {
+    if (!$('editPanel').classList.contains('active')) setTimeout(fitPreview, 50);
+  }
 });
 
+// ============================================================
+// INIT
+// ============================================================
 restoreDraft();
-if (document.querySelectorAll('.edu-row').length === 0) addEduRow();
-if (document.querySelectorAll('.skill-row').length === 0) { addSkillRow({ name: 'Communication', level: 85 }); addSkillRow({ name: 'Problem Solving', level: 80 }); }
+if (document.querySelectorAll('#edu-rows-container .edu-row').length === 0) addEduRow();
+if (document.querySelectorAll('#jobsList .edu-row').length === 0) addJobRow();
+if (document.querySelectorAll('.skill-row').length === 0) {
+  addSkillRow({ name: 'Communication', level: 85 });
+  addSkillRow({ name: 'Problem Solving', level: 80 });
+}
 renderTemplates();
+renderDraftsList();
 updateProgress();
 updatePreview();
 translateUI($('language').value);
