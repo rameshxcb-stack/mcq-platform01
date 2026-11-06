@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light">
 <title>{{ name or 'Biodata' }}</title>
 
 {% set t = theme %}
@@ -13,7 +12,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Merriweather:wght@400;700;900&family=Montserrat:wght@500;600;700&family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&family=Lato:wght@400;700&family=Oswald:wght@500;600&family=Roboto:wght@400;500&family=Cormorant+Garamond:wght@600;700&family=Nunito+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600&family=Fraunces:opsz,wght@9..144,700&family=Outfit:wght@400;500&family=Instrument+Serif&family=Instrument+Sans:wght@400;500&family=Anton&family=Martian+Mono:wght@400&family=Plus+Jakarta+Sans:wght@400;700&family=Space+Grotesk:wght@700&family=Space+Mono:wght@400&family=Syne:wght@700&family=DM+Serif+Display&family=DM+Sans:wght@400&family=Sora:wght@700&family=Manrope:wght@400&family=Bodoni+Moda:wght@700&family=Figtree:wght@400&family=Poiret+One&family=Josefin+Sans:wght@400&family=Bitter:wght@700&family=PT+Sans:wght@400&family=Rajdhani:wght@700&family=Fira+Sans:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Merriweather:wght@400;700;900&family=Montserrat:wght@500;600;700&family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&family=Lato:wght@400;700&family=Oswald:wght@500;600&family=Roboto:wght@400;500&family=Cormorant+Garamond:wght@600;700&family=Nunito+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
 
 {% if language in ['hi','mr','ne'] %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
 {% if language == 'bn' %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
@@ -29,7 +28,7 @@
 :root {
   --primary: {{ t.primary }}; --accent: {{ t.accent }}; --tint: {{ t.tint }}; --ink: {{ t.ink }}; --muted: {{ t.ink }}99; --track: {{ t.tint }};
   --display: '{{ t.displayFont }}', serif; --body: '{{ t.bodyFont }}', system-ui, -apple-system, sans-serif;
-  --name-size: {{ name_font_size or 27 }}pt;
+  --name-size: {{ name_font_size or 24 }}pt;
   {% if language in ['hi','mr','ne'] %}--script: 'Noto Sans Devanagari', var(--body);{% endif %}
   {% if language == 'bn' %}--script: 'Noto Sans Bengali', var(--body);{% endif %}
   {% if language == 'ta' %}--script: 'Noto Sans Tamil', var(--body);{% endif %}
@@ -42,73 +41,56 @@
 }
 
 * { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font-family: var(--script, var(--body)); font-size: 10pt; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; padding: 0; background: #fff; color: var(--ink); font-family: var(--script, var(--body)); font-size: 9pt; line-height: 1.4; -webkit-print-color-adjust: exact; print-color-adjust: exact; zoom: {{ zoom_level | default(1.0) }}; }
 
 @page { size: {{ page_size }} portrait; margin: 0; }
-.page { width: 210mm; min-height: 297mm; margin: 0 auto; background: #fff; position: relative; padding: 11mm 14mm 14mm; overflow: visible; counter-reset: page; }
-.page::before { content: ""; position: absolute; inset: 5mm; border: 1.2px solid var(--accent); pointer-events: none; opacity: .55; }
-.page::after { content: ""; position: absolute; inset: 8mm; border: .45px solid var(--accent); pointer-events: none; opacity: .22; }
-.content { position: relative; z-index: 1; }
+.page { width: 210mm; height: 297mm; margin: 0 auto; background: #fff; position: relative; padding: 8mm 10mm; overflow: hidden; counter-reset: page; }
+.page::before { content: ""; position: absolute; inset: 4mm; border: 1px solid var(--accent); pointer-events: none; opacity: .55; }
+.content { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; }
 
-.watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-family: var(--display); font-size: 130pt; color: var(--primary); opacity: .04; font-weight: 900; letter-spacing: 3mm; pointer-events: none; z-index: 0; white-space: nowrap; }
+/* 🔥 DYNAMIC HEADER LAYOUTS */
+.header { position: relative; padding: 2mm 4mm 4mm; border-bottom: 2px solid var(--accent); display: flex; align-items: flex-start; gap: 5mm; }
+.header-center { flex-direction: column; align-items: center; text-align: center; }
+.header-left { flex-direction: row; text-align: left; }
+.header-right { flex-direction: row-reverse; text-align: right; }
+.header-sidebar { flex-direction: column; text-align: center; align-items: center; } /* Handled differently */
 
-.header { position: relative; text-align: center; padding: 1mm 4mm 5mm; border-bottom: 1.5px solid var(--accent); }
-.ornament { color: var(--accent); font-size: 15pt; letter-spacing: 7px; margin-bottom: 2mm; }
-.photo { width: 34mm; height: 40mm; margin: 0 auto 3mm; padding: 1.2mm; border: 2px solid var(--accent); border-radius: {{ '50%' if is_round else '3mm' }}; background: #fff; box-shadow: 0 2mm 5mm #00000015; overflow: hidden; }
-.photo img { width: 100%; height: 100%; object-fit: {{ photo_fit or 'cover' }}; {% if photo_fit == 'contain' %}padding: 1mm;{% endif %} border-radius: {{ '50%' if is_round else '1.5mm' }}; display: block; }
-.name { font-family: var(--display); font-size: var(--name-size); line-height: 1.12; color: var(--primary); font-weight: 800; letter-spacing: .4px; overflow-wrap: anywhere; margin: 0; }
-.contact-line { margin-top: 2mm; color: var(--muted); font-size: 8.5pt; overflow-wrap: anywhere; }
+.ornament { color: var(--accent); font-size: 12pt; letter-spacing: 5px; margin-bottom: 1mm; text-align: center; width: 100%; }
 
-.resume-body { display: block; }
-.side-column, .main-column { min-width: 0; }
-.section { margin-top: 5mm; break-inside: auto; }
-.section-title { display: flex; align-items: center; gap: 2mm; margin: 0 0 2.5mm; color: var(--primary); font-family: var(--display); font-size: 12pt; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; }
+/* 🔥 PHOTO CONTAINER & SETTINGS */
+.photo { width: 24mm; height: 28mm; padding: 1mm; border: 2px solid var(--accent); border-radius: {{ '50%' if is_round else '3mm' }}; background: #fff; box-shadow: 0 1mm 3mm #00000010; overflow: hidden; flex-shrink: 0; }
+.photo img { 
+  width: 100%; height: 100%; 
+  object-fit: {{ photo_fit or 'cover' }}; 
+  object-position: {{ photo_x }}% {{ photo_y }}%;
+  transform: scale({{ photo_scale | default(100) | int / 100 }});
+  transform-origin: center;
+  {% if photo_fit == 'contain' %}padding: 1mm;{% endif %} 
+  border-radius: {{ '50%' if is_round else '2mm' }}; 
+  display: block; 
+}
+
+.header-copy { flex: 1; min-width: 0; padding-top: 2mm; }
+.header-center .header-copy { padding-top: 0; }
+.header-right .header-copy { text-align: right; }
+
+.name { font-family: var(--display); font-size: var(--name-size); line-height: 1.1; color: var(--primary); font-weight: 800; letter-spacing: .4px; overflow-wrap: anywhere; margin: 0; }
+.contact-line { margin-top: 1mm; color: var(--muted); font-size: 8pt; overflow-wrap: anywhere; }
+
+.resume-body { display: flex; flex-direction: column; flex: 1; margin-top: 2mm; }
+.section { margin-top: 2.5mm; break-inside: avoid; }
+.section-title { display: flex; align-items: center; gap: 2mm; margin: 0 0 1mm; color: var(--primary); font-family: var(--display); font-size: 10.5pt; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
 .section-title::after { content: ""; height: 1px; flex: 1; background: linear-gradient(90deg, var(--accent), transparent); }
-.section-title .mark { color: var(--accent); font-size: 11pt; font-weight: 800; min-width: 15px; text-align: left; }
+.section-title .mark { color: var(--accent); font-size: 10pt; font-weight: 800; min-width: 12px; text-align: left; }
 
-.grid { display: grid; grid-template-columns: 38mm 1fr; gap: 1.7mm 3mm; padding: 0 2mm; }
-.label { font-size: 8.5pt; color: var(--muted); font-weight: 700; overflow-wrap: break-word; }
-.value { font-size: 9.5pt; color: var(--ink); font-weight: 500; white-space: pre-line; overflow-wrap: anywhere; word-break: break-word; }
-.block { padding: 0 2mm; white-space: pre-line; text-align: justify; overflow-wrap: anywhere; word-break: break-word; }
+.grid { display: grid; grid-template-columns: 32mm 1fr; gap: 1mm 2mm; padding: 0 1mm; }
+.label { font-size: 8pt; color: var(--muted); font-weight: 700; overflow-wrap: break-word; }
+.value { font-size: 8.5pt; color: var(--ink); font-weight: 500; white-space: pre-line; overflow-wrap: anywhere; word-break: break-word; }
+.block { padding: 0 1mm; white-space: pre-line; text-align: justify; overflow-wrap: anywhere; word-break: break-word; font-size: 8.5pt; }
 
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 3mm;
-  font-size: 8.5pt;
-  break-inside: auto;
-  table-layout: fixed;
-  border: 1px solid #d1d5db;
-}
-.custom-table th {
-  background-color: #FDE047;
-  color: #111827;
-  font-weight: 800;
-  padding: 1.8mm;
-  border: 1px solid #d1d5db;
-  text-align: center;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  hyphens: auto;
-  vertical-align: middle;
-  font-size: 8pt;
-  line-height: 1.25;
-}
-.custom-table td {
-  padding: 1.8mm;
-  border: 1px solid #d1d5db;
-  vertical-align: top;
-  color: var(--ink);
-  text-align: center;
-  font-weight: 600;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  hyphens: auto;
-  font-size: 8.5pt;
-  line-height: 1.3;
-}
+.custom-table { width: 100%; border-collapse: collapse; margin-bottom: 2mm; font-size: 7.5pt; break-inside: auto; table-layout: fixed; border: 1px solid #d1d5db; }
+.custom-table th { background-color: #FDE047; color: #111827; font-weight: 800; padding: 1mm; border: 1px solid #d1d5db; text-align: center; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; vertical-align: middle; font-size: 7.5pt; line-height: 1.2; }
+.custom-table td { padding: 1mm; border: 1px solid #d1d5db; vertical-align: top; color: var(--ink); text-align: center; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; font-size: 8pt; line-height: 1.2; }
 .custom-table tr { break-inside: avoid; page-break-inside: avoid; }
 
 .edu-table th:nth-child(1) { width: 22%; }
@@ -121,137 +103,99 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 .jobs-table th:nth-child(3) { width: 16%; }
 .jobs-table th:nth-child(4) { width: 36%; }
 
-.skill { display: grid; grid-template-columns: 40mm 50mm 10mm; gap: 4mm; align-items: center; margin: 0 2mm 2.5mm 2mm; }
-.skill-name { font-size: 9pt; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.track { height: 2.2mm; background: var(--track); border-radius: 10mm; overflow: hidden; width: 100%; }
+.skill { display: grid; grid-template-columns: 35mm 45mm 8mm; gap: 3mm; align-items: center; margin: 0 1mm 1mm 1mm; }
+.skill-name { font-size: 8pt; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.track { height: 1.8mm; background: var(--track); border-radius: 10mm; overflow: hidden; width: 100%; }
 .fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--primary)); border-radius: 10mm; }
-.skill-pct { font-size: 8pt; color: var(--muted); text-align: right; }
+.skill-pct { font-size: 7pt; color: var(--muted); text-align: right; }
 
-.footer { margin-top: 8mm; padding-top: 3mm; border-top: 1px solid var(--accent); display: flex; justify-content: space-between; align-items: flex-end; gap: 10mm; color: var(--muted); font-size: 8.5pt; break-inside: avoid; }
+.footer { margin-top: auto; padding-top: 2mm; border-top: 1px solid var(--accent); display: flex; justify-content: space-between; align-items: flex-end; gap: 10mm; color: var(--muted); font-size: 8pt; break-inside: avoid; }
 .footer-left { flex: 1; }
 .qr-box { display: inline-flex; flex-direction: column; align-items: center; gap: 1mm; }
-.qr-box img { width: 22mm; height: 22mm; }
-.qr-box small { font-size: 6pt; color: var(--muted); text-align: center; max-width: 22mm; line-height: 1.1; }
-.signature { text-align: center; min-width: 42mm; }
-.signature-line { height: 10mm; border-bottom: 1px solid var(--muted); margin-bottom: 1.5mm; display: flex; align-items: flex-end; justify-content: center; }
-.signature-line img { max-width: 40mm; max-height: 14mm; object-fit: contain; }
-.signature-label { text-transform: uppercase; letter-spacing: 1px; font-weight: 700; font-size: 8pt; }
+.qr-box img { width: 18mm; height: 18mm; }
+.qr-box small { font-size: 5.5pt; color: var(--muted); text-align: center; max-width: 18mm; line-height: 1.1; }
+.signature { text-align: center; min-width: 35mm; }
+.signature-line { height: 8mm; border-bottom: 1px solid var(--muted); margin-bottom: 1mm; display: flex; align-items: flex-end; justify-content: center; }
+.signature-line img { max-width: 35mm; max-height: 12mm; object-fit: contain; }
+.signature-label { text-transform: uppercase; letter-spacing: 1px; font-weight: 700; font-size: 7pt; }
 
-.layout-sidebar .resume-body { display: grid; grid-template-columns: 62mm minmax(0, 1fr); gap: 7mm; margin-top: 4mm; }
-.layout-sidebar .side-column { background: var(--primary); color: #fff; padding: 5mm 4mm; border-radius: 2mm; align-self: start; }
-.layout-sidebar .side-column .section { margin-top: 5mm; } .layout-sidebar .side-column .section-title { color: #fff; font-size: 10pt; }
-.layout-sidebar .side-column .section-title::after { background: var(--accent); }
+/* Sidebar Layout adjustments */
+.layout-sidebar .resume-body { display: grid; grid-template-columns: 55mm minmax(0, 1fr); gap: 4mm; margin-top: 2mm; }
+.layout-sidebar .side-column { background: var(--primary); color: #fff; padding: 3mm; border-radius: 2mm; align-self: start; }
+.layout-sidebar .side-column .section-title { color: #fff; font-size: 9.5pt; }
 .layout-sidebar .side-column .label, .layout-sidebar .side-column .value, .layout-sidebar .side-column .skill-name, .layout-sidebar .side-column .skill-pct { color: #fff; }
-.layout-sidebar .side-column .grid { grid-template-columns: 1fr; gap: 1mm; }
-.layout-sidebar .side-column .fill { background: var(--accent); }
-.layout-sidebar .side-column .skill { grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 1mm 2mm; margin: 0 0 2mm 0; }
-.layout-sidebar .side-column .skill-name { grid-column: 1 / -1; font-size: 8.5pt; }
-.layout-sidebar .side-column .track { grid-column: 1 / -1; height: 1.8mm; background: #ffffff33; width: 100%; }
-.layout-sidebar .side-column .skill-pct { font-size: 7.5pt; text-align: right; display: block; width: 100%; margin-top: 0.5mm; }
 
-.layout-sidebar .header { text-align: left; padding-left: 5mm; border: 0; } .layout-sidebar .header .photo { float: left; margin: 0 6mm 2mm 0; } .layout-sidebar .header .ornament { display: none; } .layout-sidebar .header .name { padding-top: 2mm; }
-
-.layout-banner .header { background: var(--primary); color: white; border: 0; border-radius: 2mm; padding: 6mm; } .layout-banner .name { color: white; } .layout-banner .contact-line { color: #fff; opacity: .9; } .layout-banner .ornament { color: var(--accent); } .layout-banner .section-title { background: var(--tint); padding: 2mm 3mm; border-radius: 1mm; }
-
-.layout-corporate .header { text-align: left; padding: 2mm 5mm 4mm 7mm; border-left: 4mm solid var(--accent); } .layout-corporate .photo { float: right; margin: 0 0 2mm 7mm; } .layout-corporate .ornament { display: none; } .layout-corporate .name { padding-top: 0; } .layout-corporate .contact-line { max-width: 125mm; } .layout-corporate .section-title { font-family: var(--body); font-size: 11pt; letter-spacing: 1.5px; border-bottom: 1px solid var(--accent); padding-bottom: 1mm; }
-
-.layout-cards .section { background: #fff; padding: 4mm; border: 1px solid var(--track); border-radius: 3mm; box-shadow: 0 1mm 3mm #0000000b; } .layout-cards .section-title { margin-bottom: 3mm; } .layout-cards .header { border: 0; margin-bottom: 3mm; background: linear-gradient(135deg, var(--tint), #fff); border-radius: 4mm; } .layout-cards .photo { border-radius: 50%; } .page.layout-cards { background: var(--tint); }
-
-.layout-split .header { background: var(--primary); color: white; text-align: left; padding: 6mm 7mm; border-radius: 3mm 3mm 0 0; } .layout-split .name { color: white; } .layout-split .contact-line { color: #fff; } .layout-split .photo { float: right; margin: 0 0 2mm 8mm; } .layout-split .ornament { display: none; } .layout-split .section-title { border-bottom: 2px solid var(--accent); padding-bottom: 1.5mm; }
-
-.layout-minimal .page::before, .layout-minimal .page::after { display: none; } .layout-minimal .header { border-bottom: 2px solid var(--primary); text-align: left; padding-left: 0; } .layout-minimal .ornament { display: none; } .layout-minimal .photo { float: right; margin: 0 0 2mm 8mm; border: 1px solid var(--accent); box-shadow: none; } .layout-minimal .name { padding-top: 2mm; } .layout-minimal .section-title { font-family: var(--body); font-size: 10pt; letter-spacing: 1.8px; } .layout-minimal .section-title::after { background: var(--primary); opacity: .35; }
-
-.layout-timeline .section { border-left: 2px solid var(--accent); margin-left: 3mm; padding-left: 5mm; } .layout-timeline .section-title { position: relative; } .layout-timeline .section-title::before { content: ""; position: absolute; left: -7.2mm; width: 3mm; height: 3mm; background: var(--primary); border: 1px solid #fff; border-radius: 50%; } .layout-timeline .header { border-bottom: 3px solid var(--primary); }
-
-.layout-editorial .header { text-align: left; padding: 3mm 5mm 6mm; border-bottom: 0; } .layout-editorial .header::after { content: ""; position: absolute; left: 0; bottom: 0; width: 45mm; height: 3px; background: var(--accent); } .layout-editorial .photo { float: right; margin: 0 0 2mm 8mm; border-radius: 1mm; } .layout-editorial .ornament { display: none; } .layout-editorial .name { font-size: 30pt; } .layout-editorial .section-title { font-family: var(--body); font-size: 10pt; letter-spacing: 2px; } .layout-editorial .section { margin-top: 7mm; }
-
-.layout-traditional .header { padding-top: 2mm; border-bottom: 3px double var(--accent); } .layout-traditional .ornament { font-size: 19pt; } .layout-traditional .name { text-transform: uppercase; letter-spacing: 1.3px; } .layout-traditional .section-title { border-bottom: 1px solid var(--accent); padding-bottom: 1.5mm; }
-
-.layout-magazine .header { display: flex; align-items: flex-end; justify-content: space-between; text-align: left; padding-bottom: 2mm; border-bottom: 4px solid var(--primary); } .layout-magazine .header-copy { flex: 1; } .layout-magazine .photo { width: 28mm; height: 34mm; margin: 0 0 0 5mm; border: none; box-shadow: none; border-radius: 0; padding: 0; } .layout-magazine .name { font-size: 32pt; line-height: .95; } .layout-magazine .ornament { display: none; } .layout-magazine .resume-body { columns: 2; column-gap: 8mm; } .layout-magazine .section { break-inside: avoid; }
-
-.layout-executive .header { background: var(--tint); color: var(--primary); padding: 5mm 6mm; border-bottom: 2px solid var(--primary); border-radius: 0; } .layout-executive .name { color: var(--primary); font-size: 24pt; } .layout-executive .photo { float: right; margin: 0 0 2mm 6mm; width: 30mm; height: 36mm; } .layout-executive .section-title { background: var(--primary); color: #fff; padding: 1.5mm 3mm; font-size: 10pt; } .layout-executive .section-title::after { display: none; }
-
-.layout-vintage .page { background: #FCFBF5; } .layout-vintage .page::before { border: 3px double var(--primary); inset: 3mm; opacity: 1; } .layout-vintage .page::after { border: 1px solid var(--primary); inset: 4mm; opacity: .6; } .layout-vintage .header { border-bottom: 1px solid var(--primary); } .layout-vintage .name { font-family: 'Libre Baskerville', serif; font-size: 24pt; } .layout-vintage .photo { border-radius: 0; border: 1px solid var(--primary); padding: 1mm; } .layout-vintage .photo img { border-radius: 0; } .layout-vintage .section-title { font-family: 'Libre Baskerville', serif; text-transform: none; border-bottom: 1px dashed var(--primary); padding-bottom: 1mm; } .layout-vintage .section-title::after { display: none; }
-
-.layout-gradient .page::before { display: none; } .layout-gradient .page::after { display: none; } .layout-gradient .page { background: linear-gradient(135deg, var(--tint) 0%, #fff 40%, var(--tint) 100%); } .layout-gradient .header { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; border: 0; border-radius: 0 0 8mm 8mm; padding: 8mm 6mm 6mm; } .layout-gradient .name { color: white; } .layout-gradient .contact-line { color: rgba(255,255,255,.9); } .layout-gradient .ornament { color: white; opacity: .85; } .layout-gradient .photo { border-color: white; } .layout-gradient .section-title { background: linear-gradient(90deg, var(--primary), var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-
-.layout-geometric .page::before { display: none; } .layout-geometric .page::after { display: block; inset: 0; border: 0; background: radial-gradient(circle at 5% 5%, var(--accent) 0 4mm, transparent 4mm), radial-gradient(circle at 95% 5%, var(--primary) 0 6mm, transparent 6mm), radial-gradient(circle at 95% 95%, var(--accent) 0 5mm, transparent 5mm), radial-gradient(circle at 5% 95%, var(--primary) 0 4mm, transparent 4mm); opacity: .14; } .layout-geometric .header { border-bottom: 0; padding-bottom: 4mm; } .layout-geometric .header::after { content: ""; display: block; margin: 4mm auto 0; width: 30mm; height: 3mm; background: var(--accent); clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%); } .layout-geometric .section-title .mark { background: var(--primary); color: #fff; width: 7mm; height: 7mm; border-radius: 1mm; display: inline-flex; align-items: center; justify-content: center; text-align: center; }
-
-.layout-traditional-marriage {
-  --primary: #800000; --accent: #D4AF37; --tint: #FDFBF7; --ink: #000080; --muted: #4a4a4a;
-}
-
-.layout-traditional-marriage .page {
-  background-color: #fffafb;
-  background-image: radial-gradient(circle at top center, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
-  padding: 15mm 12mm;
-}
-
-.layout-traditional-marriage .page::before { border: 8px double var(--accent); inset: 3mm; opacity: 1; border-radius: 4mm; }
-.layout-traditional-marriage .page::after { border: 2px solid var(--primary); inset: 5mm; opacity: 1; border-radius: 3mm; }
-
-.layout-traditional-marriage .resume-body { display: block; margin-top: 2mm; }
-
-.layout-traditional-marriage .header { text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 4mm; position: relative; }
-.layout-traditional-marriage .header .ornament { font-size: 30pt; color: #d32f2f; margin-bottom: 0; }
-.layout-traditional-marriage .header .photo { position: absolute; top: 0; right: 0; width: 30mm; height: 36mm; border: 3px solid var(--accent); border-radius: 4mm; box-shadow: 0 2mm 5mm rgba(0,0,0,0.2); margin: 0; padding: 1mm; }
-.layout-traditional-marriage .header .name { font-family: 'Cinzel', serif; font-size: 26pt; color: #B22222; margin-top: 2mm; letter-spacing: 1px; text-transform: uppercase; }
-
-.layout-traditional-marriage .section { margin-top: 6mm; text-align: center; }
-.layout-traditional-marriage .section-title { display: inline-block; background: linear-gradient(to bottom, #B22222, #800000); color: #FFD700; font-family: 'Cinzel', serif; font-size: 14pt; font-weight: 800; text-transform: uppercase; padding: 2mm 10mm; border-radius: 20mm; border: 2px solid #FFD700; box-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-bottom: 5mm; position: relative; }
+/* Traditional Marriage Layout adjustments */
+.layout-traditional-marriage { --primary: #800000; --accent: #D4AF37; --tint: #FDFBF7; --ink: #000080; --muted: #4a4a4a; }
+.layout-traditional-marriage .page { background-color: #fffafb; background-image: radial-gradient(circle at top center, rgba(212, 175, 55, 0.05) 0%, transparent 50%); padding: 10mm; }
+.layout-traditional-marriage .page::before { border: 4px double var(--accent); inset: 3mm; opacity: 1; border-radius: 3mm; }
+.layout-traditional-marriage .page::after { border: 1px solid var(--primary); inset: 4.5mm; opacity: 1; border-radius: 2mm; }
+.layout-traditional-marriage .header { text-align: center; border-bottom: 1.5px solid var(--accent); padding-bottom: 2mm; position: relative; flex-direction: column; align-items: center; }
+.layout-traditional-marriage .header .ornament { font-size: 20pt; color: #d32f2f; margin-bottom: 0; }
+.layout-traditional-marriage .header .name { font-family: 'Cinzel', serif; font-size: 20pt; color: #B22222; margin-top: 1mm; text-transform: uppercase; }
+.layout-traditional-marriage .section { margin-top: 3mm; text-align: center; }
+.layout-traditional-marriage .section-title { display: inline-block; background: linear-gradient(to bottom, #B22222, #800000); color: #FFD700; font-family: 'Cinzel', serif; font-size: 10pt; padding: 1mm 8mm; border-radius: 20mm; border: 1.5px solid #FFD700; margin-bottom: 2mm; }
 .layout-traditional-marriage .section-title::after { display: none; }
 .layout-traditional-marriage .section-title .mark { display: none; }
-
-.layout-traditional-marriage .grid { display: grid; grid-template-columns: 45mm 5mm 1fr; gap: 2mm 0; padding: 0 5mm; text-align: left; font-family: 'Merriweather', serif; }
-.layout-traditional-marriage .label { font-size: 11pt; font-weight: 900; color: var(--ink); text-transform: uppercase; }
-.layout-traditional-marriage .colon { font-size: 11pt; font-weight: 900; text-align: center; color: var(--ink); }
-.layout-traditional-marriage .value { font-size: 11pt; font-weight: 700; color: var(--ink); }
-
-.layout-traditional-marriage .side-column { background: transparent; color: var(--ink); padding: 0; }
-.layout-traditional-marriage .main-column { padding: 0; }
-
-.layout-traditional-marriage .custom-table { margin: 0 5mm; width: calc(100% - 10mm); border: 2px solid var(--primary); }
-.layout-traditional-marriage .custom-table th { background-color: #B22222; color: #FFD700; border: 1px solid var(--accent); font-family: 'Cinzel', serif; text-align: center; }
-.layout-traditional-marriage .custom-table td { border: 1px solid var(--primary); color: var(--ink); font-family: 'Merriweather', serif; font-weight: 700; text-align: center; }
-
-.layout-traditional-marriage .skill { display: grid; grid-template-columns: 40mm 50mm 10mm; gap: 4mm; align-items: center; margin: 0 auto 3mm auto; font-family: 'Merriweather', serif; }
-.layout-traditional-marriage .track { background: #f0e6d2; border: 1px solid var(--primary); }
-.layout-traditional-marriage .fill { background: linear-gradient(90deg, #FFD700, #B22222); }
+.layout-traditional-marriage .grid { display: grid; grid-template-columns: 45mm 5mm 1fr; gap: 1mm 0; padding: 0 3mm; text-align: left; font-family: 'Merriweather', serif; }
+.layout-traditional-marriage .label { font-size: 9pt; font-weight: 900; color: var(--ink); text-transform: uppercase; }
+.layout-traditional-marriage .colon { font-size: 9pt; font-weight: 900; text-align: center; color: var(--ink); }
+.layout-traditional-marriage .value { font-size: 9pt; font-weight: 700; color: var(--ink); }
+.layout-traditional-marriage .custom-table { margin: 0 3mm; width: calc(100% - 6mm); border: 1.5px solid var(--primary); }
+.layout-traditional-marriage .custom-table th { background-color: #B22222; color: #FFD700; border: 1px solid var(--accent); font-family: 'Cinzel', serif; }
+.layout-traditional-marriage .custom-table td { border: 1px solid var(--primary); color: var(--ink); font-family: 'Merriweather', serif; font-weight: 700; }
+.layout-traditional-marriage .photo { position: absolute; top: 0; right: 0; width: 24mm; height: 28mm; }
 
 @media print { 
   html, body { background: #fff !important; } 
-  .page { width: 210mm; min-height: 0; margin: 0; padding: 11mm 14mm 14mm; overflow: visible; box-shadow: none; } 
+  .page { width: 210mm; height: 297mm; margin: 0; overflow: hidden; box-shadow: none; } 
   .page::before, .page::after { position: fixed; } 
-  .page::before { inset: 5mm; } 
-  .page::after { inset: 8mm; } 
-  .header, .section-title, .grid, .skill, .footer, .photo, .custom-table { break-inside: avoid; page-break-inside: avoid; } 
-  .section { break-inside: auto; page-break-inside: auto; } 
-  .section-title { break-after: avoid; page-break-after: avoid; } 
-  .block, .value { orphans: 3; widows: 3; } 
 }
-@media screen { body { padding: 12px 0; } .page { box-shadow: 0 10px 40px #15223822; } }
+@media screen { body { background: #e9edf2; padding: 12px 0; } .page { box-shadow: 0 10px 40px #15223822; } }
 </style>
 </head>
 <body>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const page = document.querySelector('.page');
+    if (page) {
+      const maxHeight = 297 * 3.7795275591; 
+      const originalZoom = document.body.style.zoom;
+      document.body.style.zoom = 1.0;
+      const actualHeight = page.getBoundingClientRect().height;
+      if (actualHeight > maxHeight) {
+        document.body.style.zoom = maxHeight / actualHeight;
+      } else {
+        document.body.style.zoom = originalZoom || 1.0;
+      }
+    }
+  });
+</script>
 
 <div class="page layout-{{ layout }}{% if watermark %} has-wm{% endif %}">
   {% if watermark %}<div class="watermark">{{ watermark_text }}</div>{% endif %}
   <main class="content">
     
-    <header class="header">
-      {% if layout == 'traditional-marriage' %}
-        <div class="ornament">🕉️</div>
-      {% else %}
-        <div class="ornament">✦ ❖ ✦</div>
-      {% endif %}
+    <!-- 🔥 DYNAMIC HEADER based on Photo Position -->
+    <header class="header {% if photo_pos == 'left' %}header-left{% elif photo_pos == 'right' %}header-right{% elif photo_pos == 'center' %}header-center{% endif %}">
       
-      <div class="photo" id="photoBox" {% if not photo %}style="display:none"{% endif %}>
-        {% if photo %}<img id="profilePhoto" src="{{ photo }}" alt="Profile photo">{% else %}<img id="profilePhoto" alt="Profile photo" style="display:none">{% endif %}
+      {% if photo and photo_pos != 'hidden' %}
+      <div class="photo" id="photoBox">
+        <img id="profilePhoto" src="{{ photo }}" alt="Profile photo">
       </div>
-      <div class="header-copy">
-        <h1 class="name">{{ name or 'YOUR NAME' }}</h1>
+      {% endif %}
+
+      <div class="header-copy" style="width: 100%;">
+        {% if layout == 'traditional-marriage' %}
+          <div class="ornament">🕉️</div>
+        {% else %}
+          {% if photo_pos == 'center' %}<div class="ornament" style="text-align: center;">✦ ❖ ✦</div>{% endif %}
+        {% endif %}
+        
+        <h1 class="name" style="{% if photo_pos == 'center' %}text-align: center;{% endif %}">{{ name or 'YOUR NAME' }}</h1>
         {% if phone or email %}
-        <div class="contact-line">
+        <div class="contact-line" style="{% if photo_pos == 'center' %}text-align: center;{% endif %}">
           {% if phone %}{{ phone }}{% endif %}{% if phone and email %} &nbsp;•&nbsp; {% endif %}{% if email %}{{ email }}{% endif %}
         </div>
         {% endif %}
@@ -262,7 +206,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
       <aside class="side-column">
         {% set ns = namespace(n=0) %}
 
-        {# ============= CONTACT (COMMON) ============= #}
         {% if phone or email or address %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -290,7 +233,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= PERSONAL (COMMON) ============= #}
         {% set personal_fields = [(labels.dob, dob), (labels.age, age), (labels.gender, gender), (labels.height, height), (labels.weight, weight), (labels.blood, blood), (labels.marital, marital)] %}
         {% set has_personal = personal_fields|selectattr(1)|list|length > 0 %}
         {% if has_personal %}
@@ -312,7 +254,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= HOROSCOPE (MARRIAGE ONLY) ============= #}
         {% if not is_job and (gotra or rashi or nakshatra or manglik or religion or caste) %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -332,7 +273,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= FAMILY (MARRIAGE ONLY) ============= #}
         {% if not is_job and (father or mother or brothers or sisters) %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -365,7 +305,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= LIFESTYLE (MARRIAGE ONLY) ============= #}
         {% if not is_job and (diet or smoking or drinking or languages or hobbies) %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -385,7 +324,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= ADDITIONAL / LANGUAGES+HOBBIES (JOB ONLY) ============= #}
         {% if is_job and (languages or hobbies) %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -408,7 +346,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= SKILLS (COMMON) ============= #}
         {% if skills_list %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -428,7 +365,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
       </aside>
 
       <div class="main-column">
-        {# ============= PROFILE / OBJECTIVE (COMMON) ============= #}
         {% if profile %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -440,7 +376,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= OCCUPATION (MARRIAGE ONLY) ============= #}
         {% if not is_job and occupation %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -452,7 +387,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= EDUCATION (COMMON) ============= #}
         {% if education_mode == 'detailed' and education_list %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -492,7 +426,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= WORK EXPERIENCE (COMMON) ============= #}
         {% if work_experience_list %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -523,7 +456,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= PROJECTS (JOB ONLY) ============= #}
         {% if is_job and projects %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -535,7 +467,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= CERTIFICATIONS (JOB ONLY) ============= #}
         {% if is_job and certifications %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -547,7 +478,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= PARTNER PREFERENCES (MARRIAGE ONLY) ============= #}
         {% if not is_job and partner_preferences %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -559,7 +489,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {# ============= DECLARATION (COMMON) ============= #}
         {% if declaration %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
@@ -579,18 +508,22 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         {% if place and date %}<br>{% endif %}
         {% if date %}{{ labels.date }}: {{ date }}{% endif %}
         {% if show_qr and qr_text %}
-        <div class="qr-box" style="margin-top:2mm;">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data={{ qr_text|urlencode }}" alt="QR">
+        <div class="qr-box" style="margin-top:1.5mm;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ qr_text|urlencode }}" alt="QR">
           <small>{{ labels.qr }}</small>
         </div>
         {% endif %}
       </div>
+      
+      <!-- 🔥 SIGNATURE ONLY FOR JOB MODE -->
+      {% if is_job and signature %}
       <div class="signature">
         <div class="signature-line">
-          {% if signature %}<img src="{{ signature }}" alt="Signature">{% endif %}
+          <img src="{{ signature }}" alt="Signature">
         </div>
         <div class="signature-label">{{ labels.signature }}</div>
       </div>
+      {% endif %}
     </footer>
   </main>
 </div>
