@@ -32,6 +32,7 @@ body {
 button, input, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; border: 0; background: none; }
 body.mode-job .marriage-only { display: none !important; }
+body.mode-marriage .job-only { display: none !important; }
 
 @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 .logo-mark, .btn-pdf, .num-badge, .footer-btn.btn-pdf {
@@ -92,7 +93,7 @@ body.dark .tpl-btn.active { background: linear-gradient(135deg, #2a2318, #1a1610
 .load-more-btn { width: 100%; padding: 10px; margin-top: 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; font-weight: 700; color: var(--ink); }
 
 .photo-row { display: flex; gap: 10px; align-items: center; }
-.photo-prev { width: 70px; height: 84px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--ink-3); font-size: 10px; flex-shrink: 0; cursor: pointer; transition: all var(--t); position: relative; }
+.photo-prev { width: 70px; height: 84px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--ink-3); font-size: 10px; flex-shrink: 0; cursor: pointer; transition: all var(--t); position: relative; text-align: center; padding: 4px; }
 .photo-prev:hover { border-color: var(--gold); }
 .photo-prev.dragover { border-color: var(--gold); background: rgba(212, 168, 83, .1); transform: scale(1.02); }
 .photo-prev img { width: 100%; height: 100%; object-fit: cover; }
@@ -153,11 +154,6 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
 .draft-item .draft-actions { display: flex; gap: 4px; }
 .draft-item button { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
 
-.skeleton { background: linear-gradient(90deg, var(--bg) 25%, var(--line) 50%, var(--bg) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
-@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-.kbd { display: inline-block; padding: 2px 6px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); font-size: 10px; font-family: monospace; font-weight: 700; }
-
 @media (max-width: 1023px) {
   .app-main { display: block; height: auto; padding-bottom: 90px; }
   .app-footer { display: flex; }
@@ -180,13 +176,14 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
     <button class="icon-btn" id="themeBtn" title="Toggle theme">🌙</button>
     <button class="icon-btn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
     <button class="icon-btn" id="redoBtn" title="Redo (Ctrl+Y)">↷</button>
-    <button class="icon-btn" id="helpBtn" title="Keyboard shortcuts (?)">?</button>
+    <button class="icon-btn" id="helpBtn" title="Keyboard shortcuts">?</button>
   </div>
 </header>
 
 <main class="app-main">
   <aside class="editor panel active" id="editPanel">
 
+    <!-- Mode Tabs -->
     <div class="sec" style="padding: 12px; border-color: var(--gold); background: #fffdf8; margin-bottom: 12px;">
       <div style="font-size: 12px; font-weight: bold; margin-bottom: 10px; color: var(--ink-2); text-align:center;" data-i18n="choose_type">CHOOSE BIODATA TYPE</div>
       <div style="display: flex; gap: 10px;">
@@ -203,6 +200,7 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
     </div>
 
+    <!-- Design -->
     <details class="sec" open>
       <summary><span class="num-badge">1</span> <span data-i18n="design">Choose Design</span> <span style="color:var(--ink-3);font-weight:500;font-size:11px;">(15,000+ available)</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
@@ -229,7 +227,6 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
         <div class="tpl-grid" id="templateGrid"></div>
         <button class="load-more-btn" id="loadMoreBtn" data-i18n="load_more">Load More...</button>
 
-        <!-- Custom Color Picker -->
         <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--line);">
           <div style="font-size:11px;font-weight:700;color:var(--ink-2);margin-bottom:8px;" data-i18n="custom_colors">🎨 CUSTOM COLORS</div>
           <div class="color-pick-row"><label data-i18n="primary_color">Primary Color</label><input type="color" class="color-pick" id="customPrimary" value="#6B0F1A"></div>
@@ -237,7 +234,6 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
           <button class="btn-sm" id="applyColorsBtn" style="width:100%;margin-top:6px;" data-i18n="apply_colors">Apply Custom Colors</button>
         </div>
 
-        <!-- Font Size -->
         <div style="margin-top:12px;">
           <label style="font-size:11px;font-weight:700;color:var(--ink-2);display:block;margin-bottom:6px;">
             <span data-i18n="name_size">Name Font Size:</span> <span id="nameSizeVal">27pt</span>
@@ -245,7 +241,6 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
           <input type="range" id="nameSize" min="18" max="42" value="27" style="width:100%;">
         </div>
 
-        <!-- Photo fit -->
         <div class="fld" style="margin-top:12px;">
           <label data-i18n="photo_fit">Photo Fit</label>
           <select id="photoFit">
@@ -256,6 +251,7 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
       </div>
     </details>
 
+    <!-- Photo + Signature -->
     <details class="sec" open>
       <summary><span class="num-badge">2</span> <span data-i18n="photo">Profile Photo</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
@@ -269,7 +265,6 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
         </div>
         <div style="font-size:11px;color:var(--ink-3);margin-top:6px;text-align:center;" data-i18n="drag_hint">Tip: Drag & drop image onto preview</div>
 
-        <!-- Signature -->
         <div class="fld" style="margin-top:14px;">
           <label data-i18n="signature_img">Signature Image</label>
           <div style="display:flex;gap:8px;align-items:center;">
@@ -284,6 +279,7 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
       </div>
     </details>
 
+    <!-- Personal Details -->
     <details class="sec" open>
       <summary><span class="num-badge">3</span> <span data-i18n="personal">Personal Details</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
@@ -312,10 +308,10 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
           <div class="fld"><label data-i18n="dob">Date of Birth</label><input id="dob" type="date"></div>
           <div class="fld"><label data-i18n="gender">Gender</label>
             <select id="gender">
-              <option value="" data-i18n="select">Select</option>
-              <option value="Male" data-i18n="male">Male</option>
-              <option value="Female" data-i18n="female">Female</option>
-              <option value="Other" data-i18n="other">Other</option>
+              <option value="">Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
             </select>
           </div>
         </div>
@@ -335,42 +331,44 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
         <div class="fld-row">
           <div class="fld"><label data-i18n="blood">Blood Group</label>
             <select id="blood">
-              <option value="" data-i18n="select">Select</option>
+              <option value="">Select</option>
               <option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
             </select>
           </div>
           <div class="fld"><label data-i18n="marital">Marital Status</label>
             <select id="marital">
-              <option value="" data-i18n="select">Select</option>
-              <option value="Unmarried" data-i18n="unmarried">Unmarried</option>
-              <option value="Never Married" data-i18n="never_married">Never Married</option>
-              <option value="Divorced" data-i18n="divorced">Divorced</option>
-              <option value="Widowed" data-i18n="widowed">Widowed</option>
-              <option value="Awaiting Divorce" data-i18n="awaiting_divorce">Awaiting Divorce</option>
+              <option value="">Select</option>
+              <option value="Unmarried">Unmarried</option>
+              <option value="Never Married">Never Married</option>
+              <option value="Divorced">Divorced</option>
+              <option value="Widowed">Widowed</option>
+              <option value="Awaiting Divorce">Awaiting Divorce</option>
             </select>
           </div>
         </div>
 
-        <div class="fld-row marriage-only">
-          <div class="fld"><label data-i18n="religion">Religion</label>
-            <input id="religion" list="religion-list" placeholder="Hindu">
-            <datalist id="religion-list"><option>Hindu</option><option>Muslim</option><option>Christian</option><option>Sikh</option><option>Buddhist</option><option>Jain</option><option>Parsi</option></datalist>
+        <!-- Horoscope fields (Marriage only) -->
+        <div class="marriage-only">
+          <div class="fld-row">
+            <div class="fld"><label data-i18n="religion">Religion</label>
+              <input id="religion" list="religion-list" placeholder="Hindu">
+              <datalist id="religion-list"><option>Hindu</option><option>Muslim</option><option>Christian</option><option>Sikh</option><option>Buddhist</option><option>Jain</option><option>Parsi</option></datalist>
+            </div>
+            <div class="fld"><label data-i18n="caste">Caste</label><input id="caste" placeholder="Optional"></div>
           </div>
-          <div class="fld"><label data-i18n="caste">Caste</label><input id="caste" placeholder="Optional"></div>
-        </div>
-        <div class="fld-row marriage-only">
-          <div class="fld"><label data-i18n="gotra">Gotra</label><input id="gotra" placeholder="Optional"></div>
-          <div class="fld"><label data-i18n="rashi">Rashi</label><input id="rashi" placeholder="Optional"></div>
-        </div>
-        <div class="fld-row marriage-only">
-          <div class="fld"><label data-i18n="nakshatra">Nakshatra</label><input id="nakshatra" placeholder="Optional"></div>
-          <div class="fld"><label data-i18n="manglik">Manglik</label>
-            <select id="manglik">
-              <option value="" data-i18n="select">Select</option>
-              <option value="Yes" data-i18n="yes">Yes</option>
-              <option value="No" data-i18n="no">No</option>
-              <option value="Partial" data-i18n="partial">Partial</option>
-            </select>
+          <div class="fld-row">
+            <div class="fld"><label data-i18n="gotra">Gotra</label><input id="gotra" placeholder="Optional"></div>
+            <div class="fld"><label data-i18n="rashi">Rashi</label><input id="rashi" placeholder="Optional"></div>
+          </div>
+          <div class="fld-row">
+            <div class="fld"><label data-i18n="nakshatra">Nakshatra</label><input id="nakshatra" placeholder="Optional"></div>
+            <div class="fld"><label data-i18n="manglik">Manglik</label>
+              <select id="manglik"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="Partial">Partial</option></select>
+            </div>
+          </div>
+          <div class="fld">
+            <label data-i18n="occupation">Occupation</label>
+            <input id="occupation" placeholder="Software Engineer at XYZ">
           </div>
         </div>
 
@@ -388,6 +386,7 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
       </div>
     </details>
 
+    <!-- Contact -->
     <details class="sec" open>
       <summary><span class="num-badge">4</span> <span data-i18n="contact">Contact Details</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
@@ -401,6 +400,7 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
       </div>
     </details>
 
+    <!-- Family (Marriage only) -->
     <details class="sec marriage-only">
       <summary><span class="num-badge">5</span> <span data-i18n="family">Family Details</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
@@ -417,8 +417,43 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
       </div>
     </details>
 
+    <!-- Lifestyle (Marriage only) -->
+    <details class="sec marriage-only">
+      <summary><span class="num-badge">6</span> <span data-i18n="lifestyle">Lifestyle</span><span class="arrow">▶</span></summary>
+      <div class="sec-body">
+        <div class="fld-row">
+          <div class="fld"><label data-i18n="diet">Diet</label>
+            <select id="diet">
+              <option value="">Select</option>
+              <option value="Vegetarian">Vegetarian</option>
+              <option value="Non-Vegetarian">Non-Vegetarian</option>
+              <option value="Eggetarian">Eggetarian</option>
+              <option value="Vegan">Vegan</option>
+            </select>
+          </div>
+          <div class="fld"><label data-i18n="smoking">Smoking</label>
+            <select id="smoking">
+              <option value="">Select</option>
+              <option value="No">No</option>
+              <option value="Occasionally">Occasionally</option>
+              <option value="Yes">Yes</option>
+            </select>
+          </div>
+        </div>
+        <div class="fld"><label data-i18n="drinking">Drinking</label>
+          <select id="drinking">
+            <option value="">Select</option>
+            <option value="No">No</option>
+            <option value="Occasionally">Occasionally</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
+      </div>
+    </details>
+
+    <!-- Education -->
     <details class="sec">
-      <summary><span class="num-badge">6</span> <span data-i18n="education">Education</span><span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">7</span> <span data-i18n="education">Education</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="edu-mode-toggle" style="display:flex; gap:14px; margin-bottom:12px;">
           <label><input type="radio" name="edu_mode" value="detailed" checked> <span data-i18n="detailed">Detailed</span></label>
@@ -434,10 +469,10 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
       </div>
     </details>
 
+    <!-- Work & Skills -->
     <details class="sec">
-      <summary><span class="num-badge">7</span> <span data-i18n="work_skills">Work & Skills</span><span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">8</span> <span data-i18n="work_skills">Work & Skills</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
-        
         <div class="fld">
           <label data-i18n="exp">Work Experience</label>
           <div id="jobsList"></div>
@@ -459,16 +494,50 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
       </div>
     </details>
 
+    <!-- Projects (Job only) -->
+    <details class="sec job-only">
+      <summary><span class="num-badge">9</span> <span data-i18n="projects">Projects / Portfolio</span><span class="arrow">▶</span></summary>
+      <div class="sec-body">
+        <div class="fld">
+          <label>Projects / Portfolio</label>
+          <textarea id="projects" placeholder="Project name — role — tech used — outcome"></textarea>
+        </div>
+      </div>
+    </details>
+
+    <!-- Certifications (Job only) -->
+    <details class="sec job-only">
+      <summary><span class="num-badge">10</span> <span data-i18n="certifications">Certifications / Training</span><span class="arrow">▶</span></summary>
+      <div class="sec-body">
+        <div class="fld">
+          <label>Certifications / Training</label>
+          <textarea id="certifications" placeholder="AWS Certified — 2024&#10;Google Data Analytics — 2023"></textarea>
+        </div>
+      </div>
+    </details>
+
+    <!-- Partner Preferences (Marriage only) -->
+    <details class="sec marriage-only">
+      <summary><span class="num-badge">11</span> <span data-i18n="partner_preferences">Partner Preferences</span><span class="arrow">▶</span></summary>
+      <div class="sec-body">
+        <div class="fld">
+          <label data-i18n="partner_preferences">What you are looking for</label>
+          <textarea id="partner_preferences" placeholder="Age range, education, location, profession, lifestyle..."></textarea>
+        </div>
+      </div>
+    </details>
+
+    <!-- Declaration -->
     <details class="sec">
-      <summary><span class="num-badge">8</span> <span data-i18n="declaration">Declaration</span><span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">12</span> <span data-i18n="declaration">Declaration</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="fld">
           <label data-i18n="preset">Preset</label>
           <select id="declarationPreset">
             <option value="">-- Choose --</option>
-            <option value="1" data-i18n="standard_1">Standard 1</option>
-            <option value="2" data-i18n="standard_2">Standard 2</option>
-            <option value="3" data-i18n="standard_3">Standard 3</option>
+            <option value="1">Standard 1</option>
+            <option value="2">Standard 2</option>
+            <option value="3">Standard 3</option>
           </select>
         </div>
         <div class="fld"><label data-i18n="dec_text">Declaration Text</label><textarea id="declaration" placeholder="I hereby declare..." maxlength="500"></textarea>
@@ -481,8 +550,9 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
       </div>
     </details>
 
+    <!-- Options & Tools -->
     <details class="sec">
-      <summary><span class="num-badge">9</span> <span data-i18n="options">Options & Tools</span><span class="arrow">▶</span></summary>
+      <summary><span class="num-badge">13</span> <span data-i18n="options">Options & Tools</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
         <div class="opt-row">
           <span style="font-size:13px;font-weight:600;" data-i18n="watermark">Watermark on PDF</span>
@@ -498,17 +568,15 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
           <label class="switch"><input type="checkbox" id="optQr"><span></span></label>
         </div>
 
-        <!-- PDF Quality -->
         <div class="fld" style="margin-top:14px;">
           <label data-i18n="pdf_quality">PDF Quality</label>
           <select id="pdfQuality">
-            <option value="high" data-i18n="q_high">High (larger file)</option>
-            <option value="medium" data-i18n="q_medium" selected>Medium (recommended)</option>
-            <option value="low" data-i18n="q_low">Low (smallest)</option>
+            <option value="high">High (larger file)</option>
+            <option value="medium" selected>Medium (recommended)</option>
+            <option value="low">Low (smallest)</option>
           </select>
         </div>
 
-        <!-- Multiple Drafts -->
         <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--line);">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
             <span style="font-size:12px;font-weight:700;" data-i18n="my_drafts">📁 My Drafts</span>
@@ -522,8 +590,8 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
           <button class="btn-sm" id="importBtn" data-i18n="import">⬆ Import JSON</button>
           <input type="file" id="importFile" accept="application/json" style="display:none">
           <button class="btn-sm" id="printBtn" data-i18n="print">🖨 Print</button>
-          <button class="btn-sm" id="newTabBtn" data-i18n="new_tab">🔗 Preview in New Tab</button>
-          <button class="btn-sm danger" id="resetBtn" data-i18n="reset">🗑 Reset All</button>
+          <button class="btn-sm" id="newTabBtn" data-i18n="new_tab">🔗 New Tab</button>
+          <button class="btn-sm danger" id="resetBtn" data-i18n="reset">🗑 Reset</button>
         </div>
       </div>
     </details>
@@ -549,9 +617,9 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
 </main>
 
 <footer class="app-footer">
-  <button class="footer-btn btn-save" id="saveBtn" data-i18n="save">💾 Save</button>
-  <button class="footer-btn btn-preview" id="previewToggleBtn" data-i18n="preview">👁️ Preview</button>
-  <button class="footer-btn btn-pdf" id="pdfBtn" data-i18n="pdf">📥 PDF</button>
+  <button class="footer-btn btn-save" id="saveBtn">💾 Save</button>
+  <button class="footer-btn btn-preview" id="previewToggleBtn">👁️ Preview</button>
+  <button class="footer-btn btn-pdf" id="pdfBtn">📥 PDF</button>
 </footer>
 
 <div class="toast-host" id="toastHost"></div>
@@ -562,9 +630,6 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
 const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
 
-// ============================================================
-// TOAST SYSTEM
-// ============================================================
 function toast(msg, type = 'info', action = null) {
   const el = document.createElement('div');
   el.className = `toast ${type}`;
@@ -578,18 +643,15 @@ function toast(msg, type = 'info', action = null) {
   $('toastHost').appendChild(el);
   setTimeout(() => el.remove(), action ? 5000 : 3000);
 }
-
 function safeJSON(o) { try { return JSON.stringify(o); } catch (e) { return '{}'; } }
 
 // ============================================================
-// UI TRANSLATIONS (shortened — full set preserved from original)
+// UI TRANSLATIONS
 // ============================================================
 const UI_LANG = {
-  en: { choose_type: "CHOOSE BIODATA TYPE", marriage: "Marriage", job: "Job / Career", completion: "Profile Completion", design: "Choose Design", all: "All", fav: "⭐ Favourites", recent: "🕒 Recent", all_layouts: "All Layouts", load_more: "Load More...", photo: "Profile Photo", upload: "📷 Upload Photo", remove: "✕ Remove", no_photo: "No photo", personal: "Personal Details", lang_label: "🌐 PDF Output Language", full_name: "Full Name", req: "required", dob: "Date of Birth", gender: "Gender", select: "Select", male: "Male", female: "Female", other: "Other", height: "Height", weight: "Weight", blood: "Blood Group", marital: "Marital Status", unmarried: "Unmarried", never_married: "Never Married", divorced: "Divorced", widowed: "Widowed", awaiting_divorce: "Awaiting Divorce", religion: "Religion", caste: "Caste", gotra: "Gotra", rashi: "Rashi", nakshatra: "Nakshatra", manglik: "Manglik", yes: "Yes", no: "No", partial: "Partial", profile: "Profile / Objective", voice: "Voice Input", contact: "Contact Details", phone: "Mobile Number", req_contact: "at least one required", email: "Email", address: "Address", family: "Family Details", father: "Father Name", father_job: "Father Occupation", mother: "Mother Name", mother_job: "Mother Occupation", brothers: "Brothers", sisters: "Sisters", education: "Education", detailed: "Detailed", simple: "Simple", add_edu: "+ Add Education", qualifications: "Qualifications", work_skills: "Work & Skills", exp: "Work Experience", add_exp: "+ Add Experience", skills: "Skills", add_skill: "+ Add Skill", languages: "Languages Known", hobbies: "Hobbies", declaration: "Declaration", preset: "Preset", standard_1: "Standard 1", standard_2: "Standard 2", standard_3: "Standard 3", dec_text: "Declaration Text", place: "Place", date: "Date", options: "Options & Tools", watermark: "Watermark on PDF", wm_text: "Watermark Text", page_num: "Page numbers", qr_code: "📱 QR Code (Contact)", pdf_quality: "PDF Quality", q_high: "High", q_medium: "Medium (recommended)", q_low: "Low", my_drafts: "📁 My Drafts", new_draft: "+ New", export: "⬇ Export JSON", import: "⬆ Import JSON", print: "🖨 Print", new_tab: "🔗 New Tab", reset: "🗑 Reset", live_preview: "Live Preview", save: "💾 Save", preview: "👁️ Preview", edit: "✏️ Edit", pdf: "📥 PDF", custom_colors: "🎨 CUSTOM COLORS", primary_color: "Primary Color", accent_color: "Accent Color", apply_colors: "Apply Custom Colors", name_size: "Name Font Size", photo_fit: "Photo Fit", cover: "Cover", contain: "Contain", signature_img: "Signature Image", upload_sig: "✍️ Upload Signature", drag_hint: "Tip: Drag & drop image onto preview" },
-  hi: { choose_type: "बायोडाटा प्रकार चुनें", marriage: "शादी", job: "नौकरी", completion: "प्रोफ़ाइल पूर्णता", design: "डिज़ाइन चुनें", all: "सभी", fav: "⭐ पसंदीदा", recent: "🕒 हाल के", all_layouts: "सभी लेआउट", load_more: "और लोड करें...", photo: "प्रोफ़ाइल फोटो", upload: "📷 फोटो अपलोड करें", remove: "✕ हटाएं", no_photo: "कोई फोटो नहीं", personal: "व्यक्तिगत विवरण", lang_label: "🌐 पीडीएफ भाषा", full_name: "पूरा नाम", req: "आवश्यक", dob: "जन्म तिथि", gender: "लिंग", select: "चुनें", male: "पुरुष", female: "महिला", other: "अन्य", height: "ऊंचाई", weight: "वजन", blood: "रक्त समूह", marital: "वैवाहिक स्थिति", unmarried: "अविवाहित", never_married: "कभी शादी नहीं की", divorced: "तलाकशुदा", widowed: "विधवा/विधुर", awaiting_divorce: "तालाक का इंतजार", religion: "धर्म", caste: "जाति", gotra: "गोत्र", rashi: "राशि", nakshatra: "नक्षत्र", manglik: "मांगलिक", yes: "हाँ", no: "नहीं", partial: "आंशिक", profile: "प्रोफ़ाइल / उद्देश्य", voice: "वॉयस इनपुट", contact: "संपर्क विवरण", phone: "मोबाइल नंबर", req_contact: "कम से कम एक आवश्यक", email: "ईमेल", address: "पता", family: "पारिवारिक विवरण", father: "पिता का नाम", father_job: "पिता का व्यवसाय", mother: "माता का नाम", mother_job: "माता का व्यवसाय", brothers: "भाई", sisters: "बहनें", education: "शिक्षा", detailed: "विस्तृत", simple: "सरल", add_edu: "+ शिक्षा जोड़ें", qualifications: "योग्यता", work_skills: "काम और कौशल", exp: "कार्य अनुभव", add_exp: "+ अनुभव जोड़ें", skills: "कौशल", add_skill: "+ कौशल जोड़ें", languages: "ज्ञात भाषाएं", hobbies: "शौक", declaration: "घोषणा", preset: "प्रीसेट", standard_1: "मानक 1", standard_2: "मानक 2", standard_3: "मानक 3", dec_text: "घोषणा पाठ", place: "स्थान", date: "तिथि", options: "विकल्प", watermark: "पीडीएफ पर वॉटरमार्क", wm_text: "वॉटरमार्क टेक्स्ट", page_num: "पेज नंबर", qr_code: "📱 QR कोड (संपर्क)", pdf_quality: "PDF गुणवत्ता", q_high: "उच्च", q_medium: "मध्यम", q_low: "निम्न", my_drafts: "📁 मेरे ड्राफ्ट", new_draft: "+ नया", export: "⬇ निर्यात", import: "⬆ आयात", print: "🖨 प्रिंट", new_tab: "🔗 नई टैब", reset: "🗑 रीसेट", live_preview: "लाइव पूर्वावलोकन", save: "💾 सहेजें", preview: "👁️ पूर्वावलोकन", edit: "✏️ संपादित करें", pdf: "📥 पीडीएफ", custom_colors: "🎨 कस्टम रंग", primary_color: "प्राथमिक रंग", accent_color: "एक्सेंट रंग", apply_colors: "रंग लागू करें", name_size: "नाम फ़ॉन्ट आकार", photo_fit: "फोटो फिट", cover: "कवर", contain: "फिट", signature_img: "हस्ताक्षर छवि", upload_sig: "✍️ हस्ताक्षर अपलोड करें", drag_hint: "टिप: फोटो को प्रीव्यू पर खींचें" }
+  en: { choose_type: "CHOOSE BIODATA TYPE", marriage: "Marriage", job: "Job / Career", completion: "Profile Completion", design: "Choose Design", all: "All", fav: "⭐ Favourites", recent: "🕒 Recent", all_layouts: "All Layouts", load_more: "Load More...", photo: "Profile Photo", upload: "📷 Upload Photo", remove: "✕ Remove", no_photo: "No photo", personal: "Personal Details", lang_label: "🌐 PDF Output Language", full_name: "Full Name", req: "required", dob: "Date of Birth", gender: "Gender", height: "Height", weight: "Weight", blood: "Blood Group", marital: "Marital Status", religion: "Religion", caste: "Caste", gotra: "Gotra", rashi: "Rashi", nakshatra: "Nakshatra", manglik: "Manglik", occupation: "Occupation", profile: "Profile / Objective", voice: "Voice Input", contact: "Contact Details", phone: "Mobile Number", req_contact: "at least one required", email: "Email", address: "Address", family: "Family Details", father: "Father Name", father_job: "Father Occupation", mother: "Mother Name", mother_job: "Mother Occupation", brothers: "Brothers", sisters: "Sisters", lifestyle: "Lifestyle", diet: "Diet", smoking: "Smoking", drinking: "Drinking", education: "Education", detailed: "Detailed", simple: "Simple", add_edu: "+ Add Education", qualifications: "Qualifications", work_skills: "Work & Skills", exp: "Work Experience", add_exp: "+ Add Experience", skills: "Skills", add_skill: "+ Add Skill", languages: "Languages Known", hobbies: "Hobbies", projects: "Projects / Portfolio", certifications: "Certifications / Training", partner_preferences: "Partner Preferences", declaration: "Declaration", preset: "Preset", dec_text: "Declaration Text", place: "Place", date: "Date", options: "Options & Tools", watermark: "Watermark on PDF", wm_text: "Watermark Text", page_num: "Page numbers", qr_code: "📱 QR Code (Contact)", pdf_quality: "PDF Quality", my_drafts: "📁 My Drafts", new_draft: "+ New", export: "⬇ Export JSON", import: "⬆ Import JSON", print: "🖨 Print", new_tab: "🔗 New Tab", reset: "🗑 Reset", live_preview: "Live Preview", save: "💾 Save", preview: "👁️ Preview", edit: "✏️ Edit", pdf: "📥 PDF", custom_colors: "🎨 CUSTOM COLORS", primary_color: "Primary Color", accent_color: "Accent Color", apply_colors: "Apply Custom Colors", name_size: "Name Font Size", photo_fit: "Photo Fit", cover: "Cover", contain: "Contain", signature_img: "Signature Image", upload_sig: "✍️ Upload Signature", drag_hint: "Tip: Drag & drop image onto preview" },
+  hi: { choose_type: "बायोडाटा प्रकार चुनें", marriage: "शादी", job: "नौकरी", completion: "प्रोफ़ाइल पूर्णता", design: "डिज़ाइन चुनें", all: "सभी", fav: "⭐ पसंदीदा", recent: "🕒 हाल के", all_layouts: "सभी लेआउट", load_more: "और लोड करें...", photo: "प्रोफ़ाइल फोटो", upload: "📷 फोटो अपलोड करें", remove: "✕ हटाएं", no_photo: "कोई फोटो नहीं", personal: "व्यक्तिगत विवरण", lang_label: "🌐 पीडीएफ भाषा", full_name: "पूरा नाम", req: "आवश्यक", dob: "जन्म तिथि", gender: "लिंग", height: "ऊंचाई", weight: "वजन", blood: "रक्त समूह", marital: "वैवाहिक स्थिति", religion: "धर्म", caste: "जाति", gotra: "गोत्र", rashi: "राशि", nakshatra: "नक्षत्र", manglik: "मांगलिक", occupation: "व्यवसाय", profile: "प्रोफ़ाइल / उद्देश्य", voice: "वॉयस इनपुट", contact: "संपर्क विवरण", phone: "मोबाइल नंबर", req_contact: "कम से कम एक आवश्यक", email: "ईमेल", address: "पता", family: "पारिवारिक विवरण", father: "पिता का नाम", father_job: "पिता का व्यवसाय", mother: "माता का नाम", mother_job: "माता का व्यवसाय", brothers: "भाई", sisters: "बहनें", lifestyle: "जीवनशैली", diet: "आहार", smoking: "धूम्रपान", drinking: "शराब", education: "शिक्षा", detailed: "विस्तृत", simple: "सरल", add_edu: "+ शिक्षा जोड़ें", qualifications: "योग्यता", work_skills: "काम और कौशल", exp: "कार्य अनुभव", add_exp: "+ अनुभव जोड़ें", skills: "कौशल", add_skill: "+ कौशल जोड़ें", languages: "ज्ञात भाषाएं", hobbies: "शौक", projects: "परियोजनाएं / पोर्टफोलियो", certifications: "प्रमाणपत्र / प्रशिक्षण", partner_preferences: "जीवनसाथी की प्राथमिकताएं", declaration: "घोषणा", preset: "प्रीसेट", dec_text: "घोषणा पाठ", place: "स्थान", date: "तिथि", options: "विकल्प", watermark: "पीडीएफ पर वॉटरमार्क", wm_text: "वॉटरमार्क टेक्स्ट", page_num: "पेज नंबर", qr_code: "📱 QR कोड (संपर्क)", pdf_quality: "PDF गुणवत्ता", my_drafts: "📁 मेरे ड्राफ्ट", new_draft: "+ नया", export: "⬇ निर्यात", import: "⬆ आयात", print: "🖨 प्रिंट", new_tab: "🔗 नई टैब", reset: "🗑 रीसेट", live_preview: "लाइव पूर्वावलोकन", save: "💾 सहेजें", preview: "👁️ पूर्वावलोकन", edit: "✏️ संपादित करें", pdf: "📥 पीडीएफ", custom_colors: "🎨 कस्टम रंग", primary_color: "प्राथमिक रंग", accent_color: "एक्सेंट रंग", apply_colors: "रंग लागू करें", name_size: "नाम फ़ॉन्ट आकार", photo_fit: "फोटो फिट", cover: "कवर", contain: "फिट", signature_img: "हस्ताक्षर छवि", upload_sig: "✍️ हस्ताक्षर अपलोड करें", drag_hint: "टिप: फोटो को प्रीव्यू पर खींचें" }
 };
-
-// Fill remaining languages with English (fallback) — full dict preserved from original code
 ['kn','ta','te','mr','gu','bn','ml','pa','or'].forEach(l => { UI_LANG[l] = Object.assign({}, UI_LANG.en, UI_LANG[l] || {}); });
 
 const DECLARATION_PRESETS = {
@@ -615,28 +677,46 @@ function translateUI(lang) {
 // ============================================================
 // TEMPLATE ENGINE
 // ============================================================
-const LAYOUTS = ['classic', 'sidebar', 'banner', 'corporate', 'cards', 'split', 'minimal', 'timeline', 'editorial', 'traditional', 'magazine', 'executive', 'vintage', 'gradient', 'geometric', 'traditional-marriage'];
+const LAYOUTS = ['classic','sidebar','banner','corporate','cards','split','minimal','timeline','editorial','traditional','magazine','executive','vintage','gradient','geometric','traditional-marriage'];
 const COLORS = [
-  { n: 'Royal Maroon', p: '#6B0F1A', a: '#D4A853', t: '#FAF4E2', k: '#30242A' }, { n: 'Navy Gold', p: '#183153', a: '#D9A441', t: '#FAF0DA', k: '#1D2939' },
-  { n: 'Emerald', p: '#064E3B', a: '#D4A853', t: '#F3F8F0', k: '#1E293B' }, { n: 'Midnight', p: '#111827', a: '#C6A15B', t: '#F1EADD', k: '#202633' },
-  { n: 'Rose Gold', p: '#8F3D58', a: '#E7A7B8', t: '#FDF0F4', k: '#392832' }, { n: 'Sky Blue', p: '#1D4E89', a: '#62B6E8', t: '#F0F8FE', k: '#1E3348' },
-  { n: 'Forest', p: '#244B3A', a: '#B6A36A', t: '#F4F5E9', k: '#26372D' }, { n: 'Coral', p: '#A64245', a: '#F2A07B', t: '#FDEEE7', k: '#3B2929' },
-  { n: 'Plum', p: '#54264D', a: '#D6A0C7', t: '#FAEDF6', k: '#382A39' }, { n: 'Charcoal', p: '#252525', a: '#D7B56D', t: '#F6F0E4', k: '#292929' },
-  { n: 'Sapphire', p: '#123B70', a: '#75B7E8', t: '#F0F8FE', k: '#1D2D40' }, { n: 'Ruby', p: '#8B1E3F', a: '#F08AA5', t: '#FCEAEF', k: '#3D2630' },
-  { n: 'Ocean', p: '#075985', a: '#67C7D8', t: '#EDF9FC', k: '#183746' }, { n: 'Amber', p: '#76501D', a: '#E8B85C', t: '#FAF2DE', k: '#3B3021' },
-  { n: 'Indigo', p: '#373078', a: '#A7A0F2', t: '#F3F1FC', k: '#2C2942' }, { n: 'Lagoon', p: '#126B70', a: '#70D0C5', t: '#EBFAF7', k: '#1E3939' },
-  { n: 'Orchid', p: '#613C79', a: '#C5A1DE', t: '#F6EFFC', k: '#332A3A' }, { n: 'Steel', p: '#35465A', a: '#A9BBCB', t: '#F4F6F8', k: '#263443' },
-  { n: 'Crimson', p: '#8E2028', a: '#E3A0A0', t: '#FBF3F3', k: '#3B292B' }, { n: 'Pine', p: '#174638', a: '#A8C9A7', t: '#EEF7EF', k: '#25362D' },
-  { n: 'Muted Elegance', p: '#80766F', a: '#BDADA3', t: '#FFF0E5', k: '#664233' }, { n: 'Elegant Teal', p: '#5B8A8A', a: '#C9A962', t: '#F5F0E6', k: '#2C2C2C' },
-  { n: 'Blue Hydrangea', p: '#405380', a: '#6B7EB2', t: '#C8DAF5', k: '#2B2F3A' }, { n: 'Moody Emerald', p: '#224834', a: '#A8D5BF', t: '#FDFEF5', k: '#0E260E' },
-  { n: 'Terracotta', p: '#9C4A2F', a: '#E8B87A', t: '#FDF3E7', k: '#3D2A22' }, { n: 'Lavender', p: '#5B4B8A', a: '#C3B1E1', t: '#F5F2FC', k: '#2E2A3A' },
-  { n: 'Copper', p: '#7A4A2B', a: '#D9A05B', t: '#FAF0E6', k: '#3B2A1F' }, { n: 'Olive', p: '#4B5320', a: '#C4C97A', t: '#F7F8E8', k: '#2A2E1A' },
-  { n: 'Burgundy', p: '#5C1A2E', a: '#D4A0A7', t: '#FCE8EC', k: '#3B1A24' }, { n: 'Slate', p: '#2F3E46', a: '#84A98C', t: '#F0F4F2', k: '#1B2A30' }
+  { n: 'Royal Maroon', p: '#6B0F1A', a: '#D4A853', t: '#FAF4E2', k: '#30242A' },
+  { n: 'Navy Gold', p: '#183153', a: '#D9A441', t: '#FAF0DA', k: '#1D2939' },
+  { n: 'Emerald', p: '#064E3B', a: '#D4A853', t: '#F3F8F0', k: '#1E293B' },
+  { n: 'Midnight', p: '#111827', a: '#C6A15B', t: '#F1EADD', k: '#202633' },
+  { n: 'Rose Gold', p: '#8F3D58', a: '#E7A7B8', t: '#FDF0F4', k: '#392832' },
+  { n: 'Sky Blue', p: '#1D4E89', a: '#62B6E8', t: '#F0F8FE', k: '#1E3348' },
+  { n: 'Forest', p: '#244B3A', a: '#B6A36A', t: '#F4F5E9', k: '#26372D' },
+  { n: 'Coral', p: '#A64245', a: '#F2A07B', t: '#FDEEE7', k: '#3B2929' },
+  { n: 'Plum', p: '#54264D', a: '#D6A0C7', t: '#FAEDF6', k: '#382A39' },
+  { n: 'Charcoal', p: '#252525', a: '#D7B56D', t: '#F6F0E4', k: '#292929' },
+  { n: 'Sapphire', p: '#123B70', a: '#75B7E8', t: '#F0F8FE', k: '#1D2D40' },
+  { n: 'Ruby', p: '#8B1E3F', a: '#F08AA5', t: '#FCEAEF', k: '#3D2630' },
+  { n: 'Ocean', p: '#075985', a: '#67C7D8', t: '#EDF9FC', k: '#183746' },
+  { n: 'Amber', p: '#76501D', a: '#E8B85C', t: '#FAF2DE', k: '#3B3021' },
+  { n: 'Indigo', p: '#373078', a: '#A7A0F2', t: '#F3F1FC', k: '#2C2942' },
+  { n: 'Lagoon', p: '#126B70', a: '#70D0C5', t: '#EBFAF7', k: '#1E3939' },
+  { n: 'Orchid', p: '#613C79', a: '#C5A1DE', t: '#F6EFFC', k: '#332A3A' },
+  { n: 'Steel', p: '#35465A', a: '#A9BBCB', t: '#F4F6F8', k: '#263443' },
+  { n: 'Crimson', p: '#8E2028', a: '#E3A0A0', t: '#FBF3F3', k: '#3B292B' },
+  { n: 'Pine', p: '#174638', a: '#A8C9A7', t: '#EEF7EF', k: '#25362D' },
+  { n: 'Muted Elegance', p: '#80766F', a: '#BDADA3', t: '#FFF0E5', k: '#664233' },
+  { n: 'Elegant Teal', p: '#5B8A8A', a: '#C9A962', t: '#F5F0E6', k: '#2C2C2C' },
+  { n: 'Blue Hydrangea', p: '#405380', a: '#6B7EB2', t: '#C8DAF5', k: '#2B2F3A' },
+  { n: 'Moody Emerald', p: '#224834', a: '#A8D5BF', t: '#FDFEF5', k: '#0E260E' },
+  { n: 'Terracotta', p: '#9C4A2F', a: '#E8B87A', t: '#FDF3E7', k: '#3D2A22' },
+  { n: 'Lavender', p: '#5B4B8A', a: '#C3B1E1', t: '#F5F2FC', k: '#2E2A3A' },
+  { n: 'Copper', p: '#7A4A2B', a: '#D9A05B', t: '#FAF0E6', k: '#3B2A1F' },
+  { n: 'Olive', p: '#4B5320', a: '#C4C97A', t: '#F7F8E8', k: '#2A2E1A' },
+  { n: 'Burgundy', p: '#5C1A2E', a: '#D4A0A7', t: '#FCE8EC', k: '#3B1A24' },
+  { n: 'Slate', p: '#2F3E46', a: '#84A98C', t: '#F0F4F2', k: '#1B2A30' }
 ];
 const FONTS = [
-  { n: 'Modern', d: 'Montserrat', b: 'Inter' }, { n: 'Classic', d: 'Playfair Display', b: 'Lato' },
-  { n: 'Executive', d: 'Oswald', b: 'Roboto' }, { n: 'Elegant', d: 'Cormorant Garamond', b: 'Nunito Sans' },
-  { n: 'Traditional', d: 'Libre Baskerville', b: 'Source Sans 3' }, { n: 'Royal', d: 'Cinzel', b: 'Lato' },
+  { n: 'Modern', d: 'Montserrat', b: 'Inter' },
+  { n: 'Classic', d: 'Playfair Display', b: 'Lato' },
+  { n: 'Executive', d: 'Oswald', b: 'Roboto' },
+  { n: 'Elegant', d: 'Cormorant Garamond', b: 'Nunito Sans' },
+  { n: 'Traditional', d: 'Libre Baskerville', b: 'Source Sans 3' },
+  { n: 'Royal', d: 'Cinzel', b: 'Lato' },
   { n: 'Friendly', d: 'Plus Jakarta Sans', b: 'Plus Jakarta Sans' }
 ];
 
@@ -710,7 +790,6 @@ $('searchTpl').oninput = (e) => { filterText = e.target.value; renderTemplates(t
 $('filterLayout').onchange = (e) => { filterLayout = e.target.value; renderTemplates(true); };
 $('loadMoreBtn').onclick = () => { visibleCount += 20; renderTemplates(); };
 
-// Custom colors
 $('applyColorsBtn').onclick = () => {
   currentTheme = { ...currentTheme, primary: $('customPrimary').value, accent: $('customAccent').value };
   scheduleUpdate(); saveDraft();
@@ -720,37 +799,57 @@ $('nameSize').oninput = (e) => { $('nameSizeVal').textContent = e.target.value +
 $('photoFit').onchange = () => { scheduleUpdate(); };
 
 // ============================================================
-// CATEGORY MODE
+// MODE TOGGLE (Marriage vs Job)
 // ============================================================
 let currentMode = 'marriage';
-$('catMarriage').onclick = () => {
-  currentMode = 'marriage';
-  $('catMarriage').classList.add('active'); $('catMarriage').style.background = 'var(--gold)'; $('catMarriage').style.color = '#fff'; $('catMarriage').style.borderColor = 'var(--gold)';
-  $('catJob').classList.remove('active'); $('catJob').style.background = 'var(--bg)'; $('catJob').style.color = 'var(--ink-2)'; $('catJob').style.borderColor = 'var(--line)';
-  document.body.classList.remove('mode-job'); document.body.classList.add('mode-marriage');
-  scheduleUpdate(); saveDraft();
-};
-$('catJob').onclick = () => {
-  currentMode = 'job';
-  $('catJob').classList.add('active'); $('catJob').style.background = 'var(--gold)'; $('catJob').style.color = '#fff'; $('catJob').style.borderColor = 'var(--gold)';
-  $('catMarriage').classList.remove('active'); $('catMarriage').style.background = 'var(--bg)'; $('catMarriage').style.color = 'var(--ink-2)'; $('catMarriage').style.borderColor = 'var(--line)';
-  document.body.classList.remove('mode-marriage'); document.body.classList.add('mode-job');
-  scheduleUpdate(); saveDraft();
-};
+
+function setMode(mode) {
+  currentMode = mode;
+  if (mode === 'job') {
+    document.body.classList.remove('mode-marriage');
+    document.body.classList.add('mode-job');
+    $('catJob').style.background = 'var(--gold)';
+    $('catJob').style.color = '#fff';
+    $('catJob').style.borderColor = 'var(--gold)';
+    $('catMarriage').style.background = 'var(--bg)';
+    $('catMarriage').style.color = 'var(--ink-2)';
+    $('catMarriage').style.borderColor = 'var(--line)';
+  } else {
+    document.body.classList.remove('mode-job');
+    document.body.classList.add('mode-marriage');
+    $('catMarriage').style.background = 'var(--gold)';
+    $('catMarriage').style.color = '#fff';
+    $('catMarriage').style.borderColor = 'var(--gold)';
+    $('catJob').style.background = 'var(--bg)';
+    $('catJob').style.color = 'var(--ink-2)';
+    $('catJob').style.borderColor = 'var(--line)';
+  }
+  scheduleUpdate();
+  saveDraft();
+}
+
+$('catMarriage').onclick = () => setMode('marriage');
+$('catJob').onclick = () => setMode('job');
 
 // ============================================================
 // FORM FIELDS
 // ============================================================
-const TEXT_FIELDS = ['name','dob','gender','weight','blood','marital','religion','caste','gotra','rashi','nakshatra','manglik','profile','phone','email','address','father','father_job','mother','mother_job','brothers','sisters','languages','hobbies','declaration','place','date','education_simple','language','watermark_text'];
+const TEXT_FIELDS = [
+  'name','dob','gender','weight','blood','marital','religion','caste','gotra','rashi','nakshatra','manglik',
+  'occupation','profile','phone','email','address',
+  'father','father_job','mother','mother_job','brothers','sisters',
+  'diet','smoking','drinking',
+  'languages','hobbies',
+  'projects','certifications','partner_preferences',
+  'declaration','place','date','education_simple','language','watermark_text'
+];
 let photoData = '';
 let signatureData = '';
 let eduData = [];
 let skillData = [];
-const STORAGE_KEY = 'bd_main_v21';
-const DRAFT_KEY = 'bd_drafts_v21';
-const DRAFTS_LIST_KEY = 'bd_drafts_list_v21';
+const STORAGE_KEY = 'bd_main_v22';
+const DRAFTS_LIST_KEY = 'bd_drafts_list_v22';
 
-// ---- Photo Drag & Drop ----
 $('photoPrev').onclick = () => $('photoFile').click();
 ['dragenter', 'dragover'].forEach(ev => $('photoPrev').addEventListener(ev, e => { e.preventDefault(); $('photoPrev').classList.add('dragover'); }));
 ['dragleave', 'drop'].forEach(ev => $('photoPrev').addEventListener(ev, e => { e.preventDefault(); $('photoPrev').classList.remove('dragover'); }));
@@ -781,7 +880,6 @@ $('uploadBtn').onclick = () => $('photoFile').click();
 $('removePhotoBtn').onclick = () => { photoData = ''; updatePhotoPreview(); scheduleUpdate(); saveDraft(); };
 $('photoFile').onchange = (e) => { const f = e.target.files?.[0]; if (f) processPhotoFile(f); };
 
-// ---- Signature ----
 $('uploadSigBtn').onclick = () => $('signatureFile').click();
 $('removeSigBtn').onclick = () => { signatureData = ''; updateSigPreview(); scheduleUpdate(); saveDraft(); };
 $('signatureFile').onchange = (e) => {
@@ -816,7 +914,6 @@ function updatePhotoPreview() {
   else { el.innerHTML = UI_LANG[$('language').value]?.no_photo || 'No photo'; $('removePhotoBtn').style.display = 'none'; }
 }
 
-// ---- Education ----
 function addEduRow(data = {}) {
   const container = $('edu-rows-container');
   const row = document.createElement('div');
@@ -835,7 +932,7 @@ function addEduRow(data = {}) {
   container.appendChild(row);
 }
 function collectEduData() {
-  eduData = Array.from(document.querySelectorAll('.edu-row')).map(r => ({
+  eduData = Array.from(document.querySelectorAll('#edu-rows-container .edu-row')).map(r => ({
     level: r.querySelector('.edu-level').value.trim(), board: r.querySelector('.edu-board').value.trim(),
     institute: r.querySelector('.edu-institute').value.trim(), year: r.querySelector('.edu-year').value.trim(), score: r.querySelector('.edu-score').value.trim()
   })).filter(e => e.level || e.institute);
@@ -850,7 +947,6 @@ $$('input[name="edu_mode"]').forEach(r => r.onchange = (e) => {
   scheduleUpdate(); saveDraft();
 });
 
-// ---- Work Experience (FIX) ----
 function addJobRow(data = {}) {
   const container = $('jobsList');
   const row = document.createElement('div');
@@ -867,14 +963,10 @@ function addJobRow(data = {}) {
     </div>`;
   container.appendChild(row);
 }
-function collectJobs() {
-  // Just trigger re-render/save — actual data comes from saveDraft DOM query
-  scheduleUpdate(); saveDraft();
-}
+function collectJobs() { scheduleUpdate(); saveDraft(); }
 $('addJobBtn').onclick = () => addJobRow();
 $('jobsList').addEventListener('input', collectJobs);
 
-// ---- Skills ----
 function addSkillRow(data = { name: '', level: 75 }) {
   const row = document.createElement('div');
   row.className = 'skill-row';
@@ -914,6 +1006,7 @@ function collectJobsData() {
 function collectData() {
   const data = {
     theme: currentTheme,
+    mode: currentMode,
     name_font_size: $('nameSize').value,
     photo_fit: $('photoFit').value,
     quality: $('pdfQuality').value
@@ -931,7 +1024,7 @@ function collectData() {
   return data;
 }
 
-// ---- History ----
+// History
 const history = []; const future = []; let lastSnapshot = '';
 function snapshot() { return safeJSON({ data: collectData(), eduData, skillData, photoData, signatureData, mode: currentMode }); }
 function pushHistory() {
@@ -951,23 +1044,34 @@ function applySnapshot(snap) {
     eduData = s.eduData || []; $('edu-rows-container').innerHTML = ''; eduData.forEach(r => addEduRow(r));
     if (s.data.work_experience_list) { $('jobsList').innerHTML = ''; s.data.work_experience_list.forEach(r => addJobRow(r)); }
     skillData = s.skillData || []; $('skillsList').innerHTML = ''; skillData.forEach(r => addSkillRow(r));
-    if (s.mode === 'job') $('catJob').click(); else $('catMarriage').click();
+    if (s.mode === 'job') setMode('job'); else setMode('marriage');
     renderTemplates(); updateProgress(); scheduleUpdate();
   } catch (e) { console.error(e); }
 }
 $('undoBtn').onclick = () => { if (history.length < 2) return toast('Nothing to undo', 'warn'); future.push(history.pop()); applySnapshot(history[history.length - 1]); };
 $('redoBtn').onclick = () => { if (!future.length) return toast('Nothing to redo', 'warn'); const s = future.pop(); history.push(s); applySnapshot(s); };
 
-// ---- Progress ----
 function updateProgress() {
-  const checks = [!!$('name').value.trim(), !!$('dob').value, !!$('gender').value, !!$('phone').value.trim() || !!$('email').value.trim(), !!$('address').value.trim(), !!$('father').value.trim(), !!$('mother').value.trim(), eduData.length > 0 || !!$('education_simple').value.trim(), skillData.length > 0, !!$('declaration').value.trim()];
+  const checks = [
+    !!$('name').value.trim(),
+    !!$('dob').value,
+    !!$('gender').value,
+    !!$('phone').value.trim() || !!$('email').value.trim(),
+    !!$('address').value.trim(),
+    eduData.length > 0 || !!$('education_simple').value.trim(),
+    skillData.length > 0,
+    !!$('declaration').value.trim()
+  ];
+  if (currentMode === 'marriage') {
+    checks.push(!!$('father').value.trim(), !!$('mother').value.trim());
+  } else {
+    checks.push(!!$('profile').value.trim());
+  }
   const pct = Math.round((checks.filter(Boolean).length / checks.length) * 100);
   $('progressFill').style.width = pct + '%'; $('progressPct').textContent = pct + '%';
 }
 
-// ============================================================
-// PREVIEW
-// ============================================================
+// Preview
 let previewTimer = null;
 function scheduleUpdate() {
   clearTimeout(previewTimer);
@@ -1013,24 +1117,20 @@ $('zoomIn').onclick = () => { zoom = Math.min(2, zoom + 0.1); fitPreview(); };
 $('zoomOut').onclick = () => { zoom = Math.max(0.4, zoom - 0.1); fitPreview(); };
 $('zoomFit').onclick = () => { zoom = 1; fitPreview(); };
 
-const previewToggleBtn = $('previewToggleBtn');
-if (previewToggleBtn) {
-  previewToggleBtn.onclick = () => {
+if ($('previewToggleBtn')) {
+  $('previewToggleBtn').onclick = () => {
     const editPanel = $('editPanel'), previewPanel = $('previewPanel');
     if (editPanel.classList.contains('active')) {
       editPanel.classList.remove('active'); previewPanel.classList.add('active');
-      previewToggleBtn.innerHTML = UI_LANG[$('language').value]?.edit || '✏️ Edit';
+      $('previewToggleBtn').innerHTML = UI_LANG[$('language').value]?.edit || '✏️ Edit';
       setTimeout(fitPreview, 50);
     } else {
       previewPanel.classList.remove('active'); editPanel.classList.add('active');
-      previewToggleBtn.innerHTML = UI_LANG[$('language').value]?.preview || '👁️ Preview';
+      $('previewToggleBtn').innerHTML = UI_LANG[$('language').value]?.preview || '👁️ Preview';
     }
   };
 }
 
-// ============================================================
-// PRINT / NEW TAB / PDF
-// ============================================================
 $('printBtn').onclick = $('printPreviewBtn').onclick = () => {
   const frame = $('previewFrame');
   try { frame.contentWindow.focus(); frame.contentWindow.print(); }
@@ -1059,9 +1159,6 @@ $('pdfBtn').onclick = async () => {
   } catch (e) { toast(e.message, 'error'); } finally { btn.textContent = orig; btn.disabled = false; }
 };
 
-// ============================================================
-// LANGUAGE / THEME
-// ============================================================
 $('language').onchange = (e) => {
   translateUI(e.target.value);
   updatePhotoPreview();
@@ -1089,9 +1186,6 @@ $('themeBtn').onclick = () => {
 };
 if (localStorage.getItem('bd_theme') === 'dark') { document.body.classList.add('dark'); $('themeBtn').textContent = '☀'; }
 
-// ============================================================
-// SAVE / RESTORE (Work Experience bug FIXED)
-// ============================================================
 function saveDraft() {
   try {
     $('statusPill').textContent = 'Saving...';
@@ -1105,7 +1199,7 @@ function saveDraft() {
       eduMode: document.querySelector('input[name="edu_mode"]:checked').value,
       eduData,
       skillData,
-      work_experience_list: collectJobsData(),   // ← FIX
+      work_experience_list: collectJobsData(),
       options: { watermark: $('optWatermark').checked, pagenum: $('optPagenum').checked, qr: $('optQr').checked },
       extras: { nameSize: $('nameSize').value, photoFit: $('photoFit').value, quality: $('pdfQuality').value }
     };
@@ -1127,7 +1221,7 @@ function restoreDraft() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
     const d = JSON.parse(raw);
-    if (d.mode === 'job') $('catJob').click(); else $('catMarriage').click();
+    if (d.mode === 'job') setMode('job'); else setMode('marriage');
     if (d.values) {
       TEXT_FIELDS.forEach(id => { if ($(id)) $(id).value = d.values[id] || ''; });
       $('height_ft').value = d.values.height_ft || '';
@@ -1170,9 +1264,6 @@ function restoreDraft() {
 }
 $('saveBtn').onclick = () => { saveDraft(); toast('Draft saved', 'success'); };
 
-// ============================================================
-// CHARACTER COUNTERS
-// ============================================================
 function updateCharCount(id, max) {
   const el = $(id); if (!el) return;
   const counter = document.querySelector(`.char-count[data-for="${id}"]`);
@@ -1189,9 +1280,6 @@ $('profile').addEventListener('input', () => {
   $('profileCount').textContent = `${$('profile').value.length} / 600`;
 });
 
-// ============================================================
-// FIELD VALIDATION
-// ============================================================
 $('name').addEventListener('blur', () => {
   $('name').classList.toggle('invalid', $('name').value.trim() === '');
 });
@@ -1201,9 +1289,6 @@ $('email').addEventListener('blur', () => {
   $('email').classList.toggle('invalid', !valid);
 });
 
-// ============================================================
-// MULTIPLE DRAFTS
-// ============================================================
 function getDraftsList() { try { return JSON.parse(localStorage.getItem(DRAFTS_LIST_KEY) || '{}'); } catch { return {}; } }
 function saveDraftsList(obj) { localStorage.setItem(DRAFTS_LIST_KEY, safeJSON(obj)); }
 
@@ -1235,15 +1320,13 @@ function renderDraftsList() {
 $('newDraftBtn').onclick = () => {
   const name = prompt('Enter draft name:');
   if (!name || !name.trim()) return;
+  saveDraft();
   const drafts = getDraftsList();
   drafts[name.trim()] = localStorage.getItem(STORAGE_KEY) || safeJSON({});
   saveDraftsList(drafts); renderDraftsList();
   toast(`Draft "${name}" saved`, 'success');
 };
 
-// ============================================================
-// EXPORT / IMPORT / RESET
-// ============================================================
 $('exportBtn').onclick = () => {
   const data = safeJSON(collectData());
   const blob = new Blob([data], { type: 'application/json' });
@@ -1260,8 +1343,8 @@ $('importFile').onchange = (e) => {
   reader.onload = (ev) => {
     try {
       const data = JSON.parse(ev.target.result);
-      if (data.data) { // full snapshot
-        applySnapshot(safeJSON({ data: data.data, eduData: data.data.education_list, skillData: [], mode: 'marriage' }));
+      if (data.data) {
+        applySnapshot(safeJSON({ data: data.data, eduData: data.data.education_list, skillData: [], mode: data.data.mode || 'marriage' }));
       } else {
         Object.keys(data).forEach(k => { if ($(k) && typeof data[k] === 'string') $(k).value = data[k]; });
       }
@@ -1277,15 +1360,12 @@ $('resetBtn').onclick = () => {
   location.reload();
 };
 
-// ============================================================
-// AI
-// ============================================================
 $('aiGenBtn').onclick = async () => {
   const btn = $('aiGenBtn'); btn.textContent = '⏳...'; btn.disabled = true;
   try {
     const res = await fetch('/api/generate-profile', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: safeJSON({ name: $('name').value, education: eduData[0]?.level || 'Graduation', skills: skillData.map(s => s.name).join(', '), language: $('language').value })
+      body: safeJSON({ name: $('name').value, education: eduData[0]?.level || 'Graduation', skills: skillData.map(s => s.name).join(', '), language: $('language').value, mode: currentMode })
     });
     const json = await res.json();
     if (json.profile) { $('profile').value = json.profile; $('profileCount').textContent = `${json.profile.length} / 600`; scheduleUpdate(); saveDraft(); toast('AI generated!', 'success'); }
@@ -1312,9 +1392,6 @@ $('aiSkillsBtn').onclick = async () => {
   } catch (e) { toast('AI failed', 'error'); } finally { btn.textContent = '✨ AI Suggest'; btn.disabled = false; }
 };
 
-// ============================================================
-// VOICE INPUT
-// ============================================================
 $('voiceBtn').onclick = () => {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) return toast('Voice not supported', 'error');
@@ -1328,9 +1405,6 @@ $('voiceBtn').onclick = () => {
   rec.start(); toast('Listening...', 'success');
 };
 
-// ============================================================
-// KEYBOARD SHORTCUTS
-// ============================================================
 document.addEventListener('keydown', (e) => {
   const ctrl = e.ctrlKey || e.metaKey;
   if (ctrl && e.key === 's') { e.preventDefault(); saveDraft(); toast('Saved', 'success'); }
@@ -1338,15 +1412,9 @@ document.addEventListener('keydown', (e) => {
   else if (ctrl && e.key === 'e') { e.preventDefault(); $('exportBtn').click(); }
   else if (ctrl && e.key === 'z' && !e.shiftKey) { e.preventDefault(); $('undoBtn').click(); }
   else if ((ctrl && e.key === 'y') || (ctrl && e.shiftKey && e.key === 'Z')) { e.preventDefault(); $('redoBtn').click(); }
-  else if (e.key === '?' && !e.ctrlKey) {
-    toast('Ctrl+S: Save · Ctrl+P: Print · Ctrl+E: Export · Ctrl+Z: Undo', 'info');
-  }
 });
 $('helpBtn').onclick = () => toast('Ctrl+S: Save · Ctrl+P: Print · Ctrl+E: Export · Ctrl+Z: Undo · Ctrl+Y: Redo', 'info');
 
-// ============================================================
-// EVENT BINDING
-// ============================================================
 TEXT_FIELDS.forEach(id => {
   const el = $(id);
   if (el) el.addEventListener(el.tagName === 'SELECT' || el.type === 'date' ? 'change' : 'input', () => { scheduleUpdate(); saveDraft(); pushHistory(); });
@@ -1357,7 +1425,6 @@ $('optPagenum').onchange = () => { scheduleUpdate(); saveDraft(); };
 $('optQr').onchange = () => { scheduleUpdate(); saveDraft(); };
 $('pdfQuality').onchange = () => { saveDraft(); };
 
-// Fix future DOB
 $('dob').max = new Date().toISOString().split("T")[0];
 
 window.addEventListener('resize', () => {
@@ -1370,9 +1437,7 @@ window.addEventListener('resize', () => {
   }
 });
 
-// ============================================================
 // INIT
-// ============================================================
 restoreDraft();
 if (document.querySelectorAll('#edu-rows-container .edu-row').length === 0) addEduRow();
 if (document.querySelectorAll('#jobsList .edu-row').length === 0) addJobRow();
@@ -1385,6 +1450,7 @@ renderDraftsList();
 updateProgress();
 updatePreview();
 translateUI($('language').value);
+setMode(currentMode);
 pushHistory();
 </script>
 </body>
