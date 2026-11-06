@@ -36,65 +36,120 @@ if GEMINI_API_KEY and GENAI_OK:
 
 TRANS_CACHE = {}
 
-def _translate(text, lang):
+# ============================================================
+# 🔥 FIX 1: Force name transliteration (3-layer fallback)
+# ============================================================
+NAME_PREFIX_MAP = {
+    "hi": "मेरा नाम", "mr": "माझे नाव", "kn": "ನನ್ನ ಹೆಸರು",
+    "ta": "என் பெயர்", "te": "నా పేరు", "gu": "મારું નામ",
+    "bn": "আমার নাম", "ml": "എന്റെ പേര്", "pa": "ਮੇਰਾ ਨਾਮ", "or": "ମୋର ନାମ"
+}
+
+def _translate(text, lang, is_name=False):
     if not text or not lang or lang == "en":
         return text
-    
+
     text = str(text).strip()
-    if not text: return text
-    
-    cache_key = f"{lang}:{text}"
+    if not text:
+        return text
+
+    # If already in target script (non-ASCII), return as-is
+    if not text.isascii():
+        return text
+
+    cache_key = f"{lang}:{is_name}:{text}"
     if cache_key in TRANS_CACHE:
         return TRANS_CACHE[cache_key]
-    
-    # Direct Google API
-    try:
-        url = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl={lang}&dt=t&q={urllib.parse.quote(text)}"
-        res = requests.get(url, timeout=5)
-        if res.status_code == 200:
-            data = res.json()
-            out = "".join([item[0] for item in data[0]])
-            TRANS_CACHE[cache_key] = out
-            return out
-    except Exception:
-        pass
-        
+
+    def _api_call(q, sl="auto"):
+        try:
+            url = (f"https://translate.googleapis.com/translate_a/single"
+                   f"?client=gtx&sl={sl}&tl={lang}&dt=t&q={urllib.parse.quote(q)}")
+            res = requests.get(url, timeout=6)
+            if res.status_code == 200:
+                data = res.json()
+                return "".join([item[0] for item in data[0]])
+        except Exception:
+            pass
+        return None
+
+    # Attempt 1: Zero-width space (helps for some names)
+    out = _api_call(text + "\u200b")
+    if out:
+        cleaned = out.replace("\u200b", "").strip()
+        if cleaned and cleaned != text:
+            TRANS_CACHE[cache_key] = cleaned
+            return cleaned
+
+    # Attempt 2: Prefix-context (very reliable for names)
+    if is_name and lang in NAME_PREFIX_MAP:
+        prefix = NAME_PREFIX_MAP[lang]
+        out = _api_call(f"{prefix} {text}")
+        if out:
+            cleaned = out.strip()
+            # Strip prefix
+            for word in prefix.split():
+                cleaned = cleaned.replace(word, "").strip()
+            cleaned = re.sub(r"[\s:：\-—–]+", " ", cleaned).strip()
+            if cleaned and cleaned != text and any(ord(c) > 127 for c in cleaned):
+                TRANS_CACHE[cache_key] = cleaned
+                return cleaned
+
+    # Attempt 3: Plain translate
+    out = _api_call(text)
+    if out:
+        cleaned = out.strip()
+        if cleaned and cleaned != text:
+            TRANS_CACHE[cache_key] = cleaned
+            return cleaned
+
+    TRANS_CACHE[cache_key] = text
     return text
 
-# 🔥 FULL TRANSLATION DICTIONARY (Added Table Headers)
+
 LABELS_MULTI = {
-    "en": {"contact": "Contact Details", "personal": "Personal Details", "family": "Family Details", "skills": "Skills", "additional": "Additional Details", "profile": "Profile / Objective", "education": "Education", "experience": "Work Experience", "declaration": "Declaration", "dob": "Date of Birth", "gender": "Gender", "height": "Height", "weight": "Weight", "blood": "Blood Group", "marital": "Marital Status", "religion": "Religion", "caste": "Caste / Community", "gotra": "Gotra", "rashi": "Rashi", "nakshatra": "Nakshatra", "manglik": "Manglik", "phone": "Mobile Number", "email": "Email", "address": "Address", "father": "Father", "mother": "Mother", "brothers": "Brothers", "sisters": "Sisters", "languages": "Languages", "hobbies": "Hobbies", "place": "Place", "date": "Date", "signature": "Signature", "qualification": "Qualification", "institute": "Name of the University/Board/School", "year": "Year of Passing", "score": "% Marks / CGPA / SGPA", "organization": "Organization", "designation": "Designation", "period": "Job Period", "responsibilities": "Responsibilities"},
-    "hi": {"contact": "संपर्क विवरण", "personal": "व्यक्तिगत विवरण", "family": "पारिवारिक विवरण", "skills": "कौशल", "additional": "अतिरिक्त विवरण", "profile": "प्रोफ़ाइल / उद्देश्य", "education": "शिक्षा", "experience": "कार्य अनुभव", "declaration": "घोषणा", "dob": "जन्म तिथि", "gender": "लिंग", "height": "ऊंचाई", "weight": "वजन", "blood": "रक्त समूह", "marital": "वैवाहिक स्थिति", "religion": "धर्म", "caste": "जाति", "gotra": "गोत्र", "rashi": "राशि", "nakshatra": "नक्षत्र", "manglik": "मांगलिक", "phone": "मोबाइल नंबर", "email": "ईमेल", "address": "पता", "father": "पिता", "mother": "माता", "brothers": "भाई", "sisters": "बहनें", "languages": "भाषाएं", "hobbies": "शौक", "place": "स्थान", "date": "तिथि", "signature": "हस्ताक्षर", "qualification": "योग्यता", "institute": "विश्वविद्यालय/बोर्ड/स्कूल का नाम", "year": "पास होने का वर्ष", "score": "% अंक / CGPA / SGPA", "organization": "संगठन", "designation": "पद", "period": "कार्यकाल", "responsibilities": "जिम्मेदारियां"},
-    "kn": {"contact": "ಸಂಪರ್ಕ ವಿವರಗಳು", "personal": "ವೈಯಕ್ತಿಕ ವಿವರಗಳು", "family": "ಕುಟುಂಬದ ವಿವರಗಳು", "skills": "ಕೌಶಲ್ಯಗಳು", "additional": "ಹೆಚ್ಚುವರಿ ವಿವರಗಳು", "profile": "ಪ್ರೊಫೈಲ್ / ಉದ್ದೇಶ", "education": "ಶಿಕ್ಷಣ", "experience": "ಕೆಲಸದ ಅನುಭವ", "declaration": "ಘೋಷಣೆ", "dob": "ಜನ್ಮ ದಿನಾಂಕ", "gender": "ಲಿಂಗ", "height": "ಎತ್ತರ", "weight": "ತೂಕ", "blood": "ರಕ್ತ ಗುಂಪು", "marital": "ವೈವಾಹಿಕ ಸ್ಥಿತಿ", "religion": "ಧರ್ಮ", "caste": "ಜಾತಿ", "gotra": "ಗೋತ್ರ", "rashi": "ರಾಶಿ", "nakshatra": "ನಕ್ಷತ್ರ", "manglik": "ಮಾಂಗಲಿಕ", "phone": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ", "email": "ಇಮೇಲ್", "address": "ವಿಳಾಸ", "father": "ತಂದೆ", "mother": "ತಾಯಿ", "brothers": "ಸಹೋದರರು", "sisters": "ಸಹೋದರಿಯರು", "languages": "ಭಾಷೆಗಳು", "hobbies": "ಹವ್ಯಾಸಗಳು", "place": "ಸ್ಥಳ", "date": "ದಿನಾಂಕ", "signature": "ಸಹಿ", "qualification": "ಅರ್ಹತೆ", "institute": "ವಿಶ್ವವಿದ್ಯಾಲಯ/ಮಂಡಳಿ/ಶಾಲೆಯ ಹೆಸರು", "year": "ತೇರ್ಗಡೆಯಾದ ವರ್ಷ", "score": "% ಅಂಕಗಳು / CGPA / SGPA", "organization": "ಸಂಸ್ಥೆ", "designation": "ಹುದ್ದೆ", "period": "ಕೆಲಸದ ಅವಧಿ", "responsibilities": "ಜವಾಬ್ದಾರಿಗಳು"},
-    "ta": {"contact": "தொடர்பு விவரங்கள்", "personal": "தனிப்பட்ட விவரங்கள்", "family": "குடும்ப விவரங்கள்", "skills": "திறன்கள்", "additional": "கூடுதல் விவரங்கள்", "profile": "சுயவிவரம் / குறிக்கோள்", "education": "கல்வி", "experience": "பணி அனுபவம்", "declaration": "பிரகடனம்", "dob": "பிறந்த தேதி", "gender": "பாலினம்", "height": "உயரம்", "weight": "எடை", "blood": "இரத்தக் குழு", "marital": "திருமண நிலை", "religion": "மதம்", "caste": "சாதி", "gotra": "கோத்திரம்", "rashi": "ராசி", "nakshatra": "நட்சத்திரம்", "manglik": "மாங்கல்யம்", "phone": "கைபேசி எண்", "email": "மின்னஞ்சல்", "address": "முகவரி", "father": "தந்தை", "mother": "தாய்", "brothers": "சகோதரர்கள்", "sisters": "சகோதரிகள்", "languages": "மொழிகள்", "hobbies": "பொழுதுபோக்கு", "place": "இடம்", "date": "தேதி", "signature": "கையொப்பம்", "qualification": "தகுதி", "institute": "பல்கலைக்கழகம்/வாரியம்/பள்ளியின் பெயர்", "year": "தேர்ச்சி பெற்ற ஆண்டு", "score": "% மதிப்பெண்கள் / CGPA / SGPA", "organization": "நிறுவனம்", "designation": "பதவி", "period": "பணி காலம்", "responsibilities": "பொறுப்புகள்"},
-    "te": {"contact": "సంప్రదింపు వివరాలు", "personal": "వ్యక్తిగత వివరాలు", "family": "కుటుంబ వివరాలు", "skills": "నైపుణ్యాలు", "additional": "అదనపు వివరాలు", "profile": "ప్రొఫైల్ / లక్ష్యం", "education": "విద్య", "experience": "పని అనుభవం", "declaration": "ప్రకటన", "dob": "పుట్టిన తేదీ", "gender": "లింగం", "height": "ఎత్తు", "weight": "బరువు", "blood": "రక్త వర్గం", "marital": "వైవాహిక స్థితి", "religion": "మతం", "caste": "కులం", "gotra": "గోత్రం", "rashi": "రాశి", "nakshatra": "నక్షత్రం", "manglik": "మాంగలిక్", "phone": "మొబైల్ నంబర్", "email": "ఇమెయిల్", "address": "చిరునామా", "father": "తండ్రి", "mother": "తల్లి", "brothers": "సహోదరులు", "sisters": "సహోదరులు (అక్కచెల్లెళ్ళు)", "languages": "భాషలు", "hobbies": "అభిరుచులు", "place": "స్థలం", "date": "తేదీ", "signature": "సంతకం", "qualification": "అర్హత", "institute": "విశ్వవిద్యాలయం/బోర్డు/పాఠశాల పేరు", "year": "ఉత్తీర్ణత సంవత్సరం", "score": "% మార్కులు / CGPA / SGPA", "organization": "సంస్థ", "designation": "హోదా", "period": "పని కాలం", "responsibilities": "బాధ్యతలు"},
-    "mr": {"contact": "संपर्क तपशील", "personal": "वैयक्तिक तपशील", "family": "कौटुंबिक तपशील", "skills": "कौशल्ये", "additional": "अतिरिक्त तपशील", "profile": "प्रोफाइल / उद्दिष्ट", "education": "शिक्षण", "experience": "कामाचा अनुभव", "declaration": "घोषणा", "dob": "जन्मतारीख", "gender": "लिंग", "height": "उंची", "weight": "वजन", "blood": "रक्तगट", "marital": "वैवाहिक स्थिती", "religion": "धर्म", "caste": "जात", "gotra": "गोत्र", "rashi": "राशी", "nakshatra": "नक्षत्र", "manglik": "मांगलिक", "phone": "मोबाइल क्रमांक", "email": "ईमेल", "address": "पत्ता", "father": "वडील", "mother": "आई", "brothers": "भाऊ", "sisters": "बहिणी", "languages": "भाषा", "hobbies": "छंद", "place": "ठिकाण", "date": "तारीख", "signature": "स्वाक्षरी", "qualification": "पात्रता", "institute": "विद्यापीठ/मंडळ/शाळेचे नाव", "year": "उत्तीर्ण होण्याचे वर्ष", "score": "% गुण / CGPA / SGPA", "organization": "संस्था", "designation": "पद", "period": "कामाचा कालावधी", "responsibilities": "जबाबदाऱ्या"},
-    "gu": {"contact": "સંપર્ક વિગતો", "personal": "અંગત વિગતો", "family": "કૌટુંબિક વિગતો", "skills": "કૌશલ્યો", "additional": "વધારાની વિગતો", "profile": "પ્રોફાઇલ / ઉદ્દેશ્ય", "education": "શિક્ષણ", "experience": "કાર્ય અનુભવ", "declaration": "ઘોષણા", "dob": "જન્મ તારીખ", "gender": "જાતિ", "height": "ઊંચાઈ", "weight": "વજન", "blood": "બ્લડ ગ્રુપ", "marital": "વૈવાહિક સ્થિતિ", "religion": "ધર્મ", "caste": "જ્ઞાતિ", "gotra": "ગોત્ર", "rashi": "રાશિ", "nakshatra": "નક્ષત્ર", "manglik": "માંગલિક", "phone": "મોબાઇલ નંબર", "email": "ઇમેઇલ", "address": "સરનામું", "father": "પિતા", "mother": "માતા", "brothers": "ભાઈઓ", "sisters": "બહેનો", "languages": "ભાષાઓ", "hobbies": "શોખ", "place": "સ્થળ", "date": "તારીખ", "signature": "સહી", "qualification": "લાયકાત", "institute": "યુનિવર્સિટી/બોર્ડ/શાળાનું નામ", "year": "પાસ થયાનું વર્ષ", "score": "% માર્ક્સ / CGPA / SGPA", "organization": "સંસ્થા", "designation": "હોદ્દો", "period": "કાર્યકાળ", "responsibilities": "જવાબદારીઓ"},
-    "bn": {"contact": "যোগাযোগের বিবরণ", "personal": "ব্যক্তিগত বিবরণ", "family": "পারিবারিক বিবরণ", "skills": "দক্ষতা", "additional": "অতিরিক্ত বিবরণ", "profile": "প্রোফাইল / উদ্দেশ্য", "education": "শিক্ষা", "experience": "কাজের অভিজ্ঞতা", "declaration": "ঘোষণা", "dob": "জন্ম তারিখ", "gender": "লিঙ্গ", "height": "উচ্চতা", "weight": "ওজন", "blood": "রক্তের গ্রুপ", "marital": "বৈবাহিক অবস্থা", "religion": "ধর্ম", "caste": "বর্ণ", "gotra": "গোত্র", "rashi": "রাশি", "nakshatra": "নক্ষত্র", "manglik": "মাঙ্গলিক", "phone": "মোবাইল নম্বর", "email": "ইমেল", "address": "ঠিকানা", "father": "পিতা", "mother": "মাতা", "brothers": "ভাই", "sisters": "বোন", "languages": "ভাষা", "hobbies": "শখ", "place": "স্থান", "date": "তারিখ", "signature": "স্বাক্ষর", "qualification": "যোগ্যতা", "institute": "বিশ্ববিদ্যালয়/বোর্ড/স্কুলের নাম", "year": "পাসের বছর", "score": "% নম্বর / CGPA / SGPA", "organization": "সংস্থা", "designation": "পদবি", "period": "কাজের সময়কাল", "responsibilities": "দায়িত্ব"},
-    "ml": {"contact": "ബന്ധപ്പെടാനുള്ള വിവരങ്ങൾ", "personal": "വ്യക്തിഗത വിവരങ്ങൾ", "family": "കുടുംബ വിവരങ്ങൾ", "skills": "കഴിവുകൾ", "additional": "അധിക വിവരങ്ങൾ", "profile": "പ്രൊഫൈൽ / ലക്ഷ്യം", "education": "വിദ്യാഭ്യാസം", "experience": "ജോലി പരിചയം", "declaration": "സത്യവാങ്മൂലം", "dob": "ജനനത്തീയതി", "gender": "ലിംഗഭേദം", "height": "ഉയരം", "weight": "ഭാരം", "blood": "രക്തഗ്രൂപ്പ്", "marital": "വൈവാഹിക നില", "religion": "മതം", "caste": "ജാതി", "gotra": "ഗോത്രം", "rashi": "രാശി", "nakshatra": "നക്ഷത്രം", "manglik": "മാംഗല്യം", "phone": "മൊബൈൽ നമ്പർ", "email": "ഇമെയിൽ", "address": "വിലാസം", "father": "പിതാവ്", "mother": "മാതാവ്", "brothers": "സഹോദരങ്ങൾ", "sisters": "സഹോദരിമാർ", "languages": "ഭാഷകൾ", "hobbies": "വിനോദങ്ങൾ", "place": "സ്ഥലം", "date": "തീയതി", "signature": "ഒപ്പ്", "qualification": "യോഗ്യത", "institute": "സർവ്വകലാശാല/ബോർഡ്/സ്കൂളിന്റെ പേര്", "year": "വിജയിച്ച വർഷം", "score": "% മാർക്ക് / CGPA / SGPA", "organization": "സ്ഥാപനം", "designation": "പദവി", "period": "ജോലി കാലയളവ്", "responsibilities": "ഉത്തരവാദിത്തങ്ങൾ"},
-    "pa": {"contact": "ਸੰਪਰਕ ਵੇਰਵੇ", "personal": "ਨਿੱਜੀ ਵੇਰਵੇ", "family": "ਪਰਿਵਾਰਕ ਵੇਰਵੇ", "skills": "ਹੁਨਰ", "additional": "ਵਾਧੂ ਵੇਰਵੇ", "profile": "ਪ੍ਰੋਫਾਈਲ / ਉਦੇਸ਼", "education": "ਸਿੱਖਿਆ", "experience": "ਕੰਮ ਦਾ ਤਜਰਬਾ", "declaration": "ਐਲਾਨ", "dob": "ਜਨਮ ਤਾਰੀਖ", "gender": "ਲਿੰਗ", "height": "ਕੱਦ", "weight": "ਭਾਰ", "blood": "ਬਲੱਡ ਗਰੁੱਪ", "marital": "ਵਿਆਹੁਤਾ ਸਥਿਤੀ", "religion": "ਧਰਮ", "caste": "ਜਾਤੀ", "gotra": "ਗੋਤਰ", "rashi": "ਰਾਸ਼ੀ", "nakshatra": "ਨਛੱਤਰ", "manglik": "ਮਾਂਗਲਿਕ", "phone": "ਮੋਬਾਈਲ ਨੰਬਰ", "email": "ਈਮੇਲ", "address": "ਪਤਾ", "father": "ਪਿਤਾ", "mother": "ਮਾਤਾ", "brothers": "ਭਰਾ", "sisters": "ਭੈਣਾਂ", "languages": "ਭਾਸ਼ਾਵਾਂ", "hobbies": "ਸ਼ੌਕ", "place": "ਜਗ੍ਹਾ", "date": "ਤਾਰੀਖ", "signature": "ਦਸਤਖਤ", "qualification": "ਯੋਗਤਾ", "institute": "ਯੂਨੀਵਰਸਿਟੀ/ਬੋਰਡ/ਸਕੂਲ ਦਾ ਨਾਮ", "year": "ਪਾਸ ਹੋਣ ਦਾ ਸਾਲ", "score": "% ਅੰਕ / CGPA / SGPA", "organization": "ਸੰਗਠਨ", "designation": "ਅਹੁਦਾ", "period": "ਕੰਮ ਦੀ ਮਿਆਦ", "responsibilities": "ਜ਼ਿੰਮੇਵਾਰੀਆਂ"},
-    "or": {"contact": "ଯୋଗାଯୋଗ ବିବରଣୀ", "personal": "ବ୍ୟକ୍ତିଗତ ବିବରଣୀ", "family": "ପାରିବାରିକ ବିବରଣୀ", "skills": "ଦକ୍ଷତା", "additional": "ଅତିରିକ୍ତ ବିବରଣୀ", "profile": "ପ୍ରୋଫାଇଲ୍ / ଉଦ୍ଦେଶ୍ୟ", "education": "ଶିକ୍ଷା", "experience": "କାର୍ଯ୍ୟ ଅଭିଜ୍ଞତା", "declaration": "ଘୋଷଣା", "dob": "ଜନ୍ମ ତାରିଖ", "gender": "ଲିଙ୍ଗ", "height": "ଉଚ୍ଚତା", "weight": "ଓଜନ", "blood": "ରକ୍ତ ଗ୍ରୁପ୍", "marital": "ବୈବାହିକ ସ୍ଥିତି", "religion": "ଧର୍ମ", "caste": "ଜାତି", "gotra": "ଗୋତ୍ର", "rashi": "ରାଶି", "nakshatra": "ନକ୍ଷତ୍ର", "manglik": "ମାଙ୍ଗଳିକ", "phone": "ମୋବାଇଲ୍ ନମ୍ବର", "email": "ଇମେଲ୍", "address": "ଠିକଣା", "father": "ପିତା", "mother": "ମାତା", "brothers": "ଭାଇ", "sisters": "ଭଉଣୀ", "languages": "ଭାଷା", "hobbies": "ଶଉକ", "place": "ସ୍ଥାନ", "date": "ତାରିଖ", "signature": "ଦସ୍ତଖତ", "qualification": "ଯୋଗ୍ୟତା", "institute": "ବିଶ୍ୱବିଦ୍ୟାଳୟ/ବୋର୍ଡ/ବିଦ୍ୟାଳୟର ନାମ", "year": "ପାସ ହେବାର ବର୍ଷ", "score": "% ମାର୍କ / CGPA / SGPA", "organization": "ସଂସ୍ଥା", "designation": "ପଦବୀ", "period": "କାର୍ଯ୍ୟକାଳ", "responsibilities": "ଦାୟିତ୍ୱ"}
+    "en": {"contact": "Contact Details", "personal": "Personal Details", "family": "Family Details", "skills": "Skills", "additional": "Additional Details", "profile": "Profile / Objective", "education": "Education", "experience": "Work Experience", "declaration": "Declaration", "dob": "Date of Birth", "gender": "Gender", "height": "Height", "weight": "Weight", "blood": "Blood Group", "marital": "Marital Status", "religion": "Religion", "caste": "Caste / Community", "gotra": "Gotra", "rashi": "Rashi", "nakshatra": "Nakshatra", "manglik": "Manglik", "phone": "Mobile Number", "email": "Email", "address": "Address", "father": "Father", "mother": "Mother", "brothers": "Brothers", "sisters": "Sisters", "languages": "Languages", "hobbies": "Hobbies", "place": "Place", "date": "Date", "signature": "Signature", "qualification": "Qualification", "institute": "Name of the University/Board/School", "year": "Year of Passing", "score": "% Marks / CGPA / SGPA", "organization": "Organization", "designation": "Designation", "period": "Job Period", "responsibilities": "Responsibilities", "age": "Age", "qr": "Scan for Contact"},
+    "hi": {"contact": "संपर्क विवरण", "personal": "व्यक्तिगत विवरण", "family": "पारिवारिक विवरण", "skills": "कौशल", "additional": "अतिरिक्त विवरण", "profile": "प्रोफ़ाइल / उद्देश्य", "education": "शिक्षा", "experience": "कार्य अनुभव", "declaration": "घोषणा", "dob": "जन्म तिथि", "gender": "लिंग", "height": "ऊंचाई", "weight": "वजन", "blood": "रक्त समूह", "marital": "वैवाहिक स्थिति", "religion": "धर्म", "caste": "जाति", "gotra": "गोत्र", "rashi": "राशि", "nakshatra": "नक्षत्र", "manglik": "मांगलिक", "phone": "मोबाइल नंबर", "email": "ईमेल", "address": "पता", "father": "पिता", "mother": "माता", "brothers": "भाई", "sisters": "बहनें", "languages": "भाषाएं", "hobbies": "शौक", "place": "स्थान", "date": "तिथि", "signature": "हस्ताक्षर", "qualification": "योग्यता", "institute": "विश्वविद्यालय/बोर्ड/स्कूल का नाम", "year": "पास होने का वर्ष", "score": "% अंक / CGPA / SGPA", "organization": "संगठन", "designation": "पद", "period": "कार्यकाल", "responsibilities": "जिम्मेदारियां", "age": "उम्र", "qr": "संपर्क के लिए स्कैन करें"},
+    "kn": {"contact": "ಸಂಪರ್ಕ ವಿವರಗಳು", "personal": "ವೈಯಕ್ತಿಕ ವಿವರಗಳು", "family": "ಕುಟುಂಬದ ವಿವರಗಳು", "skills": "ಕೌಶಲ್ಯಗಳು", "additional": "ಹೆಚ್ಚುವರಿ ವಿವರಗಳು", "profile": "ಪ್ರೊಫೈಲ್ / ಉದ್ದೇಶ", "education": "ಶಿಕ್ಷಣ", "experience": "ಕೆಲಸದ ಅನುಭವ", "declaration": "ಘೋಷಣೆ", "dob": "ಜನ್ಮ ದಿನಾಂಕ", "gender": "ಲಿಂಗ", "height": "ಎತ್ತರ", "weight": "ತೂಕ", "blood": "ರಕ್ತ ಗುಂಪು", "marital": "ವೈವಾಹಿಕ ಸ್ಥಿತಿ", "religion": "ಧರ್ಮ", "caste": "ಜಾತಿ", "gotra": "ಗೋತ್ರ", "rashi": "ರಾಶಿ", "nakshatra": "ನಕ್ಷತ್ರ", "manglik": "ಮಾಂಗಲಿಕ", "phone": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ", "email": "ಇಮೇಲ್", "address": "ವಿಳಾಸ", "father": "ತಂದೆ", "mother": "ತಾಯಿ", "brothers": "ಸಹೋದರರು", "sisters": "ಸಹೋದರಿಯರು", "languages": "ಭಾಷೆಗಳು", "hobbies": "ಹವ್ಯಾಸಗಳು", "place": "ಸ್ಥಳ", "date": "ದಿನಾಂಕ", "signature": "ಸಹಿ", "qualification": "ಅರ್ಹತೆ", "institute": "ವಿಶ್ವವಿದ್ಯಾಲಯ/ಮಂಡಳಿ/ಶಾಲೆಯ ಹೆಸರು", "year": "ತೇರ್ಗಡೆಯಾದ ವರ್ಷ", "score": "% ಅಂಕಗಳು / CGPA / SGPA", "organization": "ಸಂಸ್ಥೆ", "designation": "ಹುದ್ದೆ", "period": "ಕೆಲಸದ ಅವಧಿ", "responsibilities": "ಜವಾಬ್ದಾರಿಗಳು", "age": "ವಯಸ್ಸು", "qr": "ಸಂಪರ್ಕಕ್ಕಾಗಿ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ"},
+    "ta": {"contact": "தொடர்பு விவரங்கள்", "personal": "தனிப்பட்ட விவரங்கள்", "family": "குடும்ப விவரங்கள்", "skills": "திறன்கள்", "additional": "கூடுதல் விவரங்கள்", "profile": "சுயவிவரம் / குறிக்கோள்", "education": "கல்வி", "experience": "பணி அனுபவம்", "declaration": "பிரகடனம்", "dob": "பிறந்த தேதி", "gender": "பாலினம்", "height": "உயரம்", "weight": "எடை", "blood": "இரத்தக் குழு", "marital": "திருமண நிலை", "religion": "மதம்", "caste": "சாதி", "gotra": "கோத்திரம்", "rashi": "ராசி", "nakshatra": "நட்சத்திரம்", "manglik": "மாங்கல்யம்", "phone": "கைபேசி எண்", "email": "மின்னஞ்சல்", "address": "முகவரி", "father": "தந்தை", "mother": "தாய்", "brothers": "சகோதரர்கள்", "sisters": "சகோதரிகள்", "languages": "மொழிகள்", "hobbies": "பொழுதுபோக்கு", "place": "இடம்", "date": "தேதி", "signature": "கையொப்பம்", "qualification": "தகுதி", "institute": "பல்கலைக்கழகம்/வாரியம்/பள்ளியின் பெயர்", "year": "தேர்ச்சி பெற்ற ஆண்டு", "score": "% மதிப்பெண்கள் / CGPA / SGPA", "organization": "நிறுவனம்", "designation": "பதவி", "period": "பணி காலம்", "responsibilities": "பொறுப்புகள்", "age": "வயது", "qr": "தொடர்புக்கு ஸ்கேன் செய்யவும்"},
+    "te": {"contact": "సంప్రదింపు వివరాలు", "personal": "వ్యక్తిగత వివరాలు", "family": "కుటుంబ వివరాలు", "skills": "నైపుణ్యాలు", "additional": "అదనపు వివరాలు", "profile": "ప్రొఫైల్ / లక్ష్యం", "education": "విద్య", "experience": "పని అనుభవం", "declaration": "ప్రకటన", "dob": "పుట్టిన తేదీ", "gender": "లింగం", "height": "ఎత్తు", "weight": "బరువు", "blood": "రక్త వర్గం", "marital": "వైవాహిక స్థితి", "religion": "మతం", "caste": "కులం", "gotra": "గోత్రం", "rashi": "రాశి", "nakshatra": "నక్షత్రం", "manglik": "మాంగలిక్", "phone": "మొబైల్ నంబర్", "email": "ఇమెయిల్", "address": "చిరునామా", "father": "తండ్రి", "mother": "తల్లి", "brothers": "సహోదరులు", "sisters": "సహోదరులు (అక్కచెల్లెళ్ళు)", "languages": "భాషలు", "hobbies": "అభిరుచులు", "place": "స్థలం", "date": "తేదీ", "signature": "సంతకం", "qualification": "అర్హత", "institute": "విశ్వవిద్యాలయం/బోర్డు/పాఠశాల పేరు", "year": "ఉత్తీర్ణత సంవత్సరం", "score": "% మార్కులు / CGPA / SGPA", "organization": "సంస్థ", "designation": "హోదా", "period": "పని కాలం", "responsibilities": "బాధ్యతలు", "age": "వయస్సు", "qr": "సంప్రదింపు కోసం స్కాన్ చేయండి"},
+    "mr": {"contact": "संपर्क तपशील", "personal": "वैयक्तिक तपशील", "family": "कौटुंबिक तपशील", "skills": "कौशल्ये", "additional": "अतिरिक्त तपशील", "profile": "प्रोफाइल / उद्दिष्ट", "education": "शिक्षण", "experience": "कामाचा अनुभव", "declaration": "घोषणा", "dob": "जन्मतारीख", "gender": "लिंग", "height": "उंची", "weight": "वजन", "blood": "रक्तगट", "marital": "वैवाहिक स्थिती", "religion": "धर्म", "caste": "जात", "gotra": "गोत्र", "rashi": "राशी", "nakshatra": "नक्षत्र", "manglik": "मांगलिक", "phone": "मोबाइल क्रमांक", "email": "ईमेल", "address": "पत्ता", "father": "वडील", "mother": "आई", "brothers": "भाऊ", "sisters": "बहिणी", "languages": "भाषा", "hobbies": "छंद", "place": "ठिकाण", "date": "तारीख", "signature": "स्वाक्षरी", "qualification": "पात्रता", "institute": "विद्यापीठ/मंडळ/शाळेचे नाव", "year": "उत्तीर्ण होण्याचे वर्ष", "score": "% गुण / CGPA / SGPA", "organization": "संस्था", "designation": "पद", "period": "कामाचा कालावधी", "responsibilities": "जबाबदाऱ्या", "age": "वय", "qr": "संपर्कासाठी स्कॅन करा"},
+    "gu": {"contact": "સંપર્ક વિગતો", "personal": "અંગત વિગતો", "family": "કૌટુંબિક વિગતો", "skills": "કૌશલ્યો", "additional": "વધારાની વિગતો", "profile": "પ્રોફાઇલ / ઉદ્દેશ્ય", "education": "શિક્ષણ", "experience": "કાર્ય અનુભવ", "declaration": "ઘોષણા", "dob": "જન્મ તારીખ", "gender": "જાતિ", "height": "ઊંચાઈ", "weight": "વજન", "blood": "બ્લડ ગ્રુપ", "marital": "વૈવાહિક સ્થિતિ", "religion": "ધર્મ", "caste": "જ્ઞાતિ", "gotra": "ગોત્ર", "rashi": "રાશિ", "nakshatra": "નક્ષત્ર", "manglik": "માંગલિક", "phone": "મોબાઇલ નંબર", "email": "ઇમેઇલ", "address": "સરનામું", "father": "પિતા", "mother": "માતા", "brothers": "ભાઈઓ", "sisters": "બહેનો", "languages": "ભાષાઓ", "hobbies": "શોખ", "place": "સ્થળ", "date": "તારીખ", "signature": "સહી", "qualification": "લાયકાત", "institute": "યુનિવર્સિટી/બોર્ડ/શાળાનું નામ", "year": "પાસ થયાનું વર્ષ", "score": "% માર્ક્સ / CGPA / SGPA", "organization": "સંસ્થા", "designation": "હોદ્દો", "period": "કાર્યકાળ", "responsibilities": "જવાબદારીઓ", "age": "ઉંમર", "qr": "સંપર્ક માટે સ્કેન કરો"},
+    "bn": {"contact": "যোগাযোগের বিবরণ", "personal": "ব্যক্তিগত বিবরণ", "family": "পারিবারিক বিবরণ", "skills": "দক্ষতা", "additional": "অতিরিক্ত বিবরণ", "profile": "প্রোফাইল / উদ্দেশ্য", "education": "শিক্ষা", "experience": "কাজের অভিজ্ঞতা", "declaration": "ঘোষণা", "dob": "জন্ম তারিখ", "gender": "লিঙ্গ", "height": "উচ্চতা", "weight": "ওজন", "blood": "রক্তের গ্রুপ", "marital": "বৈবাহিক অবস্থা", "religion": "ধর্ম", "caste": "বর্ণ", "gotra": "গোত্র", "rashi": "রাশি", "nakshatra": "নক্ষত্র", "manglik": "মাঙ্গলিক", "phone": "মোবাইল নম্বর", "email": "ইমেল", "address": "ঠিকানা", "father": "পিতা", "mother": "মাতা", "brothers": "ভাই", "sisters": "বোন", "languages": "ভাষা", "hobbies": "শখ", "place": "স্থান", "date": "তারিখ", "signature": "স্বাক্ষর", "qualification": "যোগ্যতা", "institute": "বিশ্ববিদ্যালয়/বোর্ড/স্কুলের নাম", "year": "পাসের বছর", "score": "% নম্বর / CGPA / SGPA", "organization": "সংস্থা", "designation": "পদবি", "period": "কাজের সময়কাল", "responsibilities": "দায়িত্ব", "age": "বয়স", "qr": "যোগাযোগের জন্য স্ক্যান করুন"},
+    "ml": {"contact": "ബന്ധപ്പെടാനുള്ള വിവരങ്ങൾ", "personal": "വ്യക്തിഗത വിവരങ്ങൾ", "family": "കുടുംബ വിവരങ്ങൾ", "skills": "കഴിവുകൾ", "additional": "അധിക വിവരങ്ങൾ", "profile": "പ്രൊഫൈൽ / ലക്ഷ്യം", "education": "വിദ്യാഭ്യാസം", "experience": "ജോലി പരിചയം", "declaration": "സത്യവാങ്മൂലം", "dob": "ജനനത്തീയതി", "gender": "ലിംഗഭേദം", "height": "ഉയരം", "weight": "ഭാരം", "blood": "രക്തഗ്രൂപ്പ്", "marital": "വൈവാഹിക നില", "religion": "മതം", "caste": "ജാതി", "gotra": "ഗോത്രം", "rashi": "രാശി", "nakshatra": "നക്ഷത്രം", "manglik": "മാംഗല്യം", "phone": "മൊബൈൽ നമ്പർ", "email": "ഇമെയിൽ", "address": "വിലാസം", "father": "പിതാവ്", "mother": "മാതാവ്", "brothers": "സഹോദരങ്ങൾ", "sisters": "സഹോദരിമാർ", "languages": "ഭാഷകൾ", "hobbies": "വിനോദങ്ങൾ", "place": "സ്ഥലം", "date": "തീയതി", "signature": "ഒപ്പ്", "qualification": "യോഗ്യത", "institute": "സർവ്വകലാശാല/ബോർഡ്/സ്കൂളിന്റെ പേര്", "year": "വിജയിച്ച വർഷം", "score": "% മാർക്ക് / CGPA / SGPA", "organization": "സ്ഥാപനം", "designation": "പദവി", "period": "ജോലി കാലയളവ്", "responsibilities": "ഉത്തരവാദിത്തങ്ങൾ", "age": "പ്രായം", "qr": "ബന്ധപ്പെടാൻ സ്കാൻ ചെയ്യുക"},
+    "pa": {"contact": "ਸੰਪਰਕ ਵੇਰਵੇ", "personal": "ਨਿੱਜੀ ਵੇਰਵੇ", "family": "ਪਰਿਵਾਰਕ ਵੇਰਵੇ", "skills": "ਹੁਨਰ", "additional": "ਵਾਧੂ ਵੇਰਵੇ", "profile": "ਪ੍ਰੋਫਾਈਲ / ਉਦੇਸ਼", "education": "ਸਿੱਖਿਆ", "experience": "ਕੰਮ ਦਾ ਤਜਰਬਾ", "declaration": "ਐਲਾਨ", "dob": "ਜਨਮ ਤਾਰੀਖ", "gender": "ਲਿੰਗ", "height": "ਕੱਦ", "weight": "ਭਾਰ", "blood": "ਬਲੱਡ ਗਰੁੱਪ", "marital": "ਵਿਆਹੁਤਾ ਸਥਿਤੀ", "religion": "ਧਰਮ", "caste": "ਜਾਤੀ", "gotra": "ਗੋਤਰ", "rashi": "ਰਾਸ਼ੀ", "nakshatra": "ਨਛੱਤਰ", "manglik": "ਮਾਂਗਲਿਕ", "phone": "ਮੋਬਾਈਲ ਨੰਬਰ", "email": "ਈਮੇਲ", "address": "ਪਤਾ", "father": "ਪਿਤਾ", "mother": "ਮਾਤਾ", "brothers": "ਭਰਾ", "sisters": "ਭੈਣਾਂ", "languages": "ਭਾਸ਼ਾਵਾਂ", "hobbies": "ਸ਼ੌਕ", "place": "ਜਗ੍ਹਾ", "date": "ਤਾਰੀਖ", "signature": "ਦਸਤਖਤ", "qualification": "ਯੋਗਤਾ", "institute": "ਯੂਨੀਵਰਸਿਟੀ/ਬੋਰਡ/ਸਕੂਲ ਦਾ ਨਾਮ", "year": "ਪਾਸ ਹੋਣ ਦਾ ਸਾਲ", "score": "% ਅੰਕ / CGPA / SGPA", "organization": "ਸੰਗਠਨ", "designation": "ਅਹੁਦਾ", "period": "ਕੰਮ ਦੀ ਮਿਆਦ", "responsibilities": "ਜ਼ਿੰਮੇਵਾਰੀਆਂ", "age": "ਉਮਰ", "qr": "ਸੰਪਰਕ ਲਈ ਸਕੈਨ ਕਰੋ"},
+    "or": {"contact": "ଯୋଗାଯୋଗ ବିବରଣୀ", "personal": "ବ୍ୟକ୍ତିଗତ ବିବରଣୀ", "family": "ପାରିବାରିକ ବିବରଣୀ", "skills": "ଦକ୍ଷତା", "additional": "ଅତିରିକ୍ତ ବିବରଣୀ", "profile": "ପ୍ରୋଫାଇଲ୍ / ଉଦ୍ଦେଶ୍ୟ", "education": "ଶିକ୍ଷା", "experience": "କାର୍ଯ୍ୟ ଅଭିଜ୍ଞତା", "declaration": "ଘୋଷଣା", "dob": "ଜନ୍ମ ତାରିଖ", "gender": "ଲିଙ୍ଗ", "height": "ଉଚ୍ଚତା", "weight": "ଓଜନ", "blood": "ରକ୍ତ ଗ୍ରୁପ୍", "marital": "ବୈବାହିକ ସ୍ଥିତି", "religion": "ଧର୍ମ", "caste": "ଜାତି", "gotra": "ଗୋତ୍ର", "rashi": "ରାଶି", "nakshatra": "ନକ୍ଷତ୍ର", "manglik": "ମାଙ୍ଗଳିକ", "phone": "ମୋବାଇଲ୍ ନମ୍ବର", "email": "ଇମେଲ୍", "address": "ଠିକଣା", "father": "ପିତା", "mother": "ମାତା", "brothers": "ଭାଇ", "sisters": "ଭଉଣୀ", "languages": "ଭାଷା", "hobbies": "ଶଉକ", "place": "ସ୍ଥାନ", "date": "ତାରିଖ", "signature": "ଦସ୍ତଖତ", "qualification": "ଯୋଗ୍ୟତା", "institute": "ବିଶ୍ୱବିଦ୍ୟାଳୟ/ବୋର୍ଡ/ବିଦ୍ୟାଳୟର ନାମ", "year": "ପାସ ହେବାର ବର୍ଷ", "score": "% ମାର୍କ / CGPA / SGPA", "organization": "ସଂସ୍ଥା", "designation": "ପଦବୀ", "period": "କାର୍ଯ୍ୟକାଳ", "responsibilities": "ଦାୟିତ୍ୱ", "age": "ବୟସ", "qr": "ଯୋଗାଯୋଗ ପାଇଁ ସ୍କାନ୍ କରନ୍ତୁ"}
 }
+
 
 def _preprocess(payload):
     data = dict(payload or {})
     lang = str(data.get("language") or "en").lower()
-    
+
     theme = data.get("theme") or {}
     if not isinstance(theme, dict) or not theme.get("primary"):
         theme = {"layout": "classic", "primary": "#6B0F1A", "accent": "#D4A853", "tint": "#FAF4E2", "ink": "#30242A", "displayFont": "Playfair Display", "bodyFont": "Lato", "name": "Default"}
     data["theme"] = theme
 
+    # Theme customizations
+    data["name_font_size"] = str(data.get("name_font_size") or "27")
+    data["photo_fit"] = str(data.get("photo_fit") or "cover")
+    data["photo_shape"] = str(data.get("photo_shape") or "auto")
+
+    # Skills
     skills = []
     for raw in str(data.get("skills") or "").splitlines():
         if "|" in raw:
             n, lvl = raw.split("|", 1)
-            try: lv = max(0, min(100, int(float(lvl.strip()))))
-            except: lv = 80
-            if n.strip(): 
+            try:
+                lv = max(0, min(100, int(float(lvl.strip()))))
+            except Exception:
+                lv = 80
+            if n.strip():
                 skills.append({"name": _translate(n.strip(), lang), "level": lv})
     data["skills_list"] = skills
 
+    # Value maps
     v_map = {
         "hi": {"Male": "पुरुष", "Female": "महिला", "Other": "अन्य", "Unmarried": "अविवाहित", "Never Married": "कभी शादी नहीं की", "Divorced": "तलाकशुदा", "Widowed": "विधवा/विधुर", "Awaiting Divorce": "तालाक का इंतजार", "Yes": "हाँ", "No": "नहीं", "Partial": "आंशिक", "Hindu": "हिंदू", "Muslim": "मुस्लिम", "Christian": "ईसाई", "Sikh": "सिख", "Buddhist": "बौद्ध", "Jain": "जैन", "Parsi": "पारसी"},
         "kn": {"Male": "ಪುರುಷ", "Female": "ಮಹಿಳೆ", "Other": "ಇತರೆ", "Unmarried": "ಅವಿವಾಹಿತ", "Never Married": "ಮದುವೆಯಾಗಿಲ್ಲ", "Divorced": "ವಿಚ್ಛೇದಿತ", "Widowed": "ವಿಧವೆ/ವಿಧುರ", "Awaiting Divorce": "ವಿಚ್ಛೇದನದ ನಿರೀಕ್ಷೆಯಲ್ಲಿದೆ", "Yes": "ಹೌದು", "No": "ಇಲ್ಲ", "Partial": "ಭಾಗಶಃ", "Hindu": "ಹಿಂದೂ", "Muslim": "ಮುಸ್ಲಿಂ", "Christian": "ಕ್ರಿಶ್ಚಿಯನ್", "Sikh": "ಸಿಖ್", "Buddhist": "ಬೌದ್ಧ", "Jain": "ಜೈನ", "Parsi": "ಪಾರ್ಸಿ"},
@@ -110,14 +165,15 @@ def _preprocess(payload):
 
     for k in ["gender", "marital", "manglik", "religion", "caste"]:
         val = str(data.get(k) or "").strip()
-        if val in v_map:
-            data[k] = v_map[val]
-        else:
-            data[k] = val
+        data[k] = v_map.get(val, val)
+
+    # Name first (special handling)
+    name = str(data.get("name") or "").strip()
+    data["name"] = _translate(name, lang, is_name=True) if name else name
 
     translate_keys = [
-        "name", "address", "profile", "father", "mother", "father_job", "mother_job", 
-        "brothers", "sisters", "education_simple", "languages", "hobbies", 
+        "address", "profile", "father", "mother", "father_job", "mother_job",
+        "brothers", "sisters", "education_simple", "languages", "hobbies",
         "declaration", "place"
     ]
     for k in translate_keys:
@@ -125,6 +181,20 @@ def _preprocess(payload):
 
     for k in ("dob", "weight", "phone", "email", "date"):
         data[k] = str(data.get(k) or "").strip()
+
+    # Age calculation
+    age = ""
+    try:
+        if data.get("dob"):
+            dob_parts = re.split(r"[-/.]", data["dob"])
+            if len(dob_parts) == 3:
+                y, m, d = int(dob_parts[0]), int(dob_parts[1]), int(dob_parts[2])
+                if y > 1000:
+                    today = datetime.date.today()
+                    age = str(today.year - y - ((today.month, today.day) < (m, d)))
+    except Exception:
+        pass
+    data["age"] = age
 
     edu_mode = str(data.get("education_mode") or "simple").lower()
     data["education_mode"] = edu_mode
@@ -142,7 +212,6 @@ def _preprocess(payload):
                 })
     data["education_list"] = processed_edu
 
-    # Work Experience Parse
     raw_jobs = data.get("work_experience_list", [])
     processed_jobs = []
     if isinstance(raw_jobs, list):
@@ -157,29 +226,61 @@ def _preprocess(payload):
     data["work_experience_list"] = processed_jobs
 
     data["labels"] = LABELS_MULTI.get(lang, LABELS_MULTI["en"])
-    
+
     data["photo"] = str(data.get("photo") or "")
+    data["signature"] = str(data.get("signature") or "")
     data["watermark"] = bool(data.get("watermark"))
     data["watermark_text"] = str(data.get("watermark_text") or "Biodata")[:50]
     data["show_pagenum"] = bool(data.get("show_pagenum", True))
+    data["show_qr"] = bool(data.get("show_qr", False))
     data["page_size"] = str(data.get("page_size") or "A4").upper()
+
+    # QR code data (contact)
+    qr_parts = []
+    if data.get("name"): qr_parts.append(f"N:{data['name']}")
+    if data.get("phone"): qr_parts.append(f"TEL:{data['phone']}")
+    if data.get("email"): qr_parts.append(f"EMAIL:{data['email']}")
+    data["qr_text"] = " | ".join(qr_parts)
 
     return data
 
+
 @app.route("/")
-def index(): return send_from_directory(BASE_DIR, "index.html")
+def index():
+    return send_from_directory(BASE_DIR, "index.html")
+
 
 @app.route("/manifest.json")
 def manifest():
     return jsonify({"name": "Biodata Maker Pro", "short_name": "BiodataPro", "start_url": "/", "display": "standalone", "background_color": "#f1f5f9", "theme_color": "#0f172a"})
 
+
 @app.route("/api/health")
 def health():
-    return jsonify(status="ok", ai=bool(gemini_model))
+    return jsonify(status="ok", ai=bool(gemini_model), weasyprint=WEASYPRINT_OK, version="2.0")
+
+
+@app.route("/api/qr")
+def qr():
+    """QR code proxy - free, no API key needed"""
+    text = request.args.get("text", "")
+    size = request.args.get("size", "200")
+    if not text:
+        return jsonify(error="text required"), 400
+    try:
+        url = f"https://api.qrserver.com/v1/create-qr-code/?size={size}x{size}&data={urllib.parse.quote(text)}"
+        r = requests.get(url, timeout=10)
+        if r.status_code == 200:
+            return send_file(BytesIO(r.content), mimetype="image/png")
+    except Exception as e:
+        return jsonify(error=str(e)), 500
+    return jsonify(error="QR failed"), 500
+
 
 @app.route("/api/generate-profile", methods=["POST"])
 def generate_profile():
-    if not gemini_model: return jsonify(error="AI not configured"), 503
+    if not gemini_model:
+        return jsonify(error="AI not configured"), 503
     try:
         data = request.get_json(silent=True) or {}
         name = str(data.get("name") or "the candidate").strip()
@@ -187,16 +288,18 @@ def generate_profile():
         skills = str(data.get("skills") or "Good communication").strip()
         lang = str(data.get("language") or "en")
         lang_name = {"hi": "Hindi", "kn": "Kannada", "ta": "Tamil", "te": "Telugu", "mr": "Marathi", "gu": "Gujarati", "bn": "Bengali", "ml": "Malayalam", "pa": "Punjabi", "or": "Odia"}.get(lang, "English")
-        
+
         prompt = f"Write a 3-4 sentence humble biodata profile in {lang_name} language for an Indian marriage profile. Name: {name}. Education: {education}. Skills: {skills}. Focus on family values, career goals. Return plain text only."
         resp = gemini_model.generate_content(prompt)
         return jsonify(profile=(resp.text or "").strip())
     except Exception as e:
         return jsonify(error=str(e)), 500
 
+
 @app.route("/api/suggest-skills", methods=["POST"])
 def suggest_skills():
-    if not gemini_model: return jsonify(error="AI not configured"), 503
+    if not gemini_model:
+        return jsonify(error="AI not configured"), 503
     try:
         data = request.get_json(silent=True) or {}
         education = str(data.get("education") or "").strip()
@@ -206,6 +309,7 @@ def suggest_skills():
     except Exception as e:
         return jsonify(error=str(e)), 500
 
+
 @app.route("/api/preview", methods=["POST"])
 def preview():
     try:
@@ -214,19 +318,34 @@ def preview():
         data = _preprocess(payload)
         return env.get_template("pdf_template.html").render(**data)
     except Exception as e:
+        logging.exception("Preview error")
         return f"<html><body><h1>Preview Error</h1><pre>{str(e)}</pre></body></html>", 500
+
 
 @app.route("/api/pdf", methods=["POST"])
 def pdf():
-    if not WEASYPRINT_OK: return jsonify(error="PDF unavailable"), 503
+    if not WEASYPRINT_OK:
+        return jsonify(error="PDF unavailable"), 503
     try:
-        data = _preprocess(request.get_json(silent=True) or {})
+        payload = request.get_json(silent=True) or {}
+        quality = str(payload.get("quality") or "high").lower()
+        data = _preprocess(payload)
         html_str = env.get_template("pdf_template.html").render(**data)
-        pdf_bytes = HTML(string=html_str, base_url=request.url_root).write_pdf()
+        # Quality control
+        opts = {}
+        if quality == "low":
+            opts["zoom"] = 0.75
+        elif quality == "medium":
+            opts["zoom"] = 1.0
+        else:
+            opts["zoom"] = 1.5
+        pdf_bytes = HTML(string=html_str, base_url=request.url_root).write_pdf(**opts)
         safe = re.sub(r"[^a-zA-Z0-9_-]", "", (data.get("name") or "Biodata").replace(" ", "_")) or "Biodata"
         return send_file(BytesIO(pdf_bytes), mimetype="application/pdf", as_attachment=True, download_name=f"{safe}_Biodata.pdf")
     except Exception as e:
+        logging.exception("PDF error")
         return jsonify(error=str(e)), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")))
