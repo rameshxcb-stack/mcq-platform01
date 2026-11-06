@@ -42,9 +42,7 @@ NAME_PREFIX_MAP = {
     "bn": "আমার নাম", "ml": "എന്റെ പേര്", "pa": "ਮੇਰਾ ਨਾਮ", "or": "ମୋର ନାମ"
 }
 
-
 def _transliterate_name(text, lang):
-    """Google transliteration endpoint (dt=rm) - best for names."""
     if not text or not lang or lang == "en":
         return text
     if not text.isascii():
@@ -66,7 +64,6 @@ def _transliterate_name(text, lang):
     except Exception:
         pass
     return None
-
 
 def _translate(text, lang, is_name=False):
     if not text or not lang or lang == "en":
@@ -127,230 +124,13 @@ def _translate(text, lang, is_name=False):
     TRANS_CACHE[cache_key] = text
     return text
 
-
 LABELS_MULTI = {
-    "en": {
-        "contact": "Contact Details", "personal": "Personal Details", "family": "Family Details",
-        "skills": "Skills", "additional": "Additional Details", "profile": "Profile / Objective",
-        "education": "Education", "experience": "Work Experience", "declaration": "Declaration",
-        "dob": "Date of Birth", "gender": "Gender", "height": "Height", "weight": "Weight",
-        "blood": "Blood Group", "marital": "Marital Status", "religion": "Religion",
-        "caste": "Caste / Community", "gotra": "Gotra", "rashi": "Rashi", "nakshatra": "Nakshatra",
-        "manglik": "Manglik", "phone": "Mobile Number", "email": "Email", "address": "Address",
-        "father": "Father", "mother": "Mother", "brothers": "Brothers", "sisters": "Sisters",
-        "languages": "Languages", "hobbies": "Hobbies", "place": "Place", "date": "Date",
-        "signature": "Signature", "qualification": "Qualification",
-        "institute": "Name of the University/Board/School", "year": "Year of Passing",
-        "score": "% Marks / CGPA / SGPA", "organization": "Organization", "designation": "Designation",
-        "period": "Job Period", "responsibilities": "Responsibilities", "age": "Age",
-        "qr": "Scan for Contact", "occupation": "Occupation",
-        "partner_preferences": "Partner Preferences", "lifestyle": "Lifestyle",
-        "diet": "Diet", "smoking": "Smoking", "drinking": "Drinking",
-        "projects": "Projects / Portfolio", "certifications": "Certifications / Training",
-        "horoscope": "Horoscope Details"
-    },
-    "hi": {
-        "contact": "संपर्क विवरण", "personal": "व्यक्तिगत विवरण", "family": "पारिवारिक विवरण",
-        "skills": "कौशल", "additional": "अतिरिक्त विवरण", "profile": "प्रोफ़ाइल / उद्देश्य",
-        "education": "शिक्षा", "experience": "कार्य अनुभव", "declaration": "घोषणा",
-        "dob": "जन्म तिथि", "gender": "लिंग", "height": "ऊंचाई", "weight": "वजन",
-        "blood": "रक्त समूह", "marital": "वैवाहिक स्थिति", "religion": "धर्म",
-        "caste": "जाति", "gotra": "गोत्र", "rashi": "राशि", "nakshatra": "नक्षत्र",
-        "manglik": "मांगलिक", "phone": "मोबाइल नंबर", "email": "ईमेल", "address": "पता",
-        "father": "पिता", "mother": "माता", "brothers": "भाई", "sisters": "बहनें",
-        "languages": "भाषाएं", "hobbies": "शौक", "place": "स्थान", "date": "तिथि",
-        "signature": "हस्ताक्षर", "qualification": "योग्यता",
-        "institute": "विश्वविद्यालय/बोर्ड/स्कूल का नाम", "year": "पास होने का वर्ष",
-        "score": "% अंक / CGPA / SGPA", "organization": "संगठन", "designation": "पद",
-        "period": "कार्यकाल", "responsibilities": "जिम्मेदारियां", "age": "उम्र",
-        "qr": "संपर्क के लिए स्कैन करें", "occupation": "व्यवसाय",
-        "partner_preferences": "जीवनसाथी की प्राथमिकताएं", "lifestyle": "जीवनशैली",
-        "diet": "आहार", "smoking": "धूम्रपान", "drinking": "शराब",
-        "projects": "परियोजनाएं / पोर्टफोलियो", "certifications": "प्रमाणपत्र / प्रशिक्षण",
-        "horoscope": "कुंडली विवरण"
-    },
-    "kn": {
-        "contact": "ಸಂಪರ್ಕ ವಿವರಗಳು", "personal": "ವೈಯಕ್ತಿಕ ವಿವರಗಳು", "family": "ಕುಟುಂಬದ ವಿವರಗಳು",
-        "skills": "ಕೌಶಲ್ಯಗಳು", "additional": "ಹೆಚ್ಚುವರಿ ವಿವರಗಳು", "profile": "ಪ್ರೊಫೈಲ್ / ಉದ್ದೇಶ",
-        "education": "ಶಿಕ್ಷಣ", "experience": "ಕೆಲಸದ ಅನುಭವ", "declaration": "ಘೋಷಣೆ",
-        "dob": "ಜನ್ಮ ದಿನಾಂಕ", "gender": "ಲಿಂಗ", "height": "ಎತ್ತರ", "weight": "ತೂಕ",
-        "blood": "ರಕ್ತ ಗುಂಪು", "marital": "ವೈವಾಹಿಕ ಸ್ಥಿತಿ", "religion": "ಧರ್ಮ",
-        "caste": "ಜಾತಿ", "gotra": "ಗೋತ್ರ", "rashi": "ರಾಶಿ", "nakshatra": "ನಕ್ಷತ್ರ",
-        "manglik": "ಮಾಂಗಲಿಕ", "phone": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ", "email": "ಇಮೇಲ್", "address": "ವಿಳಾಸ",
-        "father": "ತಂದೆ", "mother": "ತಾಯಿ", "brothers": "ಸಹೋದರರು", "sisters": "ಸಹೋದರಿಯರು",
-        "languages": "ಭಾಷೆಗಳು", "hobbies": "ಹವ್ಯಾಸಗಳು", "place": "ಸ್ಥಳ", "date": "ದಿನಾಂಕ",
-        "signature": "ಸಹಿ", "qualification": "ಅರ್ಹತೆ",
-        "institute": "ವಿಶ್ವವಿದ್ಯಾಲಯ/ಮಂಡಳಿ/ಶಾಲೆಯ ಹೆಸರು", "year": "ತೇರ್ಗಡೆಯಾದ ವರ್ಷ",
-        "score": "% ಅಂಕಗಳು / CGPA / SGPA", "organization": "ಸಂಸ್ಥೆ", "designation": "ಹುದ್ದೆ",
-        "period": "ಕೆಲಸದ ಅವಧಿ", "responsibilities": "ಜವಾಬ್ದಾರಿಗಳು", "age": "ವಯಸ್ಸು",
-        "qr": "ಸಂಪರ್ಕಕ್ಕಾಗಿ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ", "occupation": "ಉದ್ಯೋಗ",
-        "partner_preferences": "ಜೀವನ ಸಂಗಾತಿ ಆದ್ಯತೆಗಳು", "lifestyle": "ಜೀವನಶೈಲಿ",
-        "diet": "ಆಹಾರ", "smoking": "ಧೂಮಪಾನ", "drinking": "ಮದ್ಯಪಾನ",
-        "projects": "ಯೋಜನೆಗಳು", "certifications": "ಪ್ರಮಾಣಪತ್ರಗಳು",
-        "horoscope": "ಜಾತಕ ವಿವರಗಳು"
-    },
-    "ta": {
-        "contact": "தொடர்பு விவரங்கள்", "personal": "தனிப்பட்ட விவரங்கள்", "family": "குடும்ப விவரங்கள்",
-        "skills": "திறன்கள்", "additional": "கூடுதல் விவரங்கள்", "profile": "சுயவிவரம் / குறிக்கோள்",
-        "education": "கல்வி", "experience": "பணி அனுபவம்", "declaration": "பிரகடனம்",
-        "dob": "பிறந்த தேதி", "gender": "பாலினம்", "height": "உயரம்", "weight": "எடை",
-        "blood": "இரத்தக் குழு", "marital": "திருமண நிலை", "religion": "மதம்",
-        "caste": "சாதி", "gotra": "கோத்திரம்", "rashi": "ராசி", "nakshatra": "நட்சத்திரம்",
-        "manglik": "மாங்கல்யம்", "phone": "கைபேசி எண்", "email": "மின்னஞ்சல்", "address": "முகவரி",
-        "father": "தந்தை", "mother": "தாய்", "brothers": "சகோதரர்கள்", "sisters": "சகோதரிகள்",
-        "languages": "மொழிகள்", "hobbies": "பொழுதுபோக்கு", "place": "இடம்", "date": "தேதி",
-        "signature": "கையொப்பம்", "qualification": "தகுதி",
-        "institute": "பல்கலைக்கழகம்/வாரியம்/பள்ளியின் பெயர்", "year": "தேர்ச்சி பெற்ற ஆண்டு",
-        "score": "% மதிப்பெண்கள் / CGPA / SGPA", "organization": "நிறுவனம்", "designation": "பதவி",
-        "period": "பணி காலம்", "responsibilities": "பொறுப்புகள்", "age": "வயது",
-        "qr": "தொடர்புக்கு ஸ்கேன் செய்யவும்", "occupation": "தொழில்",
-        "partner_preferences": "வாழ்க்கைத் துணை விருப்பங்கள்", "lifestyle": "வாழ்க்கை முறை",
-        "diet": "உணவு", "smoking": "புகைபிடித்தல்", "drinking": "மது",
-        "projects": "திட்டங்கள்", "certifications": "சான்றிதழ்கள்",
-        "horoscope": "ஜாதக விவரங்கள்"
-    },
-    "te": {
-        "contact": "సంప్రదింపు వివరాలు", "personal": "వ్యక్తిగత వివరాలు", "family": "కుటుంబ వివరాలు",
-        "skills": "నైపుణ్యాలు", "additional": "అదనపు వివరాలు", "profile": "ప్రొఫైల్ / లక్ష్యం",
-        "education": "విద్య", "experience": "పని అనుభవం", "declaration": "ప్రకటన",
-        "dob": "పుట్టిన తేదీ", "gender": "లింగం", "height": "ఎత్తు", "weight": "బరువు",
-        "blood": "రక్త వర్గం", "marital": "వైవాహిక స్థితి", "religion": "మతం",
-        "caste": "కులం", "gotra": "గోత్రం", "rashi": "రాశి", "nakshatra": "నక్షత్రం",
-        "manglik": "మాంగలిక్", "phone": "మొబైల్ నంబర్", "email": "ఇమెయిల్", "address": "చిరునామా",
-        "father": "తండ్రి", "mother": "తల్లి", "brothers": "సహోదరులు", "sisters": "సహోదరులు (అక్కచెల్లెళ్ళు)",
-        "languages": "భాషలు", "hobbies": "అభిరుచులు", "place": "స్థలం", "date": "తేదీ",
-        "signature": "సంతకం", "qualification": "అర్హత",
-        "institute": "విశ్వవిద్యాలయం/బోర్డు/పాఠశాల పేరు", "year": "ఉత్తీర్ణత సంవత్సరం",
-        "score": "% మార్కులు / CGPA / SGPA", "organization": "సంస్థ", "designation": "హోదా",
-        "period": "పని కాలం", "responsibilities": "బాధ్యతలు", "age": "వయస్సు",
-        "qr": "సంప్రదింపు కోసం స్కాన్ చేయండి", "occupation": "వృత్తి",
-        "partner_preferences": "జీవిత భాగస్వామి ప్రాధాన్యతలు", "lifestyle": "జీవనశైలి",
-        "diet": "ఆహారం", "smoking": "ధూమపానం", "drinking": "మద్యపానం",
-        "projects": "ప్రాజెక్టులు", "certifications": "ధృవపత్రాలు",
-        "horoscope": "జాతక వివరాలు"
-    },
-    "mr": {
-        "contact": "संपर्क तपशील", "personal": "वैयक्तिक तपशील", "family": "कौटुंबिक तपशील",
-        "skills": "कौशल्ये", "additional": "अतिरिक्त तपशील", "profile": "प्रोफाइल / उद्दिष्ट",
-        "education": "शिक्षण", "experience": "कामाचा अनुभव", "declaration": "घोषणा",
-        "dob": "जन्मतारीख", "gender": "लिंग", "height": "उंची", "weight": "वजन",
-        "blood": "रक्तगट", "marital": "वैवाहिक स्थिती", "religion": "धर्म",
-        "caste": "जात", "gotra": "गोत्र", "rashi": "राशी", "nakshatra": "नक्षत्र",
-        "manglik": "मांगलिक", "phone": "मोबाइल क्रमांक", "email": "ईमेल", "address": "पत्ता",
-        "father": "वडील", "mother": "आई", "brothers": "भाऊ", "sisters": "बहिणी",
-        "languages": "भाषा", "hobbies": "छंद", "place": "ठिकाण", "date": "तारीख",
-        "signature": "स्वाक्षरी", "qualification": "पात्रता",
-        "institute": "विद्यापीठ/मंडळ/शाळेचे नाव", "year": "उत्तीर्ण होण्याचे वर्ष",
-        "score": "% गुण / CGPA / SGPA", "organization": "संस्था", "designation": "पद",
-        "period": "कामाचा कालावधी", "responsibilities": "जबाबदाऱ्या", "age": "वय",
-        "qr": "संपर्कासाठी स्कॅन करा", "occupation": "व्यवसाय",
-        "partner_preferences": "जीवनसाथीची प्राधान्ये", "lifestyle": "जीवनशैली",
-        "diet": "आहार", "smoking": "धूम्रपान", "drinking": "दारू",
-        "projects": "प्रकल्प", "certifications": "प्रमाणपत्रे",
-        "horoscope": "कुंडली तपशील"
-    },
-    "gu": {
-        "contact": "સંપર્ક વિગતો", "personal": "અંગત વિગતો", "family": "કૌટુંબિક વિગતો",
-        "skills": "કૌશલ્યો", "additional": "વધારાની વિગતો", "profile": "પ્રોફાઇલ / ઉદ્દેશ્ય",
-        "education": "શિક્ષણ", "experience": "કાર્ય અનુભવ", "declaration": "ઘોષણા",
-        "dob": "જન્મ તારીખ", "gender": "જાતિ", "height": "ઊંચાઈ", "weight": "વજન",
-        "blood": "બ્લડ ગ્રુપ", "marital": "વૈવાહિક સ્થિતિ", "religion": "ધર્મ",
-        "caste": "જ્ઞાતિ", "gotra": "ગોત્ર", "rashi": "રાશિ", "nakshatra": "નક્ષત્ર",
-        "manglik": "માંગલિક", "phone": "મોબાઇલ નંબર", "email": "ઇમેઇલ", "address": "સરનામું",
-        "father": "પિતા", "mother": "માતા", "brothers": "ભાઈઓ", "sisters": "બહેનો",
-        "languages": "ભાષાઓ", "hobbies": "શોખ", "place": "સ્થળ", "date": "તારીખ",
-        "signature": "સહી", "qualification": "લાયકાત",
-        "institute": "યુનિવર્સિટી/બોર્ડ/શાળાનું નામ", "year": "પાસ થયાનું વર્ષ",
-        "score": "% માર્ક્સ / CGPA / SGPA", "organization": "સંસ્થા", "designation": "હોદ્દો",
-        "period": "કાર્યકાળ", "responsibilities": "જવાબદારીઓ", "age": "ઉંમર",
-        "qr": "સંપર્ક માટે સ્કેન કરો", "occupation": "વ્યવસાય",
-        "partner_preferences": "જીવનસાથી પસંદગીઓ", "lifestyle": "જીવનશૈલી",
-        "diet": "આહાર", "smoking": "ધૂમ્રપાન", "drinking": "દારૂ",
-        "projects": "પ્રોજેક્ટ્સ", "certifications": "પ્રમાણપત્રો",
-        "horoscope": "જન્મપત્રિકા વિગતો"
-    },
-    "bn": {
-        "contact": "যোগাযোগের বিবরণ", "personal": "ব্যক্তিগত বিবরণ", "family": "পারিবারিক বিবরণ",
-        "skills": "দক্ষতা", "additional": "অতিরিক্ত বিবরণ", "profile": "প্রোফাইল / উদ্দেশ্য",
-        "education": "শিক্ষা", "experience": "কাজের অভিজ্ঞতা", "declaration": "ঘোষণা",
-        "dob": "জন্ম তারিখ", "gender": "লিঙ্গ", "height": "উচ্চতা", "weight": "ওজন",
-        "blood": "রক্তের গ্রুপ", "marital": "বৈবাহিক অবস্থা", "religion": "ধর্ম",
-        "caste": "বর্ণ", "gotra": "গোত্র", "rashi": "রাশি", "nakshatra": "নক্ষত্র",
-        "manglik": "মাঙ্গলিক", "phone": "মোবাইল নম্বর", "email": "ইমেল", "address": "ঠিকানা",
-        "father": "পিতা", "mother": "মাতা", "brothers": "ভাই", "sisters": "বোন",
-        "languages": "ভাষা", "hobbies": "শখ", "place": "স্থান", "date": "তারিখ",
-        "signature": "স্বাক্ষর", "qualification": "যোগ্যতা",
-        "institute": "বিশ্ববিদ্যালয়/বোর্ড/স্কুলের নাম", "year": "পাসের বছর",
-        "score": "% নম্বর / CGPA / SGPA", "organization": "সংস্থা", "designation": "পদবি",
-        "period": "কাজের সময়কাল", "responsibilities": "দায়িত্ব", "age": "বয়স",
-        "qr": "যোগাযোগের জন্য স্ক্যান করুন", "occupation": "পেশা",
-        "partner_preferences": "জীবনসঙ্গী পছন্দ", "lifestyle": "জীবনধারা",
-        "diet": "খাদ্য", "smoking": "ধূমপান", "drinking": "মদ্যপান",
-        "projects": "প্রকল্প", "certifications": "সার্টিফিকেট",
-        "horoscope": "জাতক বিবরণ"
-    },
-    "ml": {
-        "contact": "ബന്ധപ്പെടാനുള്ള വിവരങ്ങൾ", "personal": "വ്യക്തിഗത വിവരങ്ങൾ", "family": "കുടുംബ വിവരങ്ങൾ",
-        "skills": "കഴിവുകൾ", "additional": "അധിക വിവരങ്ങൾ", "profile": "പ്രൊഫൈൽ / ലക്ഷ്യം",
-        "education": "വിദ്യാഭ്യാസം", "experience": "ജോലി പരിചയം", "declaration": "സത്യവാങ്മൂലം",
-        "dob": "ജനനത്തീയതി", "gender": "ലിംഗഭേദം", "height": "ഉയരം", "weight": "ഭാരം",
-        "blood": "രക്തഗ്രൂപ്പ്", "marital": "വൈവാഹിക നില", "religion": "മതം",
-        "caste": "ജാതി", "gotra": "ഗോത്രം", "rashi": "രാശി", "nakshatra": "നക്ഷത്രം",
-        "manglik": "മാംഗല്യം", "phone": "മൊബൈൽ നമ്പർ", "email": "ഇമെയിൽ", "address": "വിലാസം",
-        "father": "പിതാവ്", "mother": "മാതാവ്", "brothers": "സഹോദരങ്ങൾ", "sisters": "സഹോദരിമാർ",
-        "languages": "ഭാഷകൾ", "hobbies": "വിനോദങ്ങൾ", "place": "സ്ഥലം", "date": "തീയതി",
-        "signature": "ഒപ്പ്", "qualification": "യോഗ്യത",
-        "institute": "സർവ്വകലാശാല/ബോർഡ്/സ്കൂളിന്റെ പേര്", "year": "വിജയിച്ച വർഷം",
-        "score": "% മാർക്ക് / CGPA / SGPA", "organization": "സ്ഥാപനം", "designation": "പദവി",
-        "period": "ജോലി കാലയളവ്", "responsibilities": "ഉത്തരവാദിത്തങ്ങൾ", "age": "പ്രായം",
-        "qr": "ബന്ധപ്പെടാൻ സ്കാൻ ചെയ്യുക", "occupation": "തൊഴിൽ",
-        "partner_preferences": "ഇണയുടെ മുൻഗണനകൾ", "lifestyle": "ജീവിതശൈലി",
-        "diet": "ഭക്ഷണം", "smoking": "പുകവലി", "drinking": "മദ്യപാനം",
-        "projects": "പ്രോജക്ടുകൾ", "certifications": "സർട്ടിഫിക്കറ്റുകൾ",
-        "horoscope": "ജാതക വിവരങ്ങൾ"
-    },
-    "pa": {
-        "contact": "ਸੰਪਰਕ ਵੇਰਵੇ", "personal": "ਨਿੱਜੀ ਵੇਰਵੇ", "family": "ਪਰਿਵਾਰਕ ਵੇਰਵੇ",
-        "skills": "ਹੁਨਰ", "additional": "ਵਾਧੂ ਵੇਰਵੇ", "profile": "ਪ੍ਰੋਫਾਈਲ / ਉਦੇਸ਼",
-        "education": "ਸਿੱਖਿਆ", "experience": "ਕੰਮ ਦਾ ਤਜਰਬਾ", "declaration": "ਐਲਾਨ",
-        "dob": "ਜਨਮ ਤਾਰੀਖ", "gender": "ਲਿੰਗ", "height": "ਕੱਦ", "weight": "ਭਾਰ",
-        "blood": "ਬਲੱਡ ਗਰੁੱਪ", "marital": "ਵਿਆਹੁਤਾ ਸਥਿਤੀ", "religion": "ਧਰਮ",
-        "caste": "ਜਾਤੀ", "gotra": "ਗੋਤਰ", "rashi": "ਰਾਸ਼ੀ", "nakshatra": "ਨਛੱਤਰ",
-        "manglik": "ਮਾਂਗਲਿਕ", "phone": "ਮੋਬਾਈਲ ਨੰਬਰ", "email": "ਈਮੇਲ", "address": "ਪਤਾ",
-        "father": "ਪਿਤਾ", "mother": "ਮਾਤਾ", "brothers": "ਭਰਾ", "sisters": "ਭੈਣਾਂ",
-        "languages": "ਭਾਸ਼ਾਵਾਂ", "hobbies": "ਸ਼ੌਕ", "place": "ਜਗ੍ਹਾ", "date": "ਤਾਰੀਖ",
-        "signature": "ਦਸਤਖਤ", "qualification": "ਯੋਗਤਾ",
-        "institute": "ਯੂਨੀਵਰਸਿਟੀ/ਬੋਰਡ/ਸਕੂਲ ਦਾ ਨਾਮ", "year": "ਪਾਸ ਹੋਣ ਦਾ ਸਾਲ",
-        "score": "% ਅੰਕ / CGPA / SGPA", "organization": "ਸੰਗਠਨ", "designation": "ਅਹੁਦਾ",
-        "period": "ਕੰਮ ਦੀ ਮਿਆਦ", "responsibilities": "ਜ਼ਿੰਮੇਵਾਰੀਆਂ", "age": "ਉਮਰ",
-        "qr": "ਸੰਪਰਕ ਲਈ ਸਕੈਨ ਕਰੋ", "occupation": "ਕਿੱਤਾ",
-        "partner_preferences": "ਜੀਵਨ ਸਾਥੀ ਤਰਜੀਹਾਂ", "lifestyle": "ਜੀਵਨਸ਼ੈਲੀ",
-        "diet": "ਖੁਰਾਕ", "smoking": "ਸਿਗਰਟਨੋਸ਼ੀ", "drinking": "ਸ਼ਰਾਬ",
-        "projects": "ਪ੍ਰੋਜੈਕਟ", "certifications": "ਸਰਟੀਫਿਕੇਟ",
-        "horoscope": "ਜਨਮ ਕੁੰਡਲੀ ਵੇਰਵੇ"
-    },
-    "or": {
-        "contact": "ଯୋଗାଯୋଗ ବିବରଣୀ", "personal": "ବ୍ୟକ୍ତିଗତ ବିବରଣୀ", "family": "ପାରିବାରିକ ବିବରଣୀ",
-        "skills": "ଦକ୍ଷତା", "additional": "ଅତିରିକ୍ତ ବିବରଣୀ", "profile": "ପ୍ରୋଫାଇଲ୍ / ଉଦ୍ଦେଶ୍ୟ",
-        "education": "ଶିକ୍ଷା", "experience": "କାର୍ଯ୍ୟ ଅଭିଜ୍ଞତା", "declaration": "ଘୋଷଣା",
-        "dob": "ଜନ୍ମ ତାରିଖ", "gender": "ଲିଙ୍ଗ", "height": "ଉଚ୍ଚତା", "weight": "ଓଜନ",
-        "blood": "ରକ୍ତ ଗ୍ରୁପ୍", "marital": "ବୈବାହିକ ସ୍ଥିତି", "religion": "ଧର୍ମ",
-        "caste": "ଜାତି", "gotra": "ଗୋତ୍ର", "rashi": "ରାଶି", "nakshatra": "ନକ୍ଷତ୍ର",
-        "manglik": "ମାଙ୍ଗଳିକ", "phone": "ମୋବାଇଲ୍ ନମ୍ବର", "email": "ଇମେଲ୍", "address": "ଠିକଣା",
-        "father": "ପିତା", "mother": "ମାତା", "brothers": "ଭାଇ", "sisters": "ଭଉଣୀ",
-        "languages": "ଭାଷା", "hobbies": "ଶଉକ", "place": "ସ୍ଥାନ", "date": "ତାରିଖ",
-        "signature": "ଦସ୍ତଖତ", "qualification": "ଯୋଗ୍ୟତା",
-        "institute": "ବିଶ୍ୱବିଦ୍ୟାଳୟ/ବୋର୍ଡ/ବିଦ୍ୟାଳୟର ନାମ", "year": "ପାସ ହେବାର ବର୍ଷ",
-        "score": "% ମାର୍କ / CGPA / SGPA", "organization": "ସଂସ୍ଥା", "designation": "ପଦବୀ",
-        "period": "କାର୍ଯ୍ୟକାଳ", "responsibilities": "ଦାୟିତ୍ୱ", "age": "ବୟସ",
-        "qr": "ଯୋଗାଯୋଗ ପାଇଁ ସ୍କାନ୍ କରନ୍ତୁ", "occupation": "ବୃତ୍ତି",
-        "partner_preferences": "ଜୀବନସାଥୀ ପସନ୍ଦ", "lifestyle": "ଜୀବନଶୈଳୀ",
-        "diet": "ଖାଦ୍ୟ", "smoking": "ଧୂମପାନ", "drinking": "ମଦ୍ୟପାନ",
-        "projects": "ପ୍ରୋଜେକ୍ଟ", "certifications": "ପ୍ରମାଣପତ୍ର",
-        "horoscope": "ଜାତକ ବିବରଣୀ"
-    }
+    "en": {"contact": "Contact Details", "personal": "Personal Details", "family": "Family Details", "skills": "Skills", "additional": "Additional Details", "profile": "Profile / Objective", "education": "Education", "experience": "Work Experience", "declaration": "Declaration", "dob": "Date of Birth", "gender": "Gender", "height": "Height", "weight": "Weight", "blood": "Blood Group", "marital": "Marital Status", "religion": "Religion", "caste": "Caste / Community", "gotra": "Gotra", "rashi": "Rashi", "nakshatra": "Nakshatra", "manglik": "Manglik", "phone": "Mobile Number", "email": "Email", "address": "Address", "father": "Father", "mother": "Mother", "brothers": "Brothers", "sisters": "Sisters", "languages": "Languages", "hobbies": "Hobbies", "place": "Place", "date": "Date", "signature": "Signature", "qualification": "Qualification", "institute": "Name of the University/Board/School", "year": "Year of Passing", "score": "% Marks / CGPA / SGPA", "organization": "Organization", "designation": "Designation", "period": "Job Period", "responsibilities": "Responsibilities", "age": "Age", "qr": "Scan for Contact", "occupation": "Occupation", "partner_preferences": "Partner Preferences", "lifestyle": "Lifestyle", "diet": "Diet", "smoking": "Smoking", "drinking": "Drinking", "projects": "Projects / Portfolio", "certifications": "Certifications / Training", "horoscope": "Horoscope Details"},
+    "hi": {"contact": "संपर्क विवरण", "personal": "व्यक्तिगत विवरण", "family": "पारिवारिक विवरण", "skills": "कौशल", "additional": "अतिरिक्त विवरण", "profile": "प्रोफ़ाइल / उद्देश्य", "education": "शिक्षा", "experience": "कार्य अनुभव", "declaration": "घोषणा", "dob": "जन्म तिथि", "gender": "लिंग", "height": "ऊंचाई", "weight": "वजन", "blood": "रक्त समूह", "marital": "वैवाहिक स्थिति", "religion": "धर्म", "caste": "जाति", "gotra": "गोत्र", "rashi": "राशि", "nakshatra": "नक्षत्र", "manglik": "मांगलिक", "phone": "मोबाइल नंबर", "email": "ईमेल", "address": "पता", "father": "पिता", "mother": "माता", "brothers": "भाई", "sisters": "बहनें", "languages": "भाषाएं", "hobbies": "शौक", "place": "स्थान", "date": "तिथि", "signature": "हस्ताक्षर", "qualification": "योग्यता", "institute": "विश्वविद्यालय/बोर्ड/स्कूल का नाम", "year": "पास होने का वर्ष", "score": "% अंक / CGPA / SGPA", "organization": "संगठन", "designation": "पद", "period": "कार्यकाल", "responsibilities": "जिम्मेदारियां", "age": "उम्र", "qr": "संपर्क के लिए स्कैन करें", "occupation": "व्यवसाय", "partner_preferences": "जीवनसाथी की प्राथमिकताएं", "lifestyle": "जीवनशैली", "diet": "आहार", "smoking": "धूम्रपान", "drinking": "शराब", "projects": "परियोजनाएं / पोर्टफोलियो", "certifications": "प्रमाणपत्र / प्रशिक्षण", "horoscope": "कुंडली विवरण"}
 }
 
+for lang_code in ["kn","ta","te","mr","gu","bn","ml","pa","or"]:
+    LABELS_MULTI.setdefault(lang_code, LABELS_MULTI["en"])
 
 def _preprocess(payload):
     data = dict(payload or {})
@@ -361,13 +141,17 @@ def _preprocess(payload):
 
     theme = data.get("theme") or {}
     if not isinstance(theme, dict) or not theme.get("primary"):
-        theme = {"layout": "classic", "primary": "#6B0F1A", "accent": "#D4A853",
-                 "tint": "#FAF4E2", "ink": "#30242A",
-                 "displayFont": "Playfair Display", "bodyFont": "Lato", "name": "Default"}
+        theme = {"layout": "classic", "primary": "#6B0F1A", "accent": "#D4A853", "tint": "#FAF4E2", "ink": "#30242A", "displayFont": "Playfair Display", "bodyFont": "Lato", "name": "Default"}
     data["theme"] = theme
 
-    data["name_font_size"] = str(data.get("name_font_size") or "27")
+    data["name_font_size"] = str(data.get("name_font_size") or "24")
     data["photo_fit"] = str(data.get("photo_fit") or "cover")
+    
+    # 🔥 NEW PHOTO SETTINGS
+    data["photo_pos"] = str(data.get("photo_pos") or "right") # left, right, center, sidebar
+    data["photo_scale"] = str(data.get("photo_scale") or "100")
+    data["photo_x"] = str(data.get("photo_x") or "50")
+    data["photo_y"] = str(data.get("photo_y") or "50")
 
     skills = []
     for raw in str(data.get("skills") or "").splitlines():
@@ -382,111 +166,18 @@ def _preprocess(payload):
     data["skills_list"] = skills
 
     v_map = {
-        "hi": {"Male": "पुरुष", "Female": "महिला", "Other": "अन्य", "Unmarried": "अविवाहित",
-               "Never Married": "कभी शादी नहीं की", "Divorced": "तालाकशुदा",
-               "Widowed": "विधवा/विधुर", "Awaiting Divorce": "तालाक का इंतजार",
-               "Yes": "हाँ", "No": "नहीं", "Partial": "आंशिक",
-               "Hindu": "हिंदू", "Muslim": "मुस्लिम", "Christian": "ईसाई",
-               "Sikh": "सिख", "Buddhist": "बौद्ध", "Jain": "जैन", "Parsi": "पारसी",
-               "Vegetarian": "शाकाहारी", "Non-Vegetarian": "मांसाहारी",
-               "Eggetarian": "अंडाहारी", "Vegan": "वीगन",
-               "Occasionally": "कभी-कभी"},
-        "kn": {"Male": "ಪುರುಷ", "Female": "ಮಹಿಳೆ", "Other": "ಇತರೆ", "Unmarried": "ಅವಿವಾಹಿತ",
-               "Never Married": "ಮದುವೆಯಾಗಿಲ್ಲ", "Divorced": "ವಿಚ್ಛೇದಿತ",
-               "Widowed": "ವಿಧವೆ/ವಿಧುರ", "Awaiting Divorce": "ವಿಚ್ಛೇದನದ ನಿರೀಕ್ಷೆಯಲ್ಲಿದೆ",
-               "Yes": "ಹೌದು", "No": "ಇಲ್ಲ", "Partial": "ಭಾಗಶಃ",
-               "Hindu": "ಹಿಂದೂ", "Muslim": "ಮುಸ್ಲಿಂ", "Christian": "ಕ್ರಿಶ್ಚಿಯನ್",
-               "Sikh": "ಸಿಖ್", "Buddhist": "ಬೌದ್ಧ", "Jain": "ಜೈನ", "Parsi": "ಪಾರ್ಸಿ",
-               "Vegetarian": "ಸಸ್ಯಾಹಾರಿ", "Non-Vegetarian": "ಮಾಂಸಾಹಾರಿ",
-               "Eggetarian": "ಮೊಟ್ಟೆ ತಿನ್ನುವವರು", "Vegan": "ವೀಗನ್",
-               "Occasionally": "ಆಗಾಗ್ಗೆ"},
-        "ta": {"Male": "ஆண்", "Female": "பெண்", "Other": "மற்றவை", "Unmarried": "திருமணமாகாத",
-               "Never Married": "திருமணம் செய்யவில்லை", "Divorced": "விவாகரத்து",
-               "Widowed": "விதவை/விதுரர்", "Awaiting Divorce": "விவாகரத்துக்காக காத்திருக்கிறது",
-               "Yes": "ஆம்", "No": "இல்லை", "Partial": "பகுதி",
-               "Hindu": "இந்து", "Muslim": "முஸ்லீம்", "Christian": "கிறிஸ்தவர்",
-               "Sikh": "சீக்கியர்", "Buddhist": "பௌத்தர்", "Jain": "சமணர்", "Parsi": "பார்சி",
-               "Vegetarian": "சைவம்", "Non-Vegetarian": "அசைவம்",
-               "Eggetarian": "முட்டை சாப்பிடுபவர்", "Vegan": "வீகன்",
-               "Occasionally": "எப்போதாவது"},
-        "te": {"Male": "పురుషుడు", "Female": "స్త్రీ", "Other": "ఇతర", "Unmarried": "అవివాహిత",
-               "Never Married": "పెళ్లి కాదు", "Divorced": "విడాకులు",
-               "Widowed": "వితంతువు", "Awaiting Divorce": "విడాకుల కోసం వేచి ఉంది",
-               "Yes": "అవును", "No": "కాదు", "Partial": "పాక్షికం",
-               "Hindu": "హిందూ", "Muslim": "ముస్లిం", "Christian": "క్రిస్టియన్",
-               "Sikh": "సిక్కు", "Buddhist": "బౌద్ధ", "Jain": "జైన", "Parsi": "పార్సీ",
-               "Vegetarian": "శాకాహారి", "Non-Vegetarian": "మాంసాహారి",
-               "Eggetarian": "గుడ్డు తినేవారు", "Vegan": "వీగన్",
-               "Occasionally": "అప్పుడప్పుడు"},
-        "mr": {"Male": "पुरुष", "Female": "स्त्री", "Other": "इतर", "Unmarried": "अविवाहित",
-               "Never Married": "लग्न झाले नाही", "Divorced": "घटस्पोटित",
-               "Widowed": "विधवा/विधुर", "Awaiting Divorce": "घटस्फोटाच्या प्रतीक्षेत",
-               "Yes": "होय", "No": "नाही", "Partial": "अर्धवट",
-               "Hindu": "हिंदू", "Muslim": "मुस्लिम", "Christian": "ख्रिश्चन",
-               "Sikh": "शीख", "Buddhist": "बौद्ध", "Jain": "जैन", "Parsi": "पारशी",
-               "Vegetarian": "शाकाहारी", "Non-Vegetarian": "मांसाहारी",
-               "Eggetarian": "अंडाहारी", "Vegan": "व्हीगन",
-               "Occasionally": "कधीकधी"},
-        "gu": {"Male": "પુરુષ", "Female": "સ્ત્રી", "Other": "અન્ય", "Unmarried": "અવિવાહિત",
-               "Never Married": "કદી લગ્ન કર્યા નથી", "Divorced": "છૂટાછેડા",
-               "Widowed": "વિધવા/વિધુર", "Awaiting Divorce": "છૂટાછેડાની રાહ જોઈ રહ્યા છે",
-               "Yes": "હા", "No": "ના", "Partial": "આંશિક",
-               "Hindu": "હિન્દુ", "Muslim": "મુસ્લિમ", "Christian": "ખ્રિસ્તી",
-               "Sikh": "શીખ", "Buddhist": "બૌદ્ધ", "Jain": "જૈન", "Parsi": "પારસી",
-               "Vegetarian": "શાકાહારી", "Non-Vegetarian": "માંસાહારી",
-               "Eggetarian": "ઇંડાહારી", "Vegan": "વીગન",
-               "Occasionally": "ક્યારેક"},
-        "bn": {"Male": "পুরুষ", "Female": "মহিলা", "Other": "অন্যান্য", "Unmarried": "অবিবাহিত",
-               "Never Married": "কখনো বিয়ে করেননি", "Divorced": "বিচ্ছেদ",
-               "Widowed": "বিধবা/বিপত্নীক", "Awaiting Divorce": "বিচ্ছেদের অপেক্ষায়",
-               "Yes": "হ্যাঁ", "No": "না", "Partial": "আংশিক",
-               "Hindu": "হিন্দু", "Muslim": "মুসলিম", "Christian": "খ্রিস্টান",
-               "Sikh": "শিখ", "Buddhist": "বৌদ্ধ", "Jain": "জৈন", "Parsi": "পারসি",
-               "Vegetarian": "নিরামিষ", "Non-Vegetarian": "আমিষ",
-               "Eggetarian": "ডিমখেকো", "Vegan": "ভিগান",
-               "Occasionally": "মাঝে মাঝে"},
-        "ml": {"Male": "പുരുഷൻ", "Female": "സ്ത്രീ", "Other": "മറ്റുള്ളവർ", "Unmarried": "അവിവാഹിതൻ",
-               "Never Married": "വിവാഹം കഴിച്ചിട്ടില്ല", "Divorced": "വിവാഹമോചിതൻ",
-               "Widowed": "വിധവ/വിധുരൻ", "Awaiting Divorce": "വിവാഹമോചനത്തിനായി കാത്തിരിക്കുന്നു",
-               "Yes": "അതെ", "No": "ഇല്ല", "Partial": "ഭാഗികം",
-               "Hindu": "ഹിന്ദു", "Muslim": "മുസ്ലിം", "Christian": "ക്രിസ്ത്യൻ",
-               "Sikh": "സിഖ്", "Buddhist": "ബുദ്ധമതക്കാർ", "Jain": "ജൈന", "Parsi": "പാർസി",
-               "Vegetarian": "സസ്യാഹാരി", "Non-Vegetarian": "മാംസാഹാരി",
-               "Eggetarian": "മുട്ട കഴിക്കുന്നവർ", "Vegan": "വീഗൻ",
-               "Occasionally": "ഇടയ്ക്കിടെ"},
-        "pa": {"Male": "ਪੁਰਸ਼", "Female": "ਔਰਤ", "Other": "ਹੋਰ", "Unmarried": "ਅਣਵਿਆਹਿਆ",
-               "Never Married": "ਕਦੇ ਵਿਆਹ ਨਹੀਂ ਕਰਵਾਇਆ", "Divorced": "ਤਲਾਕਸ਼ੁਦਾ",
-               "Widowed": "ਵਿਧਵਾ/ਵਿਧੁਰ", "Awaiting Divorce": "ਤਲਾਕ ਦੀ ਉਡੀਕ",
-               "Yes": "ਹਾਂ", "No": "ਨਹੀਂ", "Partial": "ਅੰਸ਼ਕ",
-               "Hindu": "ਹਿੰਦੂ", "Muslim": "ਮੁਸਲਿਮ", "Christian": "ਈਸਾਈ",
-               "Sikh": "ਸਿੱਖ", "Buddhist": "ਬੁੱਧ", "Jain": "ਜੈਨ", "Parsi": "ਪਾਰਸੀ",
-               "Vegetarian": "ਸ਼ਾਕਾਹਾਰੀ", "Non-Vegetarian": "ਮਾਸਾਹਾਰੀ",
-               "Eggetarian": "ਆਂਡਾ ਖਾਣ ਵਾਲੇ", "Vegan": "ਵੀਗਨ",
-               "Occasionally": "ਕਦੇ-ਕਦੇ"},
-        "or": {"Male": "ପୁରୁଷ", "Female": "ମହିଳା", "Other": "ଅନ୍ୟାନ୍ୟ", "Unmarried": "ଅବିବାହିତ",
-               "Never Married": "କେବେ ବିବାହ କରିନାହାଁନ୍ତି", "Divorced": "ଛାଡପତ୍ର",
-               "Widowed": "ବିଧବା/ବିଧୁର", "Awaiting Divorce": "ଛାଡପତ୍ର ଅପେକ୍ଷାରେ",
-               "Yes": "ହଁ", "No": "ନା", "Partial": "ଆଂଶିକ",
-               "Hindu": "ହିନ୍ଦୁ", "Muslim": "ମୁସଲିମ", "Christian": "ଖ୍ରୀଷ୍ଟିଆନ",
-               "Sikh": "ଶିଖ", "Buddhist": "ବୌଦ୍ଧ", "Jain": "ଜୈନ", "Parsi": "ପାର୍ସି",
-               "Vegetarian": "ନିରାମିଷ", "Non-Vegetarian": "ଆମିଷ",
-               "Eggetarian": "ଅଣ୍ଡା ଖାଉଥିବା", "Vegan": "ଭିଗାନ",
-               "Occasionally": "ମଧ୍ୟେ ମଧ୍ୟେ"}
-    }.get(lang, {})
+        "hi": {"Male": "पुरुष", "Female": "महिला", "Other": "अन्य", "Unmarried": "अविवाहित", "Never Married": "कभी शादी नहीं की", "Divorced": "तालाकशुदा", "Widowed": "विधवा/विधुर", "Awaiting Divorce": "तालाक का इंतजार", "Yes": "हाँ", "No": "नहीं", "Partial": "आंशिक", "Hindu": "हिंदू", "Muslim": "मुस्लिम", "Christian": "ईसाई", "Sikh": "सिख", "Buddhist": "बौद्ध", "Jain": "जैन", "Parsi": "पारसी", "Vegetarian": "शाकाहारी", "Non-Vegetarian": "मांसाहारी", "Eggetarian": "अंडाहारी", "Vegan": "वीगन", "Occasionally": "कभी-कभी"}
+    }
+    v_map.setdefault(lang, {})
 
     for k in ["gender", "marital", "manglik", "religion", "caste", "diet", "smoking", "drinking"]:
         val = str(data.get(k) or "").strip()
-        data[k] = v_map.get(val, val)
+        data[k] = v_map.get(lang, {}).get(val, val)
 
     name = str(data.get("name") or "").strip()
     data["name"] = _translate(name, lang, is_name=True) if name else ""
 
-    translate_keys = [
-        "address", "profile", "father", "mother", "father_job", "mother_job",
-        "brothers", "sisters", "education_simple", "languages", "hobbies",
-        "declaration", "place", "occupation",
-        "partner_preferences", "projects", "certifications"
-    ]
+    translate_keys = ["address", "profile", "father", "mother", "father_job", "mother_job", "brothers", "sisters", "education_simple", "languages", "hobbies", "declaration", "place", "occupation", "partner_preferences", "projects", "certifications"]
     for k in translate_keys:
         data[k] = _translate(str(data.get(k) or "").strip(), lang)
 
@@ -536,7 +227,6 @@ def _preprocess(payload):
     data["work_experience_list"] = processed_jobs
 
     data["labels"] = LABELS_MULTI.get(lang, LABELS_MULTI["en"])
-
     data["photo"] = str(data.get("photo") or "")
     data["signature"] = str(data.get("signature") or "")
     data["watermark"] = bool(data.get("watermark"))
@@ -553,23 +243,17 @@ def _preprocess(payload):
 
     return data
 
-
 @app.route("/")
 def index():
     return send_from_directory(BASE_DIR, "index.html")
 
-
 @app.route("/manifest.json")
 def manifest():
-    return jsonify({"name": "Biodata Maker Pro", "short_name": "BiodataPro",
-                    "start_url": "/", "display": "standalone",
-                    "background_color": "#f1f5f9", "theme_color": "#0f172a"})
-
+    return jsonify({"name": "Biodata Maker Pro", "short_name": "BiodataPro", "start_url": "/", "display": "standalone", "background_color": "#f1f5f9", "theme_color": "#0f172a"})
 
 @app.route("/api/health")
 def health():
-    return jsonify(status="ok", ai=bool(gemini_model), weasyprint=WEASYPRINT_OK, version="2.2")
-
+    return jsonify(status="ok", ai=bool(gemini_model), weasyprint=WEASYPRINT_OK, version="2.4")
 
 @app.route("/api/qr")
 def qr():
@@ -578,15 +262,13 @@ def qr():
     if not text:
         return jsonify(error="text required"), 400
     try:
-        url = (f"https://api.qrserver.com/v1/create-qr-code/"
-               f"?size={size}x{size}&data={urllib.parse.quote(text)}")
+        url = f"https://api.qrserver.com/v1/create-qr-code/?size={size}x{size}&data={urllib.parse.quote(text)}"
         r = requests.get(url, timeout=10)
         if r.status_code == 200:
             return send_file(BytesIO(r.content), mimetype="image/png")
     except Exception as e:
         return jsonify(error=str(e)), 500
     return jsonify(error="QR failed"), 500
-
 
 @app.route("/api/generate-profile", methods=["POST"])
 def generate_profile():
@@ -599,23 +281,15 @@ def generate_profile():
         skills = str(data.get("skills") or "Good communication").strip()
         lang = str(data.get("language") or "en")
         mode = str(data.get("mode") or "marriage")
-        lang_name = {"hi": "Hindi", "kn": "Kannada", "ta": "Tamil", "te": "Telugu",
-                     "mr": "Marathi", "gu": "Gujarati", "bn": "Bengali",
-                     "ml": "Malayalam", "pa": "Punjabi", "or": "Odia"}.get(lang, "English")
+        lang_name = {"hi": "Hindi", "kn": "Kannada", "ta": "Tamil", "te": "Telugu", "mr": "Marathi", "gu": "Gujarati", "bn": "Bengali", "ml": "Malayalam", "pa": "Punjabi", "or": "Odia"}.get(lang, "English")
         if mode == "job":
-            prompt = (f"Write a 3-4 sentence professional career objective in {lang_name} "
-                      f"for a job biodata/resume. Name: {name}. Education: {education}. "
-                      f"Skills: {skills}. Focus on career goals, achievements, growth. "
-                      f"Return plain text only.")
+            prompt = f"Write a 3-4 sentence professional career objective in {lang_name} for a job biodata. Name: {name}. Education: {education}. Skills: {skills}. Focus on career goals, achievements. Return plain text only."
         else:
-            prompt = (f"Write a 3-4 sentence humble biodata profile in {lang_name} language "
-                      f"for an Indian marriage profile. Name: {name}. Education: {education}. "
-                      f"Skills: {skills}. Focus on family values, career goals. Return plain text only.")
+            prompt = f"Write a 3-4 sentence humble biodata profile in {lang_name} language for an Indian marriage profile. Name: {name}. Education: {education}. Skills: {skills}. Focus on family values, career goals. Return plain text only."
         resp = gemini_model.generate_content(prompt)
         return jsonify(profile=(resp.text or "").strip())
     except Exception as e:
         return jsonify(error=str(e)), 500
-
 
 @app.route("/api/suggest-skills", methods=["POST"])
 def suggest_skills():
@@ -624,13 +298,11 @@ def suggest_skills():
     try:
         data = request.get_json(silent=True) or {}
         education = str(data.get("education") or "").strip()
-        prompt = (f"Suggest 6 relevant skills (as 'Name | Level 0-100') for a candidate "
-                  f"with education '{education}'. Return only one skill per line.")
+        prompt = f"Suggest 6 relevant skills (as 'Name | Level 0-100') for a candidate with education '{education}'. Return only one skill per line."
         resp = gemini_model.generate_content(prompt)
         return jsonify(skills=(resp.text or "").strip())
     except Exception as e:
         return jsonify(error=str(e)), 500
-
 
 @app.route("/api/preview", methods=["POST"])
 def preview():
@@ -638,11 +310,10 @@ def preview():
         payload = request.get_json(silent=True) or {}
         payload.pop("photo", None)
         data = _preprocess(payload)
-        return env.get_template("pdf_template.html").render(**data)
+        return env.get_template("pdf_template.html").render(**data, zoom_level=1.0)
     except Exception as e:
         logging.exception("Preview error")
         return f"<html><body><h1>Preview Error</h1><pre>{str(e)}</pre></body></html>", 500
-
 
 @app.route("/api/pdf", methods=["POST"])
 def pdf():
@@ -652,16 +323,23 @@ def pdf():
         payload = request.get_json(silent=True) or {}
         quality = str(payload.get("quality") or "high").lower()
         data = _preprocess(payload)
-        html_str = env.get_template("pdf_template.html").render(**data)
-        opts = {"zoom": 1.5 if quality == "high" else (1.0 if quality == "medium" else 0.75)}
-        pdf_bytes = HTML(string=html_str, base_url=request.url_root).write_pdf(**opts)
+        
+        zoom = 1.0
+        max_attempts = 15
+        
+        for _ in range(max_attempts):
+            html_str = env.get_template("pdf_template.html").render(**data, zoom_level=zoom)
+            doc = HTML(string=html_str, base_url=request.url_root).render()
+            if len(doc.pages) <= 1:
+                break
+            zoom -= 0.04
+            
+        pdf_bytes = doc.write_pdf()
         safe = re.sub(r"[^a-zA-Z0-9_-]", "", (data.get("name") or "Biodata").replace(" ", "_")) or "Biodata"
-        return send_file(BytesIO(pdf_bytes), mimetype="application/pdf",
-                         as_attachment=True, download_name=f"{safe}_Biodata.pdf")
+        return send_file(BytesIO(pdf_bytes), mimetype="application/pdf", as_attachment=True, download_name=f"{safe}_Biodata.pdf")
     except Exception as e:
         logging.exception("PDF error")
         return jsonify(error=str(e)), 500
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")))
