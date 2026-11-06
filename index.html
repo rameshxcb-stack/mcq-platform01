@@ -367,7 +367,6 @@ body.dark .app-footer { background: rgba(17, 26, 46, .95); }
       <summary><span class="num-badge">7</span> <span data-i18n="work_skills">Work & Skills</span><span class="arrow">▶</span></summary>
       <div class="sec-body">
         
-        <!-- WORK EXPERIENCE TABLE INPUT -->
         <div class="fld">
           <label data-i18n="exp">Work Experience</label>
           <div id="jobsList"></div>
@@ -526,7 +525,7 @@ function translateUI(lang) {
 /* =====================================================
    TEMPLATE ENGINE
    ===================================================== */
-const LAYOUTS = ['classic', 'sidebar', 'banner', 'corporate', 'cards', 'split', 'minimal', 'timeline', 'editorial', 'traditional', 'magazine', 'executive', 'vintage', 'gradient', 'geometric'];
+const LAYOUTS = ['classic', 'sidebar', 'banner', 'corporate', 'cards', 'split', 'minimal', 'timeline', 'editorial', 'traditional', 'magazine', 'executive', 'vintage', 'gradient', 'geometric', 'traditional-marriage'];
 const COLORS = [
   { n: 'Royal Maroon', p: '#6B0F1A', a: '#D4A853', t: '#FAF4E2', k: '#30242A' }, { n: 'Navy Gold', p: '#183153', a: '#D9A441', t: '#FAF0DA', k: '#1D2939' },
   { n: 'Emerald', p: '#064E3B', a: '#D4A853', t: '#F3F8F0', k: '#1E293B' }, { n: 'Midnight', p: '#111827', a: '#C6A15B', t: '#F1EADD', k: '#202633' },
@@ -665,8 +664,8 @@ const TEXT_FIELDS = ['name','dob','gender','weight','blood','marital','religion'
 let photoData = '';
 let eduData = [];
 let skillData = [];
-const STORAGE_KEY = 'bd_main_v18';
-const DRAFT_KEY = 'bd_drafts_v18';
+const STORAGE_KEY = 'bd_main_v19';
+const DRAFT_KEY = 'bd_drafts_v19';
 
 function addEduRow(data = {}) {
   const container = $('edu-rows-container');
@@ -943,7 +942,7 @@ function restoreDraft() {
     (d.work_experience_list || []).forEach(r => addJobRow(r));
     (d.skillData || []).forEach(r => addSkillRow(r));
     
-    // 🔥 FIX: Sync DOM to Memory
+    // Sync DOM to Memory
     collectEduData();
     collectSkills();
 
