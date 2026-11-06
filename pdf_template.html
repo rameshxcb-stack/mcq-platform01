@@ -70,7 +70,12 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 .value { font-size: 9.5pt; color: var(--ink); font-weight: 500; white-space: pre-line; overflow-wrap: anywhere; }
 .block { padding: 0 2mm; white-space: pre-line; text-align: justify; overflow-wrap: anywhere; }
 
-/* 🔥 FIX: Skill Track Length (Ab fixed 50mm width hai, poore page par nahi failega) */
+/* 🔥 NAYA: Table Design (Image jaisa) */
+.custom-table { width: 100%; border-collapse: collapse; margin-bottom: 3mm; font-size: 9pt; break-inside: auto; }
+.custom-table th { background-color: #FDE047; color: #111827; font-weight: 800; padding: 2mm; border: 1px solid #d1d5db; text-align: left; }
+.custom-table td { padding: 2mm; border: 1px solid #d1d5db; vertical-align: top; color: var(--ink); }
+.custom-table tr { break-inside: avoid; page-break-inside: avoid; }
+
 .skill { display: grid; grid-template-columns: 40mm 50mm 10mm; gap: 4mm; align-items: center; margin: 0 2mm 2.5mm 2mm; }
 .skill-name { font-size: 9pt; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .track { height: 2.2mm; background: var(--track); border-radius: 10mm; overflow: hidden; width: 100%; }
@@ -81,12 +86,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 .signature { text-align: center; min-width: 42mm; }
 .signature-line { height: 10mm; border-bottom: 1px solid var(--muted); margin-bottom: 1.5mm; }
 .signature-label { text-transform: uppercase; letter-spacing: 1px; font-weight: 700; font-size: 8pt; }
-
-.edu-item { margin-bottom: 3mm; padding-bottom: 2mm; border-bottom: 1px dashed var(--track); }
-.edu-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-.edu-header { display: flex; justify-content: space-between; font-weight: 700; font-size: 10pt; color: var(--primary); margin-bottom: 1mm; }
-.edu-sub { font-size: 9pt; color: var(--ink); margin-bottom: .5mm; }
-.edu-meta { font-size: 8.5pt; color: var(--muted); display: flex; gap: 4mm; }
 
 /* LAYOUT SPECIFIC STYLES */
 .layout-sidebar .resume-body { display: grid; grid-template-columns: 62mm minmax(0, 1fr); gap: 7mm; margin-top: 4mm; }
@@ -129,7 +128,7 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 
 .layout-geometric .page::before { display: none; } .layout-geometric .page::after { display: block; inset: 0; border: 0; background: radial-gradient(circle at 5% 5%, var(--accent) 0 4mm, transparent 4mm), radial-gradient(circle at 95% 5%, var(--primary) 0 6mm, transparent 6mm), radial-gradient(circle at 95% 95%, var(--accent) 0 5mm, transparent 5mm), radial-gradient(circle at 5% 95%, var(--primary) 0 4mm, transparent 4mm); opacity: .14; } .layout-geometric .header { border-bottom: 0; padding-bottom: 4mm; } .layout-geometric .header::after { content: ""; display: block; margin: 4mm auto 0; width: 30mm; height: 3mm; background: var(--accent); clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%); } .layout-geometric .section-title .mark { background: var(--primary); color: #fff; width: 7mm; height: 7mm; border-radius: 1mm; display: inline-flex; align-items: center; justify-content: center; text-align: center; }
 
-@media print { html, body { background: #fff !important; } .page { width: 210mm; min-height: 0; margin: 0; padding: 11mm 14mm 14mm; overflow: visible; box-shadow: none; } .page::before, .page::after { position: fixed; } .page::before { inset: 5mm; } .page::after { inset: 8mm; } .header, .section-title, .grid, .skill, .footer, .photo, .edu-item { break-inside: avoid; page-break-inside: avoid; } .section { break-inside: auto; page-break-inside: auto; } .section-title { break-after: avoid; page-break-after: avoid; } .block, .value { orphans: 3; widows: 3; } }
+@media print { html, body { background: #fff !important; } .page { width: 210mm; min-height: 0; margin: 0; padding: 11mm 14mm 14mm; overflow: visible; box-shadow: none; } .page::before, .page::after { position: fixed; } .page::before { inset: 5mm; } .page::after { inset: 8mm; } .header, .section-title, .grid, .skill, .footer, .photo, .custom-table { break-inside: avoid; page-break-inside: avoid; } .section { break-inside: auto; page-break-inside: auto; } .section-title { break-after: avoid; page-break-after: avoid; } .block, .value { orphans: 3; widows: 3; } }
 @media screen { body { padding: 12px 0; } .page { box-shadow: 0 10px 40px #15223822; } }
 </style>
 </head>
@@ -232,15 +231,26 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         {% set ns.n = ns.n + 1 %}
         <section class="section">
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.education }}</h2>
-          <div style="padding: 0 2mm;">
-            {% for edu in education_list %}
-            <div class="edu-item">
-              <div class="edu-header"><span>{{ edu.level }}</span><span>{{ edu.score }}</span></div>
-              <div class="edu-sub">{{ edu.institute }}</div>
-              <div class="edu-meta">{% if edu.board %}<span>{{ edu.board }}</span>{% endif %}{% if edu.year %}<span>{{ edu.year }}</span>{% endif %}</div>
-            </div>
-            {% endfor %}
-          </div>
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>{{ labels.qualification or 'Qualification' }}</th>
+                <th>{{ labels.institute or 'Name of the University' }}</th>
+                <th>{{ labels.year or 'Year of Passing' }}</th>
+                <th>{{ labels.score or 'Total % Marks' }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for edu in education_list %}
+              <tr>
+                <td>{{ edu.level }}</td>
+                <td>{{ edu.institute }}</td>
+                <td>{{ edu.year }}</td>
+                <td>{{ edu.score }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </section>
         {% elif education_simple %}
         {% set ns.n = ns.n + 1 %}
@@ -250,11 +260,30 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {% if experience %}
+        {% if work_experience_list %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.experience }}</h2>
-          <div class="block">{{ experience }}</div>
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>{{ labels.organization or 'Organization' }}</th>
+                <th>{{ labels.designation or 'Designation' }}</th>
+                <th>{{ labels.period or 'Job Period' }}</th>
+                <th>{{ labels.responsibilities or 'Responsibilities' }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for job in work_experience_list %}
+              <tr>
+                <td>{{ job.organization }}</td>
+                <td>{{ job.designation }}</td>
+                <td>{{ job.period }}</td>
+                <td>{{ job.responsibilities }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </section>
         {% endif %}
 
