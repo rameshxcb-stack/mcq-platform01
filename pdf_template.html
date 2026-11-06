@@ -13,7 +13,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&family=Lato:wght@400;700&family=Oswald:wght@500;600&family=Roboto:wght@400;500&family=Cormorant+Garamond:wght@600;700&family=Nunito+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600&family=Cinzel:wght@600;700&family=Fraunces:opsz,wght@9..144,700&family=Outfit:wght@400;500&family=Instrument+Serif&family=Instrument+Sans:wght@400;500&family=Anton&family=Martian+Mono:wght@400&family=Plus+Jakarta+Sans:wght@400;700&family=Space+Grotesk:wght@700&family=Space+Mono:wght@400&family=Syne:wght@700&family=DM+Serif+Display&family=DM+Sans:wght@400&family=Sora:wght@700&family=Manrope:wght@400&family=Bodoni+Moda:wght@700&family=Figtree:wght@400&family=Poiret+One&family=Josefin+Sans:wght@400&family=Bitter:wght@700&family=PT+Sans:wght@400&family=Rajdhani:wght@700&family=Fira+Sans:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Merriweather:wght@400;700;900&family=Montserrat:wght@500;600;700&family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&family=Lato:wght@400;700&family=Oswald:wght@500;600&family=Roboto:wght@400;500&family=Cormorant+Garamond:wght@600;700&family=Nunito+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600&family=Fraunces:opsz,wght@9..144,700&family=Outfit:wght@400;500&family=Instrument+Serif&family=Instrument+Sans:wght@400;500&family=Anton&family=Martian+Mono:wght@400&family=Plus+Jakarta+Sans:wght@400;700&family=Space+Grotesk:wght@700&family=Space+Mono:wght@400&family=Syne:wght@700&family=DM+Serif+Display&family=DM+Sans:wght@400&family=Sora:wght@700&family=Manrope:wght@400&family=Bodoni+Moda:wght@700&family=Figtree:wght@400&family=Poiret+One&family=Josefin+Sans:wght@400&family=Bitter:wght@700&family=PT+Sans:wght@400&family=Rajdhani:wght@700&family=Fira+Sans:wght@400&display=swap" rel="stylesheet">
 
 {% if language in ['hi','mr','ne'] %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
 {% if language == 'bn' %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">{% endif %}
@@ -70,10 +70,10 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 .value { font-size: 9.5pt; color: var(--ink); font-weight: 500; white-space: pre-line; overflow-wrap: anywhere; }
 .block { padding: 0 2mm; white-space: pre-line; text-align: justify; overflow-wrap: anywhere; }
 
-/* 🔥 NAYA: Table Design (Image jaisa) */
+/* 🔥 FIX: Table Design with Center Alignment */
 .custom-table { width: 100%; border-collapse: collapse; margin-bottom: 3mm; font-size: 9pt; break-inside: auto; }
-.custom-table th { background-color: #FDE047; color: #111827; font-weight: 800; padding: 2mm; border: 1px solid #d1d5db; text-align: left; }
-.custom-table td { padding: 2mm; border: 1px solid #d1d5db; vertical-align: top; color: var(--ink); }
+.custom-table th { background-color: #FDE047; color: #111827; font-weight: 800; padding: 2mm; border: 1px solid #d1d5db; text-align: center; }
+.custom-table td { padding: 2mm; border: 1px solid #d1d5db; vertical-align: top; color: var(--ink); text-align: center; font-weight: 600; }
 .custom-table tr { break-inside: avoid; page-break-inside: avoid; }
 
 .skill { display: grid; grid-template-columns: 40mm 50mm 10mm; gap: 4mm; align-items: center; margin: 0 2mm 2.5mm 2mm; }
@@ -128,7 +128,61 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 
 .layout-geometric .page::before { display: none; } .layout-geometric .page::after { display: block; inset: 0; border: 0; background: radial-gradient(circle at 5% 5%, var(--accent) 0 4mm, transparent 4mm), radial-gradient(circle at 95% 5%, var(--primary) 0 6mm, transparent 6mm), radial-gradient(circle at 95% 95%, var(--accent) 0 5mm, transparent 5mm), radial-gradient(circle at 5% 95%, var(--primary) 0 4mm, transparent 4mm); opacity: .14; } .layout-geometric .header { border-bottom: 0; padding-bottom: 4mm; } .layout-geometric .header::after { content: ""; display: block; margin: 4mm auto 0; width: 30mm; height: 3mm; background: var(--accent); clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%); } .layout-geometric .section-title .mark { background: var(--primary); color: #fff; width: 7mm; height: 7mm; border-radius: 1mm; display: inline-flex; align-items: center; justify-content: center; text-align: center; }
 
-@media print { html, body { background: #fff !important; } .page { width: 210mm; min-height: 0; margin: 0; padding: 11mm 14mm 14mm; overflow: visible; box-shadow: none; } .page::before, .page::after { position: fixed; } .page::before { inset: 5mm; } .page::after { inset: 8mm; } .header, .section-title, .grid, .skill, .footer, .photo, .custom-table { break-inside: avoid; page-break-inside: avoid; } .section { break-inside: auto; page-break-inside: auto; } .section-title { break-after: avoid; page-break-after: avoid; } .block, .value { orphans: 3; widows: 3; } }
+/* ==========================================
+   🔥 NEW ROYAL TRADITIONAL MARRIAGE LAYOUT 
+   ========================================== */
+.layout-traditional-marriage {
+  --primary: #800000; --accent: #D4AF37; --tint: #FDFBF7; --ink: #000080; --muted: #4a4a4a;
+}
+
+.layout-traditional-marriage .page {
+  background-color: #fffafb;
+  background-image: radial-gradient(circle at top center, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+  padding: 15mm 12mm;
+}
+
+.layout-traditional-marriage .page::before { border: 8px double var(--accent); inset: 3mm; opacity: 1; border-radius: 4mm; }
+.layout-traditional-marriage .page::after { border: 2px solid var(--primary); inset: 5mm; opacity: 1; border-radius: 3mm; }
+
+.layout-traditional-marriage .resume-body { display: block; margin-top: 2mm; }
+
+.layout-traditional-marriage .header { text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 4mm; position: relative; }
+.layout-traditional-marriage .header .ornament { font-size: 30pt; color: #d32f2f; margin-bottom: 0; }
+.layout-traditional-marriage .header .photo { position: absolute; top: 0; right: 0; width: 30mm; height: 36mm; border: 3px solid var(--accent); border-radius: 4mm; box-shadow: 0 2mm 5mm rgba(0,0,0,0.2); margin: 0; padding: 1mm; }
+.layout-traditional-marriage .header .name { font-family: 'Cinzel', serif; font-size: 26pt; color: #B22222; margin-top: 2mm; letter-spacing: 1px; text-transform: uppercase; }
+
+.layout-traditional-marriage .section { margin-top: 6mm; text-align: center; }
+.layout-traditional-marriage .section-title { display: inline-block; background: linear-gradient(to bottom, #B22222, #800000); color: #FFD700; font-family: 'Cinzel', serif; font-size: 14pt; font-weight: 800; text-transform: uppercase; padding: 2mm 10mm; border-radius: 20mm; border: 2px solid #FFD700; box-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-bottom: 5mm; position: relative; }
+.layout-traditional-marriage .section-title::after { display: none; }
+.layout-traditional-marriage .section-title .mark { display: none; }
+
+.layout-traditional-marriage .grid { display: grid; grid-template-columns: 45mm 5mm 1fr; gap: 2mm 0; padding: 0 5mm; text-align: left; font-family: 'Merriweather', serif; }
+.layout-traditional-marriage .label { font-size: 11pt; font-weight: 900; color: var(--ink); text-transform: uppercase; }
+.layout-traditional-marriage .colon { font-size: 11pt; font-weight: 900; text-align: center; color: var(--ink); }
+.layout-traditional-marriage .value { font-size: 11pt; font-weight: 700; color: var(--ink); }
+
+.layout-traditional-marriage .side-column { background: transparent; color: var(--ink); padding: 0; }
+.layout-traditional-marriage .main-column { padding: 0; }
+
+.layout-traditional-marriage .custom-table { margin: 0 5mm; width: calc(100% - 10mm); border: 2px solid var(--primary); }
+.layout-traditional-marriage .custom-table th { background-color: #B22222; color: #FFD700; border: 1px solid var(--accent); font-family: 'Cinzel', serif; text-align: center; }
+.layout-traditional-marriage .custom-table td { border: 1px solid var(--primary); color: var(--ink); font-family: 'Merriweather', serif; font-weight: 700; text-align: center; }
+
+.layout-traditional-marriage .skill { display: grid; grid-template-columns: 40mm 50mm 10mm; gap: 4mm; align-items: center; margin: 0 auto 3mm auto; font-family: 'Merriweather', serif; }
+.layout-traditional-marriage .track { background: #f0e6d2; border: 1px solid var(--primary); }
+.layout-traditional-marriage .fill { background: linear-gradient(90deg, #FFD700, #B22222); }
+
+@media print { 
+  html, body { background: #fff !important; } 
+  .page { width: 210mm; min-height: 0; margin: 0; padding: 11mm 14mm 14mm; overflow: visible; box-shadow: none; } 
+  .page::before, .page::after { position: fixed; } 
+  .page::before { inset: 5mm; } 
+  .page::after { inset: 8mm; } 
+  .header, .section-title, .grid, .skill, .footer, .photo, .custom-table { break-inside: avoid; page-break-inside: avoid; } 
+  .section { break-inside: auto; page-break-inside: auto; } 
+  .section-title { break-after: avoid; page-break-after: avoid; } 
+  .block, .value { orphans: 3; widows: 3; } 
+}
 @media screen { body { padding: 12px 0; } .page { box-shadow: 0 10px 40px #15223822; } }
 </style>
 </head>
@@ -137,8 +191,14 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 <div class="page layout-{{ layout }}{% if watermark %} has-wm{% endif %}">
   {% if watermark %}<div class="watermark">{{ watermark_text }}</div>{% endif %}
   <main class="content">
+    
     <header class="header">
-      <div class="ornament">✦ ❖ ✦</div>
+      {% if layout == 'traditional-marriage' %}
+        <div class="ornament">🕉️</div>
+      {% else %}
+        <div class="ornament">✦ ❖ ✦</div>
+      {% endif %}
+      
       <div class="photo" id="photoBox" {% if not photo %}style="display:none"{% endif %}>
         {% if photo %}<img id="profilePhoto" src="{{ photo }}" alt="Profile photo">{% else %}<img id="profilePhoto" alt="Profile photo" style="display:none">{% endif %}
       </div>
@@ -153,16 +213,36 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
     </header>
 
     <div class="resume-body">
+      <!-- SIDEBAR COLUMN -->
       <aside class="side-column">
         {% set ns = namespace(n=0) %}
         {% if phone or email or address %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
+          {% if layout != 'traditional-marriage' %}
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.contact }}</h2>
+          {% else %}
+          <h2 class="section-title">{{ labels.contact }}</h2>
+          {% endif %}
+          
           <div class="grid">
-            {% if phone %}<div class="label">{{ labels.phone }}</div><div class="value">{{ phone }}</div>{% endif %}
-            {% if email %}<div class="label">{{ labels.email }}</div><div class="value">{{ email }}</div>{% endif %}
-            {% if address %}<div class="label">{{ labels.address }}</div><div class="value">{{ address }}</div>{% endif %}
+            {% if phone %}
+            <div class="label">{{ labels.phone }}</div>
+            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+            <div class="value">{{ phone }}</div>
+            {% endif %}
+            
+            {% if email %}
+            <div class="label">{{ labels.email }}</div>
+            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+            <div class="value">{{ email }}</div>
+            {% endif %}
+            
+            {% if address %}
+            <div class="label">{{ labels.address }}</div>
+            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+            <div class="value">{{ address }}</div>
+            {% endif %}
           </div>
         </section>
         {% endif %}
@@ -170,10 +250,19 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         {% if dob or gender or height or weight or blood or marital or religion or caste or gotra or rashi or nakshatra or manglik %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
+          {% if layout != 'traditional-marriage' %}
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.personal }}</h2>
+          {% else %}
+          <h2 class="section-title">{{ labels.personal }}</h2>
+          {% endif %}
+          
           <div class="grid">
             {% for l, v in [(labels.dob, dob), (labels.gender, gender), (labels.height, height), (labels.weight, weight), (labels.blood, blood), (labels.marital, marital), (labels.religion, religion), (labels.caste, caste), (labels.gotra, gotra), (labels.rashi, rashi), (labels.nakshatra, nakshatra), (labels.manglik, manglik)] %}
-              {% if v %}<div class="label">{{ l }}</div><div class="value">{{ v }}</div>{% endif %}
+              {% if v %}
+              <div class="label">{{ l }}</div>
+              {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+              <div class="value">{{ v }}</div>
+              {% endif %}
             {% endfor %}
           </div>
         </section>
@@ -182,12 +271,36 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         {% if father or mother or brothers or sisters %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
+          {% if layout != 'traditional-marriage' %}
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.family }}</h2>
+          {% else %}
+          <h2 class="section-title">{{ labels.family }}</h2>
+          {% endif %}
+          
           <div class="grid">
-            {% if father %}<div class="label">{{ labels.father }}</div><div class="value">{{ father }}{% if father_job %} — {{ father_job }}{% endif %}</div>{% endif %}
-            {% if mother %}<div class="label">{{ labels.mother }}</div><div class="value">{{ mother }}{% if mother_job %} — {{ mother_job }}{% endif %}</div>{% endif %}
-            {% if brothers %}<div class="label">{{ labels.brothers }}</div><div class="value">{{ brothers }}</div>{% endif %}
-            {% if sisters %}<div class="label">{{ labels.sisters }}</div><div class="value">{{ sisters }}</div>{% endif %}
+            {% if father %}
+            <div class="label">{{ labels.father }}</div>
+            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+            <div class="value">{{ father }}{% if father_job %} — {{ father_job }}{% endif %}</div>
+            {% endif %}
+            
+            {% if mother %}
+            <div class="label">{{ labels.mother }}</div>
+            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+            <div class="value">{{ mother }}{% if mother_job %} — {{ mother_job }}{% endif %}</div>
+            {% endif %}
+            
+            {% if brothers %}
+            <div class="label">{{ labels.brothers }}</div>
+            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+            <div class="value">{{ brothers }}</div>
+            {% endif %}
+            
+            {% if sisters %}
+            <div class="label">{{ labels.sisters }}</div>
+            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+            <div class="value">{{ sisters }}</div>
+            {% endif %}
           </div>
         </section>
         {% endif %}
@@ -195,7 +308,12 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         {% if skills_list %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
+          {% if layout != 'traditional-marriage' %}
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.skills }}</h2>
+          {% else %}
+          <h2 class="section-title">{{ labels.skills }}</h2>
+          {% endif %}
+          
           {% for skill in skills_list %}
           <div class="skill">
             <div class="skill-name">{{ skill.name }}</div>
@@ -209,35 +327,60 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         {% if languages or hobbies %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
+          {% if layout != 'traditional-marriage' %}
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.additional }}</h2>
+          {% else %}
+          <h2 class="section-title">{{ labels.additional }}</h2>
+          {% endif %}
+          
           <div class="grid">
-            {% if languages %}<div class="label">{{ labels.languages }}</div><div class="value">{{ languages }}</div>{% endif %}
-            {% if hobbies %}<div class="label">{{ labels.hobbies }}</div><div class="value">{{ hobbies }}</div>{% endif %}
+            {% if languages %}
+            <div class="label">{{ labels.languages }}</div>
+            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+            <div class="value">{{ languages }}</div>
+            {% endif %}
+            
+            {% if hobbies %}
+            <div class="label">{{ labels.hobbies }}</div>
+            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+            <div class="value">{{ hobbies }}</div>
+            {% endif %}
           </div>
         </section>
         {% endif %}
       </aside>
 
+      <!-- MAIN COLUMN -->
       <div class="main-column">
         {% if profile %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
+          {% if layout != 'traditional-marriage' %}
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.profile }}</h2>
-          <div class="block">{{ profile }}</div>
+          {% else %}
+          <h2 class="section-title">{{ labels.profile }}</h2>
+          {% endif %}
+          
+          <div class="block" {% if layout == 'traditional-marriage' %}style="text-align:center; font-family:'Merriweather', serif; font-weight:700; color:var(--ink);"{% endif %}>{{ profile }}</div>
         </section>
         {% endif %}
 
         {% if education_mode == 'detailed' and education_list %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
+          {% if layout != 'traditional-marriage' %}
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.education }}</h2>
+          {% else %}
+          <h2 class="section-title">{{ labels.education }}</h2>
+          {% endif %}
+          
           <table class="custom-table">
             <thead>
               <tr>
                 <th>{{ labels.qualification or 'Qualification' }}</th>
-                <th>{{ labels.institute or 'Name of the University' }}</th>
+                <th>{{ labels.institute or 'Name of the University/Board/School' }}</th>
                 <th>{{ labels.year or 'Year of Passing' }}</th>
-                <th>{{ labels.score or 'Total % Marks' }}</th>
+                <th>{{ labels.score or '% Marks / CGPA / SGPA' }}</th>
               </tr>
             </thead>
             <tbody>
@@ -255,15 +398,24 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         {% elif education_simple %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
+          {% if layout != 'traditional-marriage' %}
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.education }}</h2>
-          <div class="block">{{ education_simple }}</div>
+          {% else %}
+          <h2 class="section-title">{{ labels.education }}</h2>
+          {% endif %}
+          <div class="block" {% if layout == 'traditional-marriage' %}style="text-align:center; font-family:'Merriweather', serif; font-weight:700; color:var(--ink);"{% endif %}>{{ education_simple }}</div>
         </section>
         {% endif %}
 
         {% if work_experience_list %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
+          {% if layout != 'traditional-marriage' %}
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.experience }}</h2>
+          {% else %}
+          <h2 class="section-title">{{ labels.experience }}</h2>
+          {% endif %}
+          
           <table class="custom-table">
             <thead>
               <tr>
@@ -290,8 +442,12 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         {% if declaration %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
+          {% if layout != 'traditional-marriage' %}
           <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.declaration }}</h2>
-          <div class="block">{{ declaration }}</div>
+          {% else %}
+          <h2 class="section-title">{{ labels.declaration }}</h2>
+          {% endif %}
+          <div class="block" {% if layout == 'traditional-marriage' %}style="text-align:center; font-family:'Merriweather', serif; font-weight:700; color:var(--ink);"{% endif %}>{{ declaration }}</div>
         </section>
         {% endif %}
       </div>
