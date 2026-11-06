@@ -71,7 +71,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 .value { font-size: 9.5pt; color: var(--ink); font-weight: 500; white-space: pre-line; overflow-wrap: anywhere; word-break: break-word; }
 .block { padding: 0 2mm; white-space: pre-line; text-align: justify; overflow-wrap: anywhere; word-break: break-word; }
 
-/* 🔥 FIX: Table - bulletproof layout */
 .custom-table {
   width: 100%;
   border-collapse: collapse;
@@ -112,13 +111,11 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 }
 .custom-table tr { break-inside: avoid; page-break-inside: avoid; }
 
-/* Education table - specific widths */
 .edu-table th:nth-child(1) { width: 22%; }
 .edu-table th:nth-child(2) { width: 40%; }
 .edu-table th:nth-child(3) { width: 14%; }
 .edu-table th:nth-child(4) { width: 24%; }
 
-/* Jobs table - specific widths */
 .jobs-table th:nth-child(1) { width: 26%; }
 .jobs-table th:nth-child(2) { width: 22%; }
 .jobs-table th:nth-child(3) { width: 16%; }
@@ -140,7 +137,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 .signature-line img { max-width: 40mm; max-height: 14mm; object-fit: contain; }
 .signature-label { text-transform: uppercase; letter-spacing: 1px; font-weight: 700; font-size: 8pt; }
 
-/* LAYOUT SPECIFIC STYLES */
 .layout-sidebar .resume-body { display: grid; grid-template-columns: 62mm minmax(0, 1fr); gap: 7mm; margin-top: 4mm; }
 .layout-sidebar .side-column { background: var(--primary); color: #fff; padding: 5mm 4mm; border-radius: 2mm; align-self: start; }
 .layout-sidebar .side-column .section { margin-top: 5mm; } .layout-sidebar .side-column .section-title { color: #fff; font-size: 10pt; }
@@ -181,9 +177,6 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 
 .layout-geometric .page::before { display: none; } .layout-geometric .page::after { display: block; inset: 0; border: 0; background: radial-gradient(circle at 5% 5%, var(--accent) 0 4mm, transparent 4mm), radial-gradient(circle at 95% 5%, var(--primary) 0 6mm, transparent 6mm), radial-gradient(circle at 95% 95%, var(--accent) 0 5mm, transparent 5mm), radial-gradient(circle at 5% 95%, var(--primary) 0 4mm, transparent 4mm); opacity: .14; } .layout-geometric .header { border-bottom: 0; padding-bottom: 4mm; } .layout-geometric .header::after { content: ""; display: block; margin: 4mm auto 0; width: 30mm; height: 3mm; background: var(--accent); clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%); } .layout-geometric .section-title .mark { background: var(--primary); color: #fff; width: 7mm; height: 7mm; border-radius: 1mm; display: inline-flex; align-items: center; justify-content: center; text-align: center; }
 
-/* ==========================================
-   ROYAL TRADITIONAL MARRIAGE LAYOUT
-   ========================================== */
 .layout-traditional-marriage {
   --primary: #800000; --accent: #D4AF37; --tint: #FDFBF7; --ink: #000080; --muted: #4a4a4a;
 }
@@ -266,31 +259,28 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
     </header>
 
     <div class="resume-body">
-      <!-- SIDEBAR COLUMN -->
       <aside class="side-column">
         {% set ns = namespace(n=0) %}
+
+        {# ============= CONTACT (COMMON) ============= #}
         {% if phone or email or address %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
-          {% if layout != 'traditional-marriage' %}
-          <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.contact }}</h2>
-          {% else %}
-          <h2 class="section-title">{{ labels.contact }}</h2>
-          {% endif %}
-          
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.contact }}
+          </h2>
           <div class="grid">
             {% if phone %}
             <div class="label">{{ labels.phone }}</div>
             {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
             <div class="value">{{ phone }}</div>
             {% endif %}
-            
             {% if email %}
             <div class="label">{{ labels.email }}</div>
             {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
             <div class="value">{{ email }}</div>
             {% endif %}
-            
             {% if address %}
             <div class="label">{{ labels.address }}</div>
             {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
@@ -300,17 +290,18 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {% if dob or gender or height or weight or blood or marital or religion or caste or gotra or rashi or nakshatra or manglik %}
+        {# ============= PERSONAL (COMMON) ============= #}
+        {% set personal_fields = [(labels.dob, dob), (labels.age, age), (labels.gender, gender), (labels.height, height), (labels.weight, weight), (labels.blood, blood), (labels.marital, marital)] %}
+        {% set has_personal = personal_fields|selectattr(1)|list|length > 0 %}
+        {% if has_personal %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
-          {% if layout != 'traditional-marriage' %}
-          <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.personal }}</h2>
-          {% else %}
-          <h2 class="section-title">{{ labels.personal }}</h2>
-          {% endif %}
-          
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.personal }}
+          </h2>
           <div class="grid">
-            {% for l, v in [(labels.dob, dob), (labels.age, age), (labels.gender, gender), (labels.height, height), (labels.weight, weight), (labels.blood, blood), (labels.marital, marital), (labels.religion, religion), (labels.caste, caste), (labels.gotra, gotra), (labels.rashi, rashi), (labels.nakshatra, nakshatra), (labels.manglik, manglik)] %}
+            {% for l, v in personal_fields %}
               {% if v %}
               <div class="label">{{ l }}</div>
               {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
@@ -321,34 +312,50 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
-        {% if father or mother or brothers or sisters %}
+        {# ============= HOROSCOPE (MARRIAGE ONLY) ============= #}
+        {% if not is_job and (gotra or rashi or nakshatra or manglik or religion or caste) %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
-          {% if layout != 'traditional-marriage' %}
-          <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.family }}</h2>
-          {% else %}
-          <h2 class="section-title">{{ labels.family }}</h2>
-          {% endif %}
-          
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.horoscope }}
+          </h2>
+          <div class="grid">
+            {% for l, v in [(labels.religion, religion), (labels.caste, caste), (labels.gotra, gotra), (labels.rashi, rashi), (labels.nakshatra, nakshatra), (labels.manglik, manglik)] %}
+              {% if v %}
+              <div class="label">{{ l }}</div>
+              {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+              <div class="value">{{ v }}</div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+
+        {# ============= FAMILY (MARRIAGE ONLY) ============= #}
+        {% if not is_job and (father or mother or brothers or sisters) %}
+        {% set ns.n = ns.n + 1 %}
+        <section class="section">
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.family }}
+          </h2>
           <div class="grid">
             {% if father %}
             <div class="label">{{ labels.father }}</div>
             {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
             <div class="value">{{ father }}{% if father_job %} — {{ father_job }}{% endif %}</div>
             {% endif %}
-            
             {% if mother %}
             <div class="label">{{ labels.mother }}</div>
             {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
             <div class="value">{{ mother }}{% if mother_job %} — {{ mother_job }}{% endif %}</div>
             {% endif %}
-            
             {% if brothers %}
             <div class="label">{{ labels.brothers }}</div>
             {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
             <div class="value">{{ brothers }}</div>
             {% endif %}
-            
             {% if sisters %}
             <div class="label">{{ labels.sisters }}</div>
             {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
@@ -358,15 +365,57 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
+        {# ============= LIFESTYLE (MARRIAGE ONLY) ============= #}
+        {% if not is_job and (diet or smoking or drinking or languages or hobbies) %}
+        {% set ns.n = ns.n + 1 %}
+        <section class="section">
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.lifestyle }}
+          </h2>
+          <div class="grid">
+            {% for l, v in [(labels.diet, diet), (labels.smoking, smoking), (labels.drinking, drinking), (labels.languages, languages), (labels.hobbies, hobbies)] %}
+              {% if v %}
+              <div class="label">{{ l }}</div>
+              {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+              <div class="value">{{ v }}</div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+
+        {# ============= ADDITIONAL / LANGUAGES+HOBBIES (JOB ONLY) ============= #}
+        {% if is_job and (languages or hobbies) %}
+        {% set ns.n = ns.n + 1 %}
+        <section class="section">
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.additional }}
+          </h2>
+          <div class="grid">
+            {% if languages %}
+            <div class="label">{{ labels.languages }}</div>
+            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+            <div class="value">{{ languages }}</div>
+            {% endif %}
+            {% if hobbies %}
+            <div class="label">{{ labels.hobbies }}</div>
+            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
+            <div class="value">{{ hobbies }}</div>
+            {% endif %}
+          </div>
+        </section>
+        {% endif %}
+
+        {# ============= SKILLS (COMMON) ============= #}
         {% if skills_list %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
-          {% if layout != 'traditional-marriage' %}
-          <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.skills }}</h2>
-          {% else %}
-          <h2 class="section-title">{{ labels.skills }}</h2>
-          {% endif %}
-          
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.skills }}
+          </h2>
           {% for skill in skills_list %}
           <div class="skill">
             <div class="skill-name">{{ skill.name }}</div>
@@ -376,64 +425,48 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
           {% endfor %}
         </section>
         {% endif %}
-
-        {% if languages or hobbies %}
-        {% set ns.n = ns.n + 1 %}
-        <section class="section">
-          {% if layout != 'traditional-marriage' %}
-          <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.additional }}</h2>
-          {% else %}
-          <h2 class="section-title">{{ labels.additional }}</h2>
-          {% endif %}
-          
-          <div class="grid">
-            {% if languages %}
-            <div class="label">{{ labels.languages }}</div>
-            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
-            <div class="value">{{ languages }}</div>
-            {% endif %}
-            
-            {% if hobbies %}
-            <div class="label">{{ labels.hobbies }}</div>
-            {% if layout == 'traditional-marriage' %}<div class="colon">:</div>{% endif %}
-            <div class="value">{{ hobbies }}</div>
-            {% endif %}
-          </div>
-        </section>
-        {% endif %}
       </aside>
 
-      <!-- MAIN COLUMN -->
       <div class="main-column">
+        {# ============= PROFILE / OBJECTIVE (COMMON) ============= #}
         {% if profile %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
-          {% if layout != 'traditional-marriage' %}
-          <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.profile }}</h2>
-          {% else %}
-          <h2 class="section-title">{{ labels.profile }}</h2>
-          {% endif %}
-          
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.profile }}
+          </h2>
           <div class="block" {% if layout == 'traditional-marriage' %}style="text-align:center; font-family:'Merriweather', serif; font-weight:700; color:var(--ink);"{% endif %}>{{ profile }}</div>
         </section>
         {% endif %}
 
+        {# ============= OCCUPATION (MARRIAGE ONLY) ============= #}
+        {% if not is_job and occupation %}
+        {% set ns.n = ns.n + 1 %}
+        <section class="section">
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.occupation }}
+          </h2>
+          <div class="block">{{ occupation }}</div>
+        </section>
+        {% endif %}
+
+        {# ============= EDUCATION (COMMON) ============= #}
         {% if education_mode == 'detailed' and education_list %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
-          {% if layout != 'traditional-marriage' %}
-          <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.education }}</h2>
-          {% else %}
-          <h2 class="section-title">{{ labels.education }}</h2>
-          {% endif %}
-          
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.education }}
+          </h2>
           <table class="custom-table edu-table">
             <thead>
               <tr>
-                <th>{{ labels.qualification or 'Qualification' }}</th>
-                <th>{{ labels.institute or 'Name of the University/Board/School' }}</th>
-                <th>{{ labels.year or 'Year of Passing' }}</th>
-                <th>{{ labels.score or '% Marks / CGPA / SGPA' }}</th>
+                <th>{{ labels.qualification }}</th>
+                <th>{{ labels.institute }}</th>
+                <th>{{ labels.year }}</th>
+                <th>{{ labels.score }}</th>
               </tr>
             </thead>
             <tbody>
@@ -451,31 +484,29 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         {% elif education_simple %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
-          {% if layout != 'traditional-marriage' %}
-          <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.education }}</h2>
-          {% else %}
-          <h2 class="section-title">{{ labels.education }}</h2>
-          {% endif %}
-          <div class="block" {% if layout == 'traditional-marriage' %}style="text-align:center; font-family:'Merriweather', serif; font-weight:700; color:var(--ink);"{% endif %}>{{ education_simple }}</div>
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.education }}
+          </h2>
+          <div class="block">{{ education_simple }}</div>
         </section>
         {% endif %}
 
+        {# ============= WORK EXPERIENCE (COMMON) ============= #}
         {% if work_experience_list %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
-          {% if layout != 'traditional-marriage' %}
-          <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.experience }}</h2>
-          {% else %}
-          <h2 class="section-title">{{ labels.experience }}</h2>
-          {% endif %}
-          
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.experience }}
+          </h2>
           <table class="custom-table jobs-table">
             <thead>
               <tr>
-                <th>{{ labels.organization or 'Organization' }}</th>
-                <th>{{ labels.designation or 'Designation' }}</th>
-                <th>{{ labels.period or 'Job Period' }}</th>
-                <th>{{ labels.responsibilities or 'Responsibilities' }}</th>
+                <th>{{ labels.organization }}</th>
+                <th>{{ labels.designation }}</th>
+                <th>{{ labels.period }}</th>
+                <th>{{ labels.responsibilities }}</th>
               </tr>
             </thead>
             <tbody>
@@ -492,14 +523,50 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         </section>
         {% endif %}
 
+        {# ============= PROJECTS (JOB ONLY) ============= #}
+        {% if is_job and projects %}
+        {% set ns.n = ns.n + 1 %}
+        <section class="section">
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.projects }}
+          </h2>
+          <div class="block">{{ projects }}</div>
+        </section>
+        {% endif %}
+
+        {# ============= CERTIFICATIONS (JOB ONLY) ============= #}
+        {% if is_job and certifications %}
+        {% set ns.n = ns.n + 1 %}
+        <section class="section">
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.certifications }}
+          </h2>
+          <div class="block">{{ certifications }}</div>
+        </section>
+        {% endif %}
+
+        {# ============= PARTNER PREFERENCES (MARRIAGE ONLY) ============= #}
+        {% if not is_job and partner_preferences %}
+        {% set ns.n = ns.n + 1 %}
+        <section class="section">
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.partner_preferences }}
+          </h2>
+          <div class="block">{{ partner_preferences }}</div>
+        </section>
+        {% endif %}
+
+        {# ============= DECLARATION (COMMON) ============= #}
         {% if declaration %}
         {% set ns.n = ns.n + 1 %}
         <section class="section">
-          {% if layout != 'traditional-marriage' %}
-          <h2 class="section-title"><span class="mark">{{ ns.n }}.</span> {{ labels.declaration }}</h2>
-          {% else %}
-          <h2 class="section-title">{{ labels.declaration }}</h2>
-          {% endif %}
+          <h2 class="section-title">
+            {% if layout != 'traditional-marriage' %}<span class="mark">{{ ns.n }}.</span>{% endif %}
+            {{ labels.declaration }}
+          </h2>
           <div class="block" {% if layout == 'traditional-marriage' %}style="text-align:center; font-family:'Merriweather', serif; font-weight:700; color:var(--ink);"{% endif %}>{{ declaration }}</div>
         </section>
         {% endif %}
@@ -508,7 +575,9 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
 
     <footer class="footer">
       <div class="footer-left">
-        {% if place %}{{ labels.place }}: {{ place }}{% endif %}{% if place and date %}<br>{% endif %}{% if date %}{{ labels.date }}: {{ date }}{% endif %}
+        {% if place %}{{ labels.place }}: {{ place }}{% endif %}
+        {% if place and date %}<br>{% endif %}
+        {% if date %}{{ labels.date }}: {{ date }}{% endif %}
         {% if show_qr and qr_text %}
         <div class="qr-box" style="margin-top:2mm;">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data={{ qr_text|urlencode }}" alt="QR">
@@ -517,7 +586,9 @@ html, body { margin: 0; padding: 0; background: #e9edf2; color: var(--ink); font
         {% endif %}
       </div>
       <div class="signature">
-        <div class="signature-line">{% if signature %}<img src="{{ signature }}" alt="Signature">{% endif %}</div>
+        <div class="signature-line">
+          {% if signature %}<img src="{{ signature }}" alt="Signature">{% endif %}
+        </div>
         <div class="signature-label">{{ labels.signature }}</div>
       </div>
     </footer>
